@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016 Christopher John Vaughan. All rights reserved.
+  -->
+
+<resources>
+    <declare-styleable name="NumberInputView">
+        <attr name="label" format="string"/>
+    </declare-styleable>
+</resources>

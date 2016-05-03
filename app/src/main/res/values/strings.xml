@@ -6,4 +6,7 @@
     <string name="weight">Weight</string>
     <string name="reps">Reps</string>
     <string name="add">Add</string>
+    <string name="number_input_button_less">-</string>
+    <string name="number_input_button_more">+</string>
+    <string name="time">Time</string>
 </resources>
