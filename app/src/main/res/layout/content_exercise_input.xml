@@ -14,13 +14,13 @@
     tools:context=".exercise.ExerciseInputActivity"
     tools:showIn="@layout/activity_exercise_input">
 
-    <vaughandroid.vigor.exercise.NumberInputView
+    <vaughandroid.vigor.widgets.NumberInputView
         android:id="@+id/weight_and_reps_NumberInputView_weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:label="@string/weight"/>
 
-    <vaughandroid.vigor.exercise.NumberInputView
+    <vaughandroid.vigor.widgets.NumberInputView
         android:id="@+id/weight_and_reps_NumberInputView_reps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

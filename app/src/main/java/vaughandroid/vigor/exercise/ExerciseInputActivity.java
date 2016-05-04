@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vaughandroid.vigor.R;
+import vaughandroid.vigor.widgets.NumberInputView;
 
 /**
  * @author Chris
