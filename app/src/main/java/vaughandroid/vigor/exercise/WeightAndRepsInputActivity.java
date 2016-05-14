@@ -21,10 +21,10 @@ import vaughandroid.vigor.widgets.NumberInputView;
 /**
  * @author Chris
  */
-public class ExerciseInputActivity extends AppCompatActivity {
+public class WeightAndRepsInputActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context appContext) {
-        return new Intent(appContext, ExerciseInputActivity.class);
+        return new Intent(appContext, WeightAndRepsInputActivity.class);
     }
 
     @BindView(R.id.weight_and_reps_NumberInputView_weight) NumberInputView mWeightNumberInputView;

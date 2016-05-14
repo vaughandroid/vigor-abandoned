@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+def globalConfig = rootProject.ext
+sourceCompatibility = globalConfig.javaSourceCompatibility
+targetCompatibility = globalConfig.javaTargetCompatibility
+
+// Mimic Maven's 'provided' scope for compile-time dependencies.
+// See: https://sinking.in/blog/provided-scope-in-gradle/
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+    test {
+        compileClasspath += configurations.provided
+    }
+}
+
+dependencies {
+    def domainDependencies = rootProject.ext.domainDependencies
+    def domainTestDependencies = rootProject.ext.domainTestDependencies
+
+    provided domainDependencies.javaxAnnotation
+    provided domainDependencies.daggerCompiler
+    compile domainDependencies.dagger
+
+    testCompile domainTestDependencies.jUnit
+    testCompile domainTestDependencies.assertJ
+    testCompile domainTestDependencies.mockito
+}

@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
-    tools:context=".exercise.ExerciseInputActivity"
+    tools:context=".exercise.WeightAndRepsInputActivity"
     tools:showIn="@layout/activity_exercise_input">
 
     <vaughandroid.vigor.widgets.NumberInputView

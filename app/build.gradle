@@ -2,18 +2,26 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    def globalConfig = rootProject.ext
+
+    compileSdkVersion globalConfig.androidCompileSdkVersion
+    buildToolsVersion globalConfig.androidBuildToolsVersion
+
+    compileOptions {
+        sourceCompatibility globalConfig.javaSourceCompatibility
+        targetCompatibility globalConfig.javaTargetCompatibility
+    }
 
     defaultConfig {
         applicationId "vaughandroid.vigor"
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion globalConfig.androidMinSdkVersion
+        targetSdkVersion globalConfig.androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
 
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -24,15 +32,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
+    compile project(':domain')
+    compile project(':data')
 
-    compile 'com.android.support:appcompat-v7:' + rootProject.ext.appCompatVersion
-    compile 'com.android.support:design:' + rootProject.ext.appCompatVersion
-//    compile 'com.android.support:percent:' + rootProject.ext.appCompatVersion
+    def appDependencies = rootProject.ext.appDependencies
+    compile appDependencies.appCompat
+    compile appDependencies.design
+    apt appDependencies.daggerCompiler
+    compile appDependencies.dagger
+    apt appDependencies.butterKnifeCompiler
+    compile appDependencies.butterKnife
+    provided appDependencies.javaxAnnotation
 
-    compile 'com.jakewharton:butterknife:8.0.1'
-    apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    debugCompile appDependencies.leakCanary
+    releaseCompile appDependencies.leakCanaryNoOp
+    testCompile appDependencies.leakCanaryNoOp
+
+    def appTestDependencies = rootProject.ext.appTestDependencies
+    testCompile appTestDependencies.jUnit
+    testCompile appTestDependencies.mockito
+    androidTestCompile appTestDependencies.jUnit
+    androidTestCompile appTestDependencies.mockito
+    androidTestCompile appTestDependencies.dexmaker
+    androidTestCompile appTestDependencies.dexmakerMockito
+    androidTestCompile appTestDependencies.espresso
+    androidTestCompile appTestDependencies.testingSupportLib
 }

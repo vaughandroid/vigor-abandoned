@@ -1,4 +1,5 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'buildsystem/ci.gradle'
+apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
     repositories {
@@ -10,16 +11,27 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
-
+// TODO: is this needed?
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-ext {
-    appCompatVersion = '23.3.0'
+task appUnitTests(dependsOn: [':app:test']) {
+    description 'Run unit tests for the app layer.'
+}
+
+task domainUnitTests(dependsOn: [':domain:test']) {
+    description 'Run unit tests for the domain layer.'
+}
+
+task dataUnitTests(dependsOn: [':data:cleanTestDebugUnitTest', ':data:testDebugUnitTest']) {
+    description 'Run unit tests for the data layer.'
+}
+
+task unitTests(dependsOn: ['appUnitTests', 'domainUnitTests', 'dataUnitTests']) {
+    description 'Run unit tests for both domain and data layers.'
+}
+
+task acceptanceTests(dependsOn: [':app:connectedAndroidTest']) {
+    description 'Run application acceptance tests.'
 }

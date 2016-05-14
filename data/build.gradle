@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    defaultPublishConfig "debug"
+
+    def globalConfig = rootProject.ext
+
+    compileSdkVersion globalConfig.androidCompileSdkVersion
+    buildToolsVersion globalConfig.androidBuildToolsVersion
+
+    compileOptions {
+        sourceCompatibility globalConfig.javaSourceCompatibility
+        targetCompatibility globalConfig.javaTargetCompatibility
+    }
+
+    defaultConfig {
+        minSdkVersion globalConfig.androidMinSdkVersion
+        targetSdkVersion globalConfig.androidTargetSdkVersion
+        versionCode 1
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+}
+
+dependencies {
+    compile project(':domain')
+
+    def dataDependencies = rootProject.ext.dataDependencies
+    provided dataDependencies.javaxAnnotation
+    compile dataDependencies.androidAnnotations
+    compile dataDependencies.appCompat
+    apt dataDependencies.daggerCompiler
+    compile dataDependencies.dagger
+
+    def testDependencies = rootProject.ext.dataTestDependencies
+    testCompile testDependencies.jUnit
+    testCompile testDependencies.assertJ
+    testCompile testDependencies.mockito
+    testCompile testDependencies.robolectric
+}
