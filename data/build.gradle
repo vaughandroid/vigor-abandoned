@@ -38,6 +38,8 @@ dependencies {
     compile dataDependencies.appCompat
     apt dataDependencies.daggerCompiler
     compile dataDependencies.dagger
+    compile dataDependencies.autoValue
+    apt dataDependencies.autoValue
 
     def testDependencies = rootProject.ext.dataTestDependencies
     testCompile testDependencies.jUnit

@@ -26,6 +26,8 @@ dependencies {
     provided domainDependencies.javaxAnnotation
     provided domainDependencies.daggerCompiler
     compile domainDependencies.dagger
+    compile domainDependencies.autoValue
+    provided domainDependencies.autoValue
 
     testCompile domainTestDependencies.jUnit
     testCompile domainTestDependencies.assertJ

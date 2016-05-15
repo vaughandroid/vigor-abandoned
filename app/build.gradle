@@ -54,6 +54,8 @@ dependencies {
     apt appDependencies.butterKnifeCompiler
     compile appDependencies.butterKnife
     provided appDependencies.javaxAnnotation
+    compile appDependencies.autoValue
+    apt appDependencies.autoValue
 
     debugCompile appDependencies.leakCanary
     releaseCompile appDependencies.leakCanaryNoOp
