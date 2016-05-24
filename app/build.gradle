@@ -47,27 +47,32 @@ dependencies {
     compile project(':data')
 
     def appDependencies = rootProject.ext.appDependencies
+    provided appDependencies.javaxAnnotation
+    compile appDependencies.androidAnnotations
     compile appDependencies.appCompat
     compile appDependencies.design
     apt appDependencies.daggerCompiler
     compile appDependencies.dagger
     apt appDependencies.butterKnifeCompiler
     compile appDependencies.butterKnife
-    provided appDependencies.javaxAnnotation
-    compile appDependencies.autoValue
-    apt appDependencies.autoValue
 
     debugCompile appDependencies.leakCanary
     releaseCompile appDependencies.leakCanaryNoOp
     testCompile appDependencies.leakCanaryNoOp
 
+    compile appDependencies.autoValue
+    apt appDependencies.autoValue
+
     def appTestDependencies = rootProject.ext.appTestDependencies
     testCompile appTestDependencies.jUnit
     testCompile appTestDependencies.mockito
+    androidTestCompile appTestDependencies.androidAnnotations
     androidTestCompile appTestDependencies.jUnit
     androidTestCompile appTestDependencies.mockito
     androidTestCompile appTestDependencies.dexmaker
     androidTestCompile appTestDependencies.dexmakerMockito
+    androidTestCompile appTestDependencies.dexmakerDx
     androidTestCompile appTestDependencies.espresso
-    androidTestCompile appTestDependencies.testingSupportLib
+    androidTestCompile appTestDependencies.testSupportRunner
+    androidTestCompile appTestDependencies.testSupportRules
 }

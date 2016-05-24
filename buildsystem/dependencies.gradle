@@ -1,4 +1,6 @@
 allprojects {
+    apply plugin: 'com.github.ben-manes.versions'
+
     repositories {
         jcenter()
     }
@@ -10,15 +12,15 @@ ext {
     javaTargetCompatibility = JavaVersion.VERSION_1_7
 
     // Android
-    androidBuildToolsVersion = "23.0.1"
+    androidBuildToolsVersion = "23.0.3"
     androidMinSdkVersion = 15
-    androidTargetSdkVersion = 21
+    androidTargetSdkVersion = 21 // TODO: Update
     androidCompileSdkVersion = 23
 
     // Libraries
     javaxAnnotationVersion = '1.0'
     appCompatVersion = '23.3.0'
-    daggerVersion = '2.0.2'
+    daggerVersion = '2.4'
     butterKnifeVersion = '8.0.1'
     leakCanaryVersion = '1.3.1'
     autoValueVersion = '1.2'
@@ -27,9 +29,9 @@ ext {
     jUnitVersion = '4.12'
     assertJVersion = '1.7.1'
     mockitoVersion = '1.9.5'
-    dexmakerVersion = '1.0'
-    espressoVersion = '2.0'
-    testingSupportLibVersion = '0.1'
+    dexmakerVersion = '1.4'
+    espressoVersion = '2.2.2'
+    testSupportVersion = '0.4'
     robolectricVersion = '3.0'
 
     appDependencies = [
@@ -39,20 +41,23 @@ ext {
             design             : "com.android.support:design:${appCompatVersion}",
             daggerCompiler     : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger             : "com.google.dagger:dagger:${daggerVersion}",
-            butterKnife        : "com.jakewharton:butterknife:${butterKnifeVersion}",
             butterKnifeCompiler: "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
+            butterKnife        : "com.jakewharton:butterknife:${butterKnifeVersion}",
             leakCanary         : "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
             leakCanaryNoOp     : "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}",
             autoValue          : "com.google.auto.value:auto-value:${autoValueVersion}",
     ]
 
     appTestDependencies = [
-            jUnit            : "junit:junit:${jUnitVersion}",
-            mockito          : "org.mockito:mockito-core:${mockitoVersion}",
-            dexmaker         : "com.google.dexmaker:dexmaker:${dexmakerVersion}",
-            dexmakerMockito  : "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}",
-            espresso         : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
-            testingSupportLib: "com.android.support.test:testing-support-lib:${testingSupportLibVersion}",
+            androidAnnotations: "com.android.support:support-annotations:${appCompatVersion}",
+            jUnit             : "junit:junit:${jUnitVersion}",
+            mockito           : "org.mockito:mockito-core:${mockitoVersion}",
+            dexmaker          : "com.crittercism.dexmaker:dexmaker:${dexmakerVersion}",
+            dexmakerMockito   : "com.crittercism.dexmaker:dexmaker-mockito:${dexmakerVersion}",
+            dexmakerDx        : "com.crittercism.dexmaker:dexmaker-dx:${dexmakerVersion}",
+            espresso          : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+            testSupportRunner : "com.android.support.test:runner:${testSupportVersion}",
+            testSupportRules  : "com.android.support.test:rules:${testSupportVersion}",
     ]
 
     domainDependencies = [

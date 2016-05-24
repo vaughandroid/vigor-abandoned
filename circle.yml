@@ -3,5 +3,4 @@ test:
     - ./gradlew appUnitTests && cp -r app/build/test-results $CIRCLE_ARTIFACTS
     - ./gradlew domainUnitTests && cp -r domain/build/test-results $CIRCLE_ARTIFACTS
     - ./gradlew dataUnitTests && cp -r data/build/test-results $CIRCLE_ARTIFACTS
-# TODO: Fix dependency clash(es) for instrumented tests.
-#    - ./gradlew acceptanceTests && cp -r app/build/ $CIRCLE_ARTIFACTS
+    - ./gradlew acceptanceTests && cp -r app/build/ $CIRCLE_ARTIFACTS
