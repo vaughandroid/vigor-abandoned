@@ -12,8 +12,6 @@ test:
     # Wait for the emulator to boot
     - circle-android wait-for-boot
     # Unit tests
-    - ./gradlew appUnitTests --console=plain && cp -r app/build/test-results $CIRCLE_ARTIFACTS
-    - ./gradlew domainUnitTests --console=plain && cp -r domain/build/test-results $CIRCLE_ARTIFACTS
-    - ./gradlew dataUnitTests --console=plain && cp -r data/build/test-results $CIRCLE_ARTIFACTS
+    - ./gradlew unitTests --console=plain && cp -r app/build/test-results $CIRCLE_ARTIFACTS && cp -r domain/build/test-results $CIRCLE_ARTIFACTS && cp -r data/build/test-results $CIRCLE_ARTIFACTS
     # Acceptance tests
-    - ./gradlew acceptanceTests --console=plain && cp -r app/build/ $CIRCLE_ARTIFACTS
+    - ./gradlew acceptanceTests --console=plain && cp -r app/build/outputs/androidTest-results $CIRCLE_ARTIFACTS

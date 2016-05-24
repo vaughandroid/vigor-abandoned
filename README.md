@@ -1,7 +1,7 @@
 # vigor
 *Witness the fitness! - Roots Manuva*
 
-![Circle CI build status](https://circleci.com/gh/:owner/:repo.svg?style=shield&circle-token=:circle-token)
+![Circle CI build status](https://circleci.com/gh/vaughandroid/vigor.svg?style=shield&circle-token=:circle-token)
 
 
 ## Useful commands
