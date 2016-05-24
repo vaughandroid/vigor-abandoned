@@ -1,10 +1,19 @@
 dependencies:
   pre:
+    # Update Android SDK Packages
     - echo y | android update sdk --no-ui --all --filter tools
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
 test:
   override:
-    - ./gradlew appUnitTests && cp -r app/build/test-results $CIRCLE_ARTIFACTS
-    - ./gradlew domainUnitTests && cp -r domain/build/test-results $CIRCLE_ARTIFACTS
-    - ./gradlew dataUnitTests && cp -r data/build/test-results $CIRCLE_ARTIFACTS
-    - ./gradlew acceptanceTests && cp -r app/build/ $CIRCLE_ARTIFACTS
+    # Start the emulator
+    - emulator -avd circleci-android22 -no-audio -no-window:
+        background: true
+        parallel: true
+    # Wait for the emulator to boot
+    - circle-android wait-for-boot
+    # Unit tests
+    - ./gradlew appUnitTests --console=plain && cp -r app/build/test-results $CIRCLE_ARTIFACTS
+    - ./gradlew domainUnitTests --console=plain && cp -r domain/build/test-results $CIRCLE_ARTIFACTS
+    - ./gradlew dataUnitTests --console=plain && cp -r data/build/test-results $CIRCLE_ARTIFACTS
+    # Acceptance tests
+    - ./gradlew acceptanceTests --console=plain && cp -r app/build/ $CIRCLE_ARTIFACTS
