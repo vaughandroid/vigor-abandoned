@@ -9,7 +9,7 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import vaughandroid.vigor.exercise.WeightAndRepsInputActivity;
+import vaughandroid.vigor.exercise.ExerciseActivity;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -50,6 +50,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     void onClickFab(View view) {
-        startActivity(WeightAndRepsInputActivity.createIntent(getApplicationContext()));
+        startActivity(ExerciseActivity.createIntent(getApplicationContext()));
     }
 }

@@ -11,23 +11,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
-    tools:context=".exercise.WeightAndRepsInputActivity"
-    tools:showIn="@layout/activity_exercise_input">
+    tools:context=".exercise.ExerciseActivity"
+    tools:showIn="@layout/activity_exercise">
 
     <vaughandroid.vigor.widgets.NumberInputView
-        android:id="@+id/weight_and_reps_NumberInputView_weight"
+        android:id="@+id/content_exercise_NumberInputView_weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:label="@string/weight"/>
 
     <vaughandroid.vigor.widgets.NumberInputView
-        android:id="@+id/weight_and_reps_NumberInputView_reps"
+        android:id="@+id/content_exercise_NumberInputView_reps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:label="@string/reps"/>
 
     <Button
-        android:id="@+id/weight_and_reps_button_add"
+        android:id="@+id/content_exercise_Button_confirm"
         style="@style/Vigor.Widget.Button.Confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

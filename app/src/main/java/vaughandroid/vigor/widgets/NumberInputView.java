@@ -25,14 +25,21 @@ import vaughandroid.vigor.R;
 /**
  * @author Chris
  */
-public class NumberInputView extends LinearLayout implements NumberInputContract.View {
+public class NumberInputView extends LinearLayout {
 
-    @BindView(R.id.view_number_input_EditText_value) EditText mValueEditText;
-    @BindView(R.id.view_number_input_TextView_units) TextView mUnitsTextView;
-    @BindView(R.id.view_number_input_Button_less) Button mLessButton;
-    @BindView(R.id.view_number_input_Button_more) Button mMoreButton;
+    public interface InputListener {
+        void onIncrementClicked();
+        void onDecrementClicked();
+        void onValueEntered(String s);
+    }
 
-    @Nullable private NumberInputContract.Presenter mPresenter;
+    @BindView(R.id.view_number_input_EditText_value) EditText valueEditText;
+    @BindView(R.id.view_number_input_TextView_units) TextView unitsTextView;
+    @BindView(R.id.view_number_input_Button_less) Button lessButton;
+    @BindView(R.id.view_number_input_Button_more) Button moreButton;
+
+    @Nullable
+    private InputListener inputListener;
 
     public NumberInputView(Context context) {
         super(context);
@@ -64,62 +71,55 @@ public class NumberInputView extends LinearLayout implements NumberInputContract
             TypedArray typedArray =
                     context.obtainStyledAttributes(attrs, R.styleable.NumberInputView, defStyle, defStyleRes);
             try {
-                mValueEditText.setHint(typedArray.getString(R.styleable.NumberInputView_label));
+                valueEditText.setHint(typedArray.getString(R.styleable.NumberInputView_label));
             } finally {
                 typedArray.recycle();
             }
         }
     }
 
-    @Override
-    public void setPresenter(NumberInputContract.Presenter presenter) {
-        mPresenter = presenter;
-        mPresenter.setView(this);
-    }
-
-    @Override
     public void setValue(BigDecimal value) {
-        mValueEditText.setText(value.toPlainString());
+        valueEditText.setText(value.toPlainString());
     }
 
-    @Override
     public void setUnits(String units) {
-        mUnitsTextView.setText(units);
+        unitsTextView.setText(units);
     }
 
-    @Override
     public void setUnitsShown(boolean shown) {
-        mUnitsTextView.setVisibility(shown ? GONE : VISIBLE);
+        unitsTextView.setVisibility(shown ? GONE : VISIBLE);
     }
 
-    @Override
     public void setMoreEnabled(boolean enabled) {
-        mMoreButton.setEnabled(enabled);
+        moreButton.setEnabled(enabled);
     }
 
-    @Override
     public void setLessEnabled(boolean enabled) {
-        mLessButton.setEnabled(enabled);
+        lessButton.setEnabled(enabled);
+    }
+
+    public void setInputListener(@Nullable InputListener inputListener) {
+        this.inputListener = inputListener;
     }
 
     @OnClick(R.id.view_number_input_Button_less)
     void onClickLess() {
-        if (mPresenter != null) {
-            mPresenter.onDecrementClicked();
+        if (inputListener != null) {
+            inputListener.onDecrementClicked();
         }
     }
 
     @OnClick(R.id.view_number_input_Button_more)
     void onClickMore() {
-        if (mPresenter != null) {
-            mPresenter.onIncrementClicked();
+        if (inputListener != null) {
+            inputListener.onIncrementClicked();
         }
     }
 
     @OnTextChanged(R.id.view_number_input_EditText_value)
     void onValueTextChanged() {
-        if (mPresenter != null) {
-            mPresenter.onValueEntered(mValueEditText.getText().toString());
+        if (inputListener != null) {
+            inputListener.onValueEntered(valueEditText.getText().toString());
         }
     }
 }

@@ -21,19 +21,19 @@ import vaughandroid.vigor.widgets.NumberInputView;
 /**
  * @author Chris
  */
-public class WeightAndRepsInputActivity extends AppCompatActivity {
+public class ExerciseActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context appContext) {
-        return new Intent(appContext, WeightAndRepsInputActivity.class);
+        return new Intent(appContext, ExerciseActivity.class);
     }
 
-    @BindView(R.id.weight_and_reps_NumberInputView_weight) NumberInputView mWeightNumberInputView;
-    @BindView(R.id.weight_and_reps_NumberInputView_reps) NumberInputView mRepsNumberInputView;
+    @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView mWeightNumberInputView;
+    @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView mRepsNumberInputView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercise_input);
+        setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);
         initToolbar();
     }
@@ -70,8 +70,8 @@ public class WeightAndRepsInputActivity extends AppCompatActivity {
         return true;
     }
 
-    @OnClick(R.id.weight_and_reps_button_add)
-    void onClickAddButton(View view) {
+    @OnClick(R.id.content_exercise_Button_confirm)
+    void onClickConfirmButton(View view) {
         // TEMP
         String description =
                 getString(R.string.exercise_descrption_weight_and_reps, mWeightNumberInputView, mRepsNumberInputView);
