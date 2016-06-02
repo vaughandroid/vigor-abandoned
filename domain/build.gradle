@@ -20,16 +20,15 @@ sourceSets {
 }
 
 dependencies {
-    def domainDependencies = rootProject.ext.domainDependencies
-    def domainTestDependencies = rootProject.ext.domainTestDependencies
+    def javaLibs = rootProject.ext.javaLibs
+    def javaTestLibs = rootProject.ext.javaTestLibs
 
-    provided domainDependencies.javaxAnnotation
-    provided domainDependencies.daggerCompiler
-    compile domainDependencies.dagger
-    compile domainDependencies.autoValue
-    provided domainDependencies.autoValue
+    compile javaLibs.dagger
+    provided javaLibs.daggerCompiler
+    provided javaLibs.javaxAnnotation
+    compile javaLibs.rxJava
 
-    testCompile domainTestDependencies.jUnit
-    testCompile domainTestDependencies.assertJ
-    testCompile domainTestDependencies.mockito
+    testCompile javaTestLibs.jUnit
+    testCompile javaTestLibs.assertJ
+    testCompile javaTestLibs.mockito
 }

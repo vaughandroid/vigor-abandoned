@@ -30,20 +30,24 @@ android {
 }
 
 dependencies {
+    def javaLibs = rootProject.ext.javaLibs
+    def androidLibs = rootProject.ext.androidLibs
+    def javaTestLibs = rootProject.ext.javaTestLibs
+    def androidTestLibs = rootProject.ext.androidTestLibs
+
     compile project(':domain')
 
-    def dataDependencies = rootProject.ext.dataDependencies
-    provided dataDependencies.javaxAnnotation
-    compile dataDependencies.androidAnnotations
-    compile dataDependencies.appCompat
-    apt dataDependencies.daggerCompiler
-    compile dataDependencies.dagger
-    compile dataDependencies.autoValue
-    apt dataDependencies.autoValue
+    compile javaLibs.dagger
+    apt javaLibs.daggerCompiler
+    provided javaLibs.javaxAnnotation
+    compile javaLibs.rxJava
 
-    def testDependencies = rootProject.ext.dataTestDependencies
-    testCompile testDependencies.jUnit
-    testCompile testDependencies.assertJ
-    testCompile testDependencies.mockito
-    testCompile testDependencies.robolectric
+    compile androidLibs.androidAnnotations
+    compile androidLibs.appCompat
+    compile androidLibs.rxAndroid
+
+    testCompile javaTestLibs.jUnit
+    testCompile javaTestLibs.assertJ
+    testCompile javaTestLibs.mockito
+    testCompile androidTestLibs.robolectric
 }

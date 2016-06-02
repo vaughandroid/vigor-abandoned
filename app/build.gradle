@@ -43,36 +43,41 @@ android {
 }
 
 dependencies {
+    def javaLibs = rootProject.ext.javaLibs
+    def androidLibs = rootProject.ext.androidLibs
+    def javaTestLibs = rootProject.ext.javaTestLibs
+    def androidTestLibs = rootProject.ext.androidTestLibs
+
     compile project(':domain')
-    compile project(':data')
 
-    def appDependencies = rootProject.ext.appDependencies
-    provided appDependencies.javaxAnnotation
-    compile appDependencies.androidAnnotations
-    compile appDependencies.appCompat
-    compile appDependencies.design
-    apt appDependencies.daggerCompiler
-    compile appDependencies.dagger
-    apt appDependencies.butterKnifeCompiler
-    compile appDependencies.butterKnife
+    compile javaLibs.dagger
+    apt javaLibs.daggerCompiler
+    provided javaLibs.javaxAnnotation
+    compile javaLibs.rxJava
 
-    debugCompile appDependencies.leakCanary
-    releaseCompile appDependencies.leakCanaryNoOp
-    testCompile appDependencies.leakCanaryNoOp
+    compile androidLibs.androidAnnotations
+    compile androidLibs.appCompat
+    compile androidLibs.butterKnife
+    apt androidLibs.butterKnifeCompiler
+    compile androidLibs.design
+    debugCompile androidLibs.leakCanary
+    releaseCompile androidLibs.leakCanaryNoOp
+    compile androidLibs.rxAndroid
 
-    compile appDependencies.autoValue
-    apt appDependencies.autoValue
+    testCompile javaTestLibs.assertJ
+    testCompile javaTestLibs.jUnit
+    testCompile javaTestLibs.mockito
 
-    def appTestDependencies = rootProject.ext.appTestDependencies
-    testCompile appTestDependencies.jUnit
-    testCompile appTestDependencies.mockito
-    androidTestCompile appTestDependencies.androidAnnotations
-    androidTestCompile appTestDependencies.jUnit
-    androidTestCompile appTestDependencies.mockito
-    androidTestCompile appTestDependencies.dexmaker
-    androidTestCompile appTestDependencies.dexmakerMockito
-    androidTestCompile appTestDependencies.dexmakerDx
-    androidTestCompile appTestDependencies.espresso
-    androidTestCompile appTestDependencies.testSupportRunner
-    androidTestCompile appTestDependencies.testSupportRules
+    androidTestCompile javaTestLibs.assertJ
+    androidTestCompile androidTestLibs.dexmaker
+    androidTestCompile androidTestLibs.dexmakerMockito
+    androidTestCompile androidTestLibs.dexmakerDx
+    androidTestCompile androidTestLibs.espresso
+    androidTestCompile javaTestLibs.jUnit
+    androidTestCompile javaTestLibs.mockito
+    androidTestCompile androidTestLibs.testSupportRules
+    androidTestCompile androidTestLibs.testSupportRunner
+
+    // Fix dependency version conflicts.
+    androidTestCompile androidLibs.androidAnnotations
 }

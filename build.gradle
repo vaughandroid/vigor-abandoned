@@ -12,11 +12,6 @@ buildscript {
     }
 }
 
-// TODO: is this needed?
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 task appUnitTests(dependsOn: [':app:test']) {
     description 'Run unit tests for the app layer.'
 }
@@ -25,7 +20,7 @@ task domainUnitTests(dependsOn: [':domain:test']) {
     description 'Run unit tests for the domain layer.'
 }
 
-task dataUnitTests(dependsOn: [':data:cleanTestDebugUnitTest', ':data:testDebugUnitTest']) {
+task dataUnitTests(dependsOn: [':data:testDebugUnitTest']) {
     description 'Run unit tests for the data layer.'
 }
 

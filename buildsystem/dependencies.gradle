@@ -17,75 +17,55 @@ ext {
     androidTargetSdkVersion = 21 // TODO: Update
     androidCompileSdkVersion = 23
 
-    // Libraries
-    javaxAnnotationVersion = '1.0'
-    appCompatVersion = '23.3.0'
+    // Java libraries
     daggerVersion = '2.4'
+    javaxAnnotationVersion = '1.0'
+    rxJavaVersion = '1.1.5'
+    javaLibs = [
+            dagger         : "com.google.dagger:dagger:${daggerVersion}",
+            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            rxJava         : "io.reactivex:rxjava:1.1.5",
+    ]
+
+    // Android libraries
+    appCompatVersion = '23.3.0'
     butterKnifeVersion = '8.0.1'
     leakCanaryVersion = '1.3.1'
-    autoValueVersion = '1.2'
-
-    // Testing
-    jUnitVersion = '4.12'
-    assertJVersion = '1.7.1'
-    mockitoVersion = '1.9.5'
-    dexmakerVersion = '1.4'
-    espressoVersion = '2.2.2'
-    testSupportVersion = '0.4'
-    robolectricVersion = '3.0'
-
-    appDependencies = [
-            javaxAnnotation    : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+    rxAndroidVersion = '1.2.0'
+    androidLibs = [
             androidAnnotations : "com.android.support:support-annotations:${appCompatVersion}",
             appCompat          : "com.android.support:appcompat-v7:${appCompatVersion}",
             design             : "com.android.support:design:${appCompatVersion}",
-            daggerCompiler     : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            dagger             : "com.google.dagger:dagger:${daggerVersion}",
             butterKnifeCompiler: "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
             butterKnife        : "com.jakewharton:butterknife:${butterKnifeVersion}",
             leakCanary         : "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
             leakCanaryNoOp     : "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}",
-            autoValue          : "com.google.auto.value:auto-value:${autoValueVersion}",
+            rxAndroid          : "io.reactivex:rxandroid:1.2.0",
     ]
 
-    appTestDependencies = [
-            androidAnnotations: "com.android.support:support-annotations:${appCompatVersion}",
-            jUnit             : "junit:junit:${jUnitVersion}",
-            mockito           : "org.mockito:mockito-core:${mockitoVersion}",
-            dexmaker          : "com.crittercism.dexmaker:dexmaker:${dexmakerVersion}",
-            dexmakerMockito   : "com.crittercism.dexmaker:dexmaker-mockito:${dexmakerVersion}",
-            dexmakerDx        : "com.crittercism.dexmaker:dexmaker-dx:${dexmakerVersion}",
-            espresso          : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
-            testSupportRunner : "com.android.support.test:runner:${testSupportVersion}",
-            testSupportRules  : "com.android.support.test:rules:${testSupportVersion}",
-    ]
-
-    domainDependencies = [
-            javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            dagger         : "com.google.dagger:dagger:${daggerVersion}",
-            autoValue      : "com.google.auto.value:auto-value:${autoValueVersion}",
-    ]
-
-    domainTestDependencies = [
-            jUnit  : "junit:junit:${jUnitVersion}",
+    // Java test libraries
+    jUnitVersion = '4.12'
+    assertJVersion = '1.7.1'
+    mockitoVersion = '1.9.5'
+    javaTestLibs = [
             assertJ: "org.assertj:assertj-core:${assertJVersion}",
+            jUnit  : "junit:junit:${jUnitVersion}",
             mockito: "org.mockito:mockito-core:${mockitoVersion}",
     ]
 
-    dataDependencies = [
-            javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${appCompatVersion}",
-            appCompat         : "com.android.support:appcompat-v7:${appCompatVersion}",
-            daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            dagger            : "com.google.dagger:dagger:${daggerVersion}",
-            autoValue         : "com.google.auto.value:auto-value:${autoValueVersion}",
-    ]
-
-    dataTestDependencies = [
-            jUnit      : "junit:junit:${jUnitVersion}",
-            assertJ    : "org.assertj:assertj-core:${assertJVersion}",
-            mockito    : "org.mockito:mockito-core:${mockitoVersion}",
-            robolectric: "org.robolectric:robolectric:${robolectricVersion}",
+    // Android test libraries
+    dexmakerVersion = '1.4'
+    espressoVersion = '2.2.2'
+    testSupportVersion = '0.4'
+    robolectricVersion = '3.0'
+    androidTestLibs = [
+            dexmaker         : "com.crittercism.dexmaker:dexmaker:${dexmakerVersion}",
+            dexmakerMockito  : "com.crittercism.dexmaker:dexmaker-mockito:${dexmakerVersion}",
+            dexmakerDx       : "com.crittercism.dexmaker:dexmaker-dx:${dexmakerVersion}",
+            espresso         : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+            testSupportRunner: "com.android.support.test:runner:${testSupportVersion}",
+            testSupportRules : "com.android.support.test:rules:${testSupportVersion}",
+            robolectric      : "org.robolectric:robolectric:${robolectricVersion}",
     ]
 }
