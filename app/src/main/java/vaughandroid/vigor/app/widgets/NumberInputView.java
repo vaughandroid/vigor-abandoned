@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Christopher John Vaughan. All rights reserved.
  */
 
-package vaughandroid.vigor.widgets;
+package vaughandroid.vigor.app.widgets;
 
 import android.annotation.TargetApi;
 import android.content.Context;

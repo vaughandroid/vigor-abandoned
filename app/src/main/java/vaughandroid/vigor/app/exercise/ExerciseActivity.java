@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Christopher John Vaughan. All rights reserved.
  */
-package vaughandroid.vigor.exercise;
+package vaughandroid.vigor.app.exercise;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vaughandroid.vigor.R;
-import vaughandroid.vigor.widgets.NumberInputView;
+import vaughandroid.vigor.app.widgets.NumberInputView;
 
 /**
  * @author Chris

@@ -12,20 +12,25 @@ ext {
     javaTargetCompatibility = JavaVersion.VERSION_1_7
 
     // Android
-    androidBuildToolsVersion = "23.0.3"
+    androidBuildToolsVersion = '23.0.3'
     androidMinSdkVersion = 15
     androidTargetSdkVersion = 21 // TODO: Update
     androidCompileSdkVersion = 23
 
     // Java libraries
+    autoValueVersion = '1.2'
     daggerVersion = '2.4'
     javaxAnnotationVersion = '1.0'
+    jetBrainsAnnotationsVersion = '13.0'
     rxJavaVersion = '1.1.5'
+
     javaLibs = [
-            dagger         : "com.google.dagger:dagger:${daggerVersion}",
-            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            rxJava         : "io.reactivex:rxjava:1.1.5",
+            autoValue           : "com.google.auto.value:auto-value:${autoValueVersion}",
+            dagger              : "com.google.dagger:dagger:${daggerVersion}",
+            daggerCompiler      : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            jetBrainsAnnotations: "org.jetbrains:annotations:${jetBrainsAnnotationsVersion}",
+            rxJava              : "io.reactivex:rxjava:${rxJavaVersion}",
     ]
 
     // Android libraries

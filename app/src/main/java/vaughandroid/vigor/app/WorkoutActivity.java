@@ -1,4 +1,4 @@
-package vaughandroid.vigor;
+package vaughandroid.vigor.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +9,8 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import vaughandroid.vigor.exercise.ExerciseActivity;
+import vaughandroid.vigor.R;
+import vaughandroid.vigor.app.exercise.ExerciseActivity;
 
 public class WorkoutActivity extends AppCompatActivity {
 

@@ -1,9 +1,9 @@
-package vaughandroid.vigor.exercise;
+package vaughandroid.vigor.app.exercise;
 
 /**
  * MVP contract for {@link ExerciseActivity}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public interface ExerciseContract {
 

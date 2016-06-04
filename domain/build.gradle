@@ -1,4 +1,16 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.6"
+    }
+}
+
 apply plugin: 'java'
+apply plugin: "net.ltgt.apt"
 
 def globalConfig = rootProject.ext
 sourceCompatibility = globalConfig.javaSourceCompatibility
@@ -23,9 +35,12 @@ dependencies {
     def javaLibs = rootProject.ext.javaLibs
     def javaTestLibs = rootProject.ext.javaTestLibs
 
+    apt javaLibs.autoValue
+    compile javaLibs.autoValue // TODO: Should be compileOnly?
     compile javaLibs.dagger
     provided javaLibs.daggerCompiler
     provided javaLibs.javaxAnnotation
+    compile javaLibs.jetBrainsAnnotations
     compile javaLibs.rxJava
 
     testCompile javaTestLibs.jUnit
