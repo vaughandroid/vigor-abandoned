@@ -5,7 +5,7 @@ import com.google.auto.value.AutoValue;
 /**
  * ID for an {@link SavedExercise}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @AutoValue
 public abstract class SavedExerciseId {

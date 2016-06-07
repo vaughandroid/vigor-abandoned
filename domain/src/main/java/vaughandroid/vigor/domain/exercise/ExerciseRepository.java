@@ -7,7 +7,7 @@ import rx.Observable;
 /**
  * Interface for a class which can store & retrieve exercise data.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public interface ExerciseRepository {
 

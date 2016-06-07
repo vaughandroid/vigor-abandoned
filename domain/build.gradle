@@ -37,6 +37,7 @@ dependencies {
 
     apt javaLibs.autoValue
     compile javaLibs.autoValue // TODO: Should be compileOnly?
+    apt javaLibs.autoValueWith
     compile javaLibs.dagger
     provided javaLibs.daggerCompiler
     provided javaLibs.javaxAnnotation

@@ -7,6 +7,7 @@ package vaughandroid.vigor.app.widgets;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.Button;
@@ -78,11 +79,15 @@ public class NumberInputView extends LinearLayout {
         }
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(@NonNull BigDecimal value) {
         valueEditText.setText(value.toPlainString());
     }
 
-    public void setUnits(String units) {
+    public void setValue(int value) {
+        valueEditText.setText(Integer.valueOf(value));
+    }
+
+    public void setUnits(@NonNull String units) {
         unitsTextView.setText(units);
     }
 

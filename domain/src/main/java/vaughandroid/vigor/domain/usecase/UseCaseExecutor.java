@@ -1,9 +1,14 @@
 package vaughandroid.vigor.domain.usecase;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Scheduler;
+import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Applies {@link Scheduler}s to {@link UseCase}s
@@ -21,9 +26,14 @@ public class UseCaseExecutor {
         this.observationScheduler = observationScheduler;
     }
 
-    public <T> Observable<T> schedule(UseCase<T> useCase) {
-        return useCase.createObservable()
+    public <T> Subscription subscribe(@NotNull UseCase<T> useCase, @Nullable Subscriber<T> subscriber) {
+        return subscribe(useCase.createObservable(), subscriber);
+    }
+
+    public <T> Subscription subscribe(@NotNull Observable<T> observable, @Nullable Subscriber<T> subscriber) {
+        return observable
                 .subscribeOn(subscriptionScheduler)
-                .observeOn(observationScheduler);
+                .observeOn(observationScheduler)
+                .subscribe(subscriber);
     }
 }

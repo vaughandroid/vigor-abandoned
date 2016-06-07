@@ -1,7 +1,6 @@
-package vaughandroid.vigor.app;
+package vaughandroid.vigor.app.workout;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,9 +9,10 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vaughandroid.vigor.R;
+import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.exercise.ExerciseActivity;
 
-public class WorkoutActivity extends AppCompatActivity {
+public class WorkoutActivity extends VigorActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

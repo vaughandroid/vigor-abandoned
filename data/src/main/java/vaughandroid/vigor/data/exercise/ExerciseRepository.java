@@ -10,12 +10,12 @@ import vaughandroid.vigor.domain.exercise.SavedExerciseId;
 /**
  * Implementation of {@link vaughandroid.vigor.domain.exercise.ExerciseRepository}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.ExerciseRepository {
 
     public @NotNull Observable<SavedExercise> addExercise(@NotNull Exercise exercise) {
-        // TODO: Implement properly!
+        // TODO: stub
         return Observable.just(SavedExercise.create(SavedExerciseId.create(1), exercise));
     }
 }

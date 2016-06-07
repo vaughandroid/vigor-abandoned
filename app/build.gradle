@@ -63,6 +63,7 @@ dependencies {
     debugCompile androidLibs.leakCanary
     releaseCompile androidLibs.leakCanaryNoOp
     compile androidLibs.rxAndroid
+    compile androidLibs.timber
 
     testCompile javaTestLibs.assertJ
     testCompile javaTestLibs.jUnit
