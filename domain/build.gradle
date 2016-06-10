@@ -40,6 +40,7 @@ dependencies {
     apt javaLibs.autoValueWith
     compile javaLibs.dagger
     provided javaLibs.daggerCompiler
+    compile javaLibs.guava
     provided javaLibs.javaxAnnotation
     compile javaLibs.jetBrainsAnnotations
     compile javaLibs.rxJava
