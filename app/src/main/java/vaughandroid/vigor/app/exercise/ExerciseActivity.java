@@ -21,14 +21,17 @@ import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
+import vaughandroid.vigor.domain.exercise.SavedExercise;
 
 /**
  * @author Chris
  */
 public class ExerciseActivity extends VigorActivity implements ExerciseContract.View {
 
-    public static Intent createIntent(Context appContext) {
-        return new Intent(appContext, ExerciseActivity.class);
+    private static final String EXTRA_SAVED_EXERCISE = "savedExercise";
+
+    public static IntentBuilder intentBuilder() {
+        return new IntentBuilder();
     }
 
     @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
@@ -39,9 +42,13 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivityComponent().inject(this);
+
         setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);
         initToolbar();
+
+        presenter.setView(this);
     }
 
     private void initToolbar() {
@@ -71,7 +78,6 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     @Override
     public boolean onSupportNavigateUp() {
-        // TODO: show confirmation dialog
         finish();
         return true;
     }
@@ -94,5 +100,26 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @Override
     public void setReps(int reps) {
         repsNumberInputView.setValue(reps);
+    }
+
+    @Override
+    public void finish(SavedExercise savedExercise) {
+        setResult(RESULT_OK, new Intent().putExtra(EXTRA_SAVED_EXERCISE, savedExercise));
+    }
+
+    public static class IntentBuilder {
+
+        private final Bundle extras = new Bundle();
+
+        private IntentBuilder() {}
+
+        public IntentBuilder savedExercise(SavedExercise savedExercise) {
+            extras.putSerializable(EXTRA_SAVED_EXERCISE, savedExercise);
+            return this;
+        }
+
+        public Intent build(Context appContext) {
+            return new Intent(appContext, ExerciseActivity.class).putExtras(extras);
+        }
     }
 }

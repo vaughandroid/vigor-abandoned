@@ -3,6 +3,7 @@ package vaughandroid.vigor.app.exercise;
 import dagger.Module;
 import dagger.Provides;
 import vaughandroid.vigor.app.di.ActivityScope;
+import vaughandroid.vigor.domain.exercise.ExerciseRepository;
 
 /**
  * Provides exercise-related classes for injection.
@@ -16,5 +17,11 @@ public class ExerciseModule {
     @ActivityScope
     public ExerciseContract.Presenter provideExercisePresenter(ExercisePresenter presenter) {
         return presenter;
+    }
+
+    @Provides
+    @ActivityScope
+    public ExerciseRepository provideExerciseRepository() {
+        return new vaughandroid.vigor.data.exercise.ExerciseRepository();
     }
 }

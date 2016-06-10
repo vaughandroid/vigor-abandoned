@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -21,7 +22,8 @@ public class UseCaseExecutor {
     private final Scheduler observationScheduler;
 
     @Inject
-    public UseCaseExecutor(Scheduler subscriptionScheduler, Scheduler observationScheduler) {
+    public UseCaseExecutor(@Named("subscription") Scheduler subscriptionScheduler,
+            @Named("observation") Scheduler observationScheduler) {
         this.subscriptionScheduler = subscriptionScheduler;
         this.observationScheduler = observationScheduler;
     }

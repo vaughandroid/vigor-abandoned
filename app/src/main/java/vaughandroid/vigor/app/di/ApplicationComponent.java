@@ -1,7 +1,7 @@
 package vaughandroid.vigor.app.di;
 
 import dagger.Component;
-import vaughandroid.vigor.app.logging.LoggingModule;
+import vaughandroid.vigor.app.rx.SchedulerModule;
 
 /**
  * Injector of {@link ApplicationScope}d instances.
@@ -9,7 +9,7 @@ import vaughandroid.vigor.app.logging.LoggingModule;
  * @author Chris
  */
 @Component(modules = {
-        LoggingModule.class,
+        SchedulerModule.class
 })
 @ApplicationScope
 public interface ApplicationComponent {

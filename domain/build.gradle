@@ -43,6 +43,7 @@ dependencies {
     provided javaLibs.javaxAnnotation
     compile javaLibs.jetBrainsAnnotations
     compile javaLibs.rxJava
+    compile javaLibs.slf4j
 
     testCompile javaTestLibs.jUnit
     testCompile javaTestLibs.assertJ

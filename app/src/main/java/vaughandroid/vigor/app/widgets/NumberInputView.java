@@ -4,6 +4,7 @@
 
 package vaughandroid.vigor.app.widgets;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -83,8 +84,9 @@ public class NumberInputView extends LinearLayout {
         valueEditText.setText(value.toPlainString());
     }
 
+    @SuppressLint("SetTextI18n")
     public void setValue(int value) {
-        valueEditText.setText(Integer.valueOf(value));
+        valueEditText.setText(Integer.toString(value));
     }
 
     public void setUnits(@NonNull String units) {

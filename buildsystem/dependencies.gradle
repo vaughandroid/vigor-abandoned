@@ -24,6 +24,7 @@ ext {
     javaxAnnotationVersion = '1.0'
     jetBrainsAnnotationsVersion = '13.0'
     rxJavaVersion = '1.1.5'
+    slf4jVersion = '1.7.21'
     javaLibs = [
             autoValue           : "com.google.auto.value:auto-value:${autoValueVersion}",
             autoValueWith       : "com.gabrielittner.auto.value:auto-value-with:${autoValueWithVersion}",
@@ -32,6 +33,7 @@ ext {
             javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             jetBrainsAnnotations: "org.jetbrains:annotations:${jetBrainsAnnotationsVersion}",
             rxJava              : "io.reactivex:rxjava:${rxJavaVersion}",
+            slf4j               : "org.slf4j:slf4j-api:${slf4jVersion}",
     ]
 
     // Android libraries
@@ -39,7 +41,6 @@ ext {
     butterKnifeVersion = '8.0.1'
     leakCanaryVersion = '1.3.1'
     rxAndroidVersion = '1.2.0'
-    timberVersion = '4.1.2'
     androidLibs = [
             androidAnnotations : "com.android.support:support-annotations:${appCompatVersion}",
             appCompat          : "com.android.support:appcompat-v7:${appCompatVersion}",
@@ -49,7 +50,7 @@ ext {
             leakCanary         : "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
             leakCanaryNoOp     : "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}",
             rxAndroid          : "io.reactivex:rxandroid:1.2.0",
-            timber             : "com.jakewharton.timber:timber:${timberVersion}"
+            slf4jAndroid       : "org.slf4j:slf4j-android:${slf4jVersion}",
     ]
 
     // Java test libraries

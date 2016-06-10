@@ -49,6 +49,8 @@ dependencies {
     def androidTestLibs = rootProject.ext.androidTestLibs
 
     compile project(':domain')
+    // TODO: This is required so that we can construct the Repositories. Might be able to get around it?
+    compile project(':data')
 
     compile javaLibs.dagger
     apt javaLibs.daggerCompiler
@@ -63,7 +65,7 @@ dependencies {
     debugCompile androidLibs.leakCanary
     releaseCompile androidLibs.leakCanaryNoOp
     compile androidLibs.rxAndroid
-    compile androidLibs.timber
+    compile androidLibs.slf4jAndroid
 
     testCompile javaTestLibs.assertJ
     testCompile javaTestLibs.jUnit

@@ -2,6 +2,7 @@ package vaughandroid.vigor.domain.exercise;
 
 import com.google.auto.value.AutoValue;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
  * @author Chris
  */
 @AutoValue
-public abstract class Exercise {
+public abstract class Exercise implements Serializable {
 
     public static Builder builder() {
         return new AutoValue_Exercise.Builder()
@@ -26,7 +27,7 @@ public abstract class Exercise {
 
     @AutoValue.Builder
     public abstract static class Builder {
-        public abstract Builder reps(int foo);
+        public abstract Builder reps(int reps);
         public abstract Builder weight(BigDecimal weight);
         public abstract Exercise build();
     }

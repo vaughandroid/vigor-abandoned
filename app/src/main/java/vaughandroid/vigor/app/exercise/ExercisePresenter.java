@@ -3,6 +3,9 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
@@ -10,7 +13,6 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
-import vaughandroid.vigor.app.logging.Logger;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.SavedExercise;
@@ -26,19 +28,19 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
 
     private final UseCaseExecutor useCaseExecutor;
     private final AddExerciseUseCase addExerciseUseCase;
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @NonNull private Exercise exercise = Exercise.builder().build();
+    @Nullable private SavedExercise savedExercise;
 
     @Nullable ExerciseContract.View view;
 
     @Nullable private Subscription addExerciseSubscription;
 
     @Inject
-    public ExercisePresenter(UseCaseExecutor useCaseExecutor, AddExerciseUseCase addExerciseUseCase, Logger logger) {
+    public ExercisePresenter(UseCaseExecutor useCaseExecutor, AddExerciseUseCase addExerciseUseCase) {
         this.useCaseExecutor = useCaseExecutor;
         this.addExerciseUseCase = addExerciseUseCase;
-        this.logger = logger;
     }
 
     @Override
@@ -49,6 +51,8 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void destroy() {
         setView(null);
+        addExerciseSubscription.unsubscribe();
+        addExerciseSubscription = null;
     }
 
     @Override
@@ -80,20 +84,32 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
         addExerciseSubscription = useCaseExecutor.subscribe(addExerciseUseCase, new ExerciseSubscriber());
     }
 
+    private void onSaved(SavedExercise savedExercise) {
+        this.savedExercise = savedExercise;
+        if (view != null) {
+            view.finish(savedExercise);
+        }
+        if (addExerciseSubscription != null) {
+            addExerciseSubscription.unsubscribe();
+        }
+    }
+
     private class ExerciseSubscriber extends Subscriber<SavedExercise> {
+
         @Override
         public void onCompleted() {
-            logger.d("onCompleted");
+            logger.debug("onCompleted");
         }
 
         @Override
         public void onError(Throwable e) {
-            logger.e(e, "onError");
+            logger.error("onError", e);
         }
 
         @Override
         public void onNext(SavedExercise savedExercise) {
-            logger.d("onNext");
+            logger.debug("onNext");
+            onSaved(savedExercise);
         }
     }
 }

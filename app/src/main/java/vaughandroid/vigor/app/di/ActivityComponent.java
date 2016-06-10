@@ -1,6 +1,7 @@
 package vaughandroid.vigor.app.di;
 
 import dagger.Subcomponent;
+import vaughandroid.vigor.app.exercise.ExerciseActivity;
 import vaughandroid.vigor.app.exercise.ExerciseModule;
 
 /**
@@ -13,4 +14,5 @@ import vaughandroid.vigor.app.exercise.ExerciseModule;
 })
 @ActivityScope
 public interface ActivityComponent {
+    void inject(ExerciseActivity activity);
 }
