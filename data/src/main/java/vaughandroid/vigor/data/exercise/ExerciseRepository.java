@@ -15,23 +15,26 @@ import vaughandroid.vigor.domain.exercise.ExerciseId;
  */
 public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.ExerciseRepository {
 
-    // TODO: persist stuff somewhere
+    // TODO: persist somewhere
     private final HashMap<ExerciseId, Exercise> lookup = new HashMap<>();
 
-    public @NotNull Observable<Exercise> addExercise(@NotNull Exercise exercise) {
-        // TODO: Better to do this here, or when the exercise instance is created?
+    @NotNull
+    @Override
+    public Observable<Exercise> addExercise(@NotNull Exercise exercise) {
         if (exercise.id() == null) {
+            // TODO: Better to do this here, or when the instance is created?
             exercise = exercise.withId(ExerciseId.create(lookup.size() + 1));
         }
         lookup.put(exercise.id(), exercise);
         return Observable.just(exercise);
     }
 
-    public @NotNull Observable<Exercise> getExercise(@NotNull ExerciseId id) {
-        Exercise savedExercise = lookup.get(id);
+    @NotNull
+    @Override
+    public Observable<Exercise> getExercise(@NotNull ExerciseId id) {
         Observable<Exercise> result = Observable.empty();
-        if (savedExercise != null) {
-            Observable.just(savedExercise);
+        if (lookup.containsKey(id)) {
+            Observable.just(lookup.get(id));
         }
         return result;
     }
