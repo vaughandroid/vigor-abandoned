@@ -13,7 +13,7 @@ import vaughandroid.vigor.domain.usecase.UseCase;
  *
  * @author Chris
  */
-public class AddExerciseUseCase implements UseCase<SavedExercise> {
+public class AddExerciseUseCase implements UseCase<Exercise> {
 
     private final ExerciseRepository repository;
     private @Nullable Exercise data;
@@ -28,7 +28,7 @@ public class AddExerciseUseCase implements UseCase<SavedExercise> {
     }
 
     @Override
-    public @NotNull Observable<SavedExercise> createObservable() {
+    public @NotNull Observable<Exercise> createObservable() {
         if (data == null) {
             throw new NullPointerException("data is null");
         }

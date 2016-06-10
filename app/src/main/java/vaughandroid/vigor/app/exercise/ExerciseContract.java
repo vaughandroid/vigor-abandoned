@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.math.BigDecimal;
 
-import vaughandroid.vigor.domain.exercise.SavedExercise;
+import vaughandroid.vigor.domain.exercise.Exercise;
 
 /**
  * MVP contract for {@link ExerciseActivity}
@@ -18,7 +18,7 @@ public interface ExerciseContract {
         void setWeightUnits(@NonNull String units);
         void setReps(int reps);
 
-        void finish(SavedExercise savedExercise);
+        void finish(Exercise exercise);
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {

@@ -11,7 +11,7 @@ import rx.Observable;
  */
 public interface ExerciseRepository {
 
-    @NotNull Observable<SavedExercise> addExercise(@NotNull Exercise exercise);
+    @NotNull Observable<Exercise> addExercise(@NotNull Exercise exercise);
 
-    @NotNull Observable<SavedExercise> getExercise(@NotNull SavedExerciseId id);
+    @NotNull Observable<Exercise> getExercise(@NotNull ExerciseId id);
 }

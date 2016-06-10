@@ -15,7 +15,6 @@ import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
-import vaughandroid.vigor.domain.exercise.SavedExercise;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 
 /**
@@ -31,7 +30,6 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @NonNull private Exercise exercise = Exercise.builder().build();
-    @Nullable private SavedExercise savedExercise;
 
     @Nullable ExerciseContract.View view;
 
@@ -84,17 +82,17 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
         addExerciseSubscription = useCaseExecutor.subscribe(addExerciseUseCase, new ExerciseSubscriber());
     }
 
-    private void onSaved(SavedExercise savedExercise) {
-        this.savedExercise = savedExercise;
+    private void onSaved(Exercise exercise) {
+        this.exercise = exercise;
         if (view != null) {
-            view.finish(savedExercise);
+            view.finish(exercise);
         }
         if (addExerciseSubscription != null) {
             addExerciseSubscription.unsubscribe();
         }
     }
 
-    private class ExerciseSubscriber extends Subscriber<SavedExercise> {
+    private class ExerciseSubscriber extends Subscriber<Exercise> {
 
         @Override
         public void onCompleted() {
@@ -107,9 +105,9 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
         }
 
         @Override
-        public void onNext(SavedExercise savedExercise) {
+        public void onNext(Exercise exercise) {
             logger.debug("onNext");
-            onSaved(savedExercise);
+            onSaved(exercise);
         }
     }
 }

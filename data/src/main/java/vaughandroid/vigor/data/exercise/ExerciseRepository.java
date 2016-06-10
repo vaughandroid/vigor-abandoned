@@ -5,9 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 import rx.Observable;
-import vaughandroid.vigor.domain.exercise.SavedExercise;
 import vaughandroid.vigor.domain.exercise.Exercise;
-import vaughandroid.vigor.domain.exercise.SavedExerciseId;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
 
 /**
  * Implementation of {@link vaughandroid.vigor.domain.exercise.ExerciseRepository}
@@ -17,17 +16,20 @@ import vaughandroid.vigor.domain.exercise.SavedExerciseId;
 public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.ExerciseRepository {
 
     // TODO: persist stuff somewhere
-    private final HashMap<SavedExerciseId, SavedExercise> lookup = new HashMap<>();
+    private final HashMap<ExerciseId, Exercise> lookup = new HashMap<>();
 
-    public @NotNull Observable<SavedExercise> addExercise(@NotNull Exercise exercise) {
-        SavedExercise savedExercise = SavedExercise.create(SavedExerciseId.create(1), exercise);
-        lookup.put(savedExercise.id(), savedExercise);
-        return Observable.just(savedExercise);
+    public @NotNull Observable<Exercise> addExercise(@NotNull Exercise exercise) {
+        // TODO: Better to do this here, or when the exercise instance is created?
+        if (exercise.id() == null) {
+            exercise = exercise.withId(ExerciseId.create(lookup.size() + 1));
+        }
+        lookup.put(exercise.id(), exercise);
+        return Observable.just(exercise);
     }
 
-    public @NotNull Observable<SavedExercise> getExercise(@NotNull SavedExerciseId id) {
-        SavedExercise savedExercise = lookup.get(id);
-        Observable<SavedExercise> result = Observable.empty();
+    public @NotNull Observable<Exercise> getExercise(@NotNull ExerciseId id) {
+        Exercise savedExercise = lookup.get(id);
+        Observable<Exercise> result = Observable.empty();
         if (savedExercise != null) {
             Observable.just(savedExercise);
         }

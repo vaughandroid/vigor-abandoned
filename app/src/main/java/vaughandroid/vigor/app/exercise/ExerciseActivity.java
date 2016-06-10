@@ -21,7 +21,7 @@ import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
-import vaughandroid.vigor.domain.exercise.SavedExercise;
+import vaughandroid.vigor.domain.exercise.Exercise;
 
 /**
  * @author Chris
@@ -103,8 +103,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void finish(SavedExercise savedExercise) {
-        setResult(RESULT_OK, new Intent().putExtra(EXTRA_SAVED_EXERCISE, savedExercise));
+    public void finish(Exercise exercise) {
+        setResult(RESULT_OK, new Intent().putExtra(EXTRA_SAVED_EXERCISE, exercise));
     }
 
     public static class IntentBuilder {
@@ -113,8 +113,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
         private IntentBuilder() {}
 
-        public IntentBuilder savedExercise(SavedExercise savedExercise) {
-            extras.putSerializable(EXTRA_SAVED_EXERCISE, savedExercise);
+        public IntentBuilder exercise(Exercise exercise) {
+            extras.putSerializable(EXTRA_SAVED_EXERCISE, exercise);
             return this;
         }
 
