@@ -17,7 +17,7 @@ public interface ExerciseContract {
         void setWeightUnits(@NonNull String units);
         void setReps(int reps);
 
-        void finish();
+        void onSaved();
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {

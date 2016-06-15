@@ -153,7 +153,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void finish() {
+    public void onSaved() {
         setResult(RESULT_OK);
         finish();
     }

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,13 +31,12 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
 
     private final UseCaseExecutor useCaseExecutor;
     private final AddExerciseUseCase addExerciseUseCase;
+    private final List<Subscription> subscriptions = new ArrayList<>();
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Exercise exercise;
 
     @Nullable ExerciseContract.View view;
-
-    @Nullable private Subscription addExerciseSubscription;
 
     @Inject
     public ExercisePresenter(ExerciseId exerciseId, UseCaseExecutor useCaseExecutor,
@@ -44,13 +45,13 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
         this.addExerciseUseCase = addExerciseUseCase;
 
         getExerciseUseCase.setId(exerciseId);
-        useCaseExecutor.subscribe(getExerciseUseCase, new BaseSubscriber<Exercise>() {
+        subscriptions.add(useCaseExecutor.subscribe(getExerciseUseCase, new BaseSubscriber<Exercise>() {
             @Override
             public void onNext(Exercise exercise) {
                 super.onNext(exercise);
                 setExercise(exercise);
             }
-        });
+        }));
     }
 
     @Override
@@ -61,10 +62,10 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void destroy() {
         init(null);
-        if (addExerciseSubscription != null) {
-            addExerciseSubscription.unsubscribe();
-            addExerciseSubscription = null;
+        for (Subscription subscription : subscriptions) {
+            subscription.unsubscribe();
         }
+        subscriptions.clear();
     }
 
     @Override
@@ -130,13 +131,13 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void onValuesConfirmed() {
         addExerciseUseCase.setExercise(exercise);
-        addExerciseSubscription = useCaseExecutor.subscribe(addExerciseUseCase, new BaseSubscriber<Exercise>() {
+        subscriptions.add(useCaseExecutor.subscribe(addExerciseUseCase, new BaseSubscriber<Exercise>() {
             @Override
             public void onNext(Exercise exercise) {
                 super.onNext(exercise);
                 onSaved(exercise);
             }
-        });
+        }));
     }
 
     private void setExercise(@NonNull Exercise exercise) {
@@ -147,10 +148,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     private void onSaved(Exercise exercise) {
         this.setExercise(exercise);
         if (view != null) {
-            view.finish();
-        }
-        if (addExerciseSubscription != null) {
-            addExerciseSubscription.unsubscribe();
+            view.onSaved();
         }
     }
 }
