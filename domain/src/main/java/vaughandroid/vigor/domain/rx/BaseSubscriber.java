@@ -5,7 +5,7 @@ import rx.Subscriber;
 /**
  * No-op {@link Subscriber}, to be used as a base when we are only interested in one or two event types.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public abstract class BaseSubscriber<T> extends Subscriber<T> {
     @Override

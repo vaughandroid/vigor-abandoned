@@ -11,7 +11,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class WorkoutRepository implements vaughandroid.vigor.domain.workout.WorkoutRepository {
 

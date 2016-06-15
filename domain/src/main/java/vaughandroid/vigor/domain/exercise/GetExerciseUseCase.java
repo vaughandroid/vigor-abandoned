@@ -10,7 +10,7 @@ import vaughandroid.vigor.domain.usecase.UseCase;
 /**
  * {@link UseCase} for getting existing {@link Exercise} data.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class GetExerciseUseCase implements UseCase<Exercise> {
 

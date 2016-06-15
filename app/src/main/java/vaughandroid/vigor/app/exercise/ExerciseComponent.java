@@ -6,7 +6,7 @@ import vaughandroid.vigor.app.di.ActivityScope;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Subcomponent(modules = {
         ExerciseModule.class,

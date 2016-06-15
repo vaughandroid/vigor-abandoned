@@ -5,7 +5,7 @@ import com.google.auto.value.AutoValue;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @AutoValue
 public abstract class WorkoutId {

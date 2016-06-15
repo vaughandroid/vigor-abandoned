@@ -12,7 +12,7 @@ import vaughandroid.vigor.app.di.ApplicationScope;
 /**
  * Provides {@link Scheduler}s for injection.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Module
 public class SchedulerModule {

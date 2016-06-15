@@ -14,7 +14,7 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @AutoValue
 public abstract class Workout implements Serializable {

@@ -7,7 +7,7 @@ import vaughandroid.vigor.domain.exercise.ExerciseId;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class ExerciseIdFactory {
 
