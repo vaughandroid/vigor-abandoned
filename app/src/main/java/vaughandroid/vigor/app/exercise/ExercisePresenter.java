@@ -10,11 +10,13 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
+import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
+import vaughandroid.vigor.domain.rx.BaseSubscriber;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 
 /**
@@ -29,16 +31,26 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     private final AddExerciseUseCase addExerciseUseCase;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @NonNull private Exercise exercise = Exercise.builder().build();
+    private Exercise exercise;
 
     @Nullable ExerciseContract.View view;
 
     @Nullable private Subscription addExerciseSubscription;
 
     @Inject
-    public ExercisePresenter(UseCaseExecutor useCaseExecutor, AddExerciseUseCase addExerciseUseCase) {
+    public ExercisePresenter(ExerciseId exerciseId, UseCaseExecutor useCaseExecutor,
+            GetExerciseUseCase getExerciseUseCase, AddExerciseUseCase addExerciseUseCase) {
         this.useCaseExecutor = useCaseExecutor;
         this.addExerciseUseCase = addExerciseUseCase;
+
+        getExerciseUseCase.setId(exerciseId);
+        useCaseExecutor.subscribe(getExerciseUseCase, new BaseSubscriber<Exercise>() {
+            @Override
+            public void onNext(Exercise exercise) {
+                super.onNext(exercise);
+                setExercise(exercise);
+            }
+        });
     }
 
     @Override
@@ -48,66 +60,97 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
 
     @Override
     public void destroy() {
-        setView(null);
-        addExerciseSubscription.unsubscribe();
-        addExerciseSubscription = null;
+        init(null);
+        if (addExerciseSubscription != null) {
+            addExerciseSubscription.unsubscribe();
+            addExerciseSubscription = null;
+        }
     }
 
     @Override
-    public void setView(@Nullable ExerciseContract.View view) {
+    public void init(@Nullable ExerciseContract.View view) {
         this.view = view;
         initView();
     }
 
     private void initView() {
-        if (view != null) {
+        updateViewValues();
+    }
+
+    private void updateViewValues() {
+        if (view != null && exercise != null) {
             view.setWeight(exercise.weight());
+            view.setWeightUnits("Kg"); // TODO: 15/06/2016 implement weight units setting
             view.setReps(exercise.reps());
         }
     }
 
     @Override
-    public void onWeightChanged(@NonNull BigDecimal weight) {
-        exercise = exercise.withWeight(weight);
+    public void onWeightIncremented() {
+        setExercise(exercise.withWeight(exercise.weight().add(BigDecimal.ONE)));
     }
 
     @Override
-    public void onRepsChanged(int reps) {
-        exercise = exercise.withReps(reps);
+    public void onWeightDecremented() {
+        setExercise(exercise.withWeight(exercise.weight().subtract(BigDecimal.ONE)));
+    }
+
+    @Override
+    public void onWeightEntered(@NonNull String weight) {
+        try {
+            setExercise(exercise.withWeight(new BigDecimal(weight)));
+        } catch (NumberFormatException e) {
+            logger.warn("Caught invalid weight input: " + weight);
+            // Reset valid values.
+            updateViewValues();
+        }
+    }
+
+    @Override
+    public void onRepsEntered(@NonNull String reps) {
+        try {
+            setExercise(exercise.withReps(Integer.valueOf(reps)));
+        } catch (NumberFormatException e) {
+            logger.warn("Caught invalid reps input: " + reps);
+            // Reset valid values.
+            updateViewValues();
+        }
+    }
+
+    @Override
+    public void onRepsIncremented() {
+        setExercise(exercise.withReps(exercise.reps() + 1));
+    }
+
+    @Override
+    public void onRepsDecremented() {
+        setExercise(exercise.withReps(exercise.reps() - 1));
     }
 
     @Override
     public void onValuesConfirmed() {
-        addExerciseUseCase.setData(exercise);
-        addExerciseSubscription = useCaseExecutor.subscribe(addExerciseUseCase, new ExerciseSubscriber());
+        addExerciseUseCase.setExercise(exercise);
+        addExerciseSubscription = useCaseExecutor.subscribe(addExerciseUseCase, new BaseSubscriber<Exercise>() {
+            @Override
+            public void onNext(Exercise exercise) {
+                super.onNext(exercise);
+                onSaved(exercise);
+            }
+        });
+    }
+
+    private void setExercise(@NonNull Exercise exercise) {
+        this.exercise = exercise;
+        updateViewValues();
     }
 
     private void onSaved(Exercise exercise) {
-        this.exercise = exercise;
+        this.setExercise(exercise);
         if (view != null) {
-            view.finish(exercise);
+            view.finish();
         }
         if (addExerciseSubscription != null) {
             addExerciseSubscription.unsubscribe();
-        }
-    }
-
-    private class ExerciseSubscriber extends Subscriber<Exercise> {
-
-        @Override
-        public void onCompleted() {
-            logger.debug("onCompleted");
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            logger.error("onError", e);
-        }
-
-        @Override
-        public void onNext(Exercise exercise) {
-            logger.debug("onNext");
-            onSaved(exercise);
         }
     }
 }

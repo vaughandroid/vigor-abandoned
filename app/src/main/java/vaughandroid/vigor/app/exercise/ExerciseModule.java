@@ -3,6 +3,7 @@ package vaughandroid.vigor.app.exercise;
 import dagger.Module;
 import dagger.Provides;
 import vaughandroid.vigor.app.di.ActivityScope;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.ExerciseRepository;
 
 /**
@@ -12,6 +13,12 @@ import vaughandroid.vigor.domain.exercise.ExerciseRepository;
  */
 @Module
 public class ExerciseModule {
+
+    private final ExerciseId exerciseId;
+
+    public ExerciseModule(ExerciseId exerciseId) {
+        this.exerciseId = exerciseId;
+    }
 
     @Provides
     @ActivityScope

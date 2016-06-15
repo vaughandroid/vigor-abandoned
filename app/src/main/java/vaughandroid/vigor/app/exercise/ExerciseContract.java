@@ -1,10 +1,9 @@
 package vaughandroid.vigor.app.exercise;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
-
-import vaughandroid.vigor.domain.exercise.Exercise;
 
 /**
  * MVP contract for {@link ExerciseActivity}
@@ -18,14 +17,20 @@ public interface ExerciseContract {
         void setWeightUnits(@NonNull String units);
         void setReps(int reps);
 
-        void finish(Exercise exercise);
+        void finish();
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
-        void setView(View view);
+        void init(@Nullable View view);
 
-        void onWeightChanged(@NonNull BigDecimal weight);
-        void onRepsChanged(int reps);
+        void onWeightIncremented();
+        void onWeightDecremented();
+        void onWeightEntered(@NonNull String weight);
+
+        void onRepsIncremented();
+        void onRepsDecremented();
+        void onRepsEntered(@NonNull String reps);
+
         void onValuesConfirmed();
     }
 }

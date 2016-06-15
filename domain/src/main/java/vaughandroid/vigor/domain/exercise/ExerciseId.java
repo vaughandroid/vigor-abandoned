@@ -12,9 +12,9 @@ import java.io.Serializable;
 @AutoValue
 public abstract class ExerciseId implements Serializable {
 
-    public static ExerciseId create(int value) {
-        return new AutoValue_ExerciseId(value);
+    public static ExerciseId create(String guid) {
+        return new AutoValue_ExerciseId(guid);
     }
 
-    public abstract int value();
+    public abstract String guid();
 }

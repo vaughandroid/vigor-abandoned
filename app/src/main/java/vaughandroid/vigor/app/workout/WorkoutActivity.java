@@ -52,6 +52,5 @@ public class WorkoutActivity extends VigorActivity {
 
     @OnClick(R.id.fab)
     void onClickFab() {
-        startActivity(ExerciseActivity.intentBuilder().build(getApplicationContext()));
     }
 }

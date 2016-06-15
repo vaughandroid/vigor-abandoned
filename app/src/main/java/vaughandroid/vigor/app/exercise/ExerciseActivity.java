@@ -21,34 +21,78 @@ import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
-import vaughandroid.vigor.domain.exercise.Exercise;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
 
 /**
  * @author Chris
  */
 public class ExerciseActivity extends VigorActivity implements ExerciseContract.View {
 
-    private static final String EXTRA_SAVED_EXERCISE = "savedExercise";
+    private static final String EXTRA_SAVED_EXERCISE_ID = "savedExerciseId";
 
-    public static IntentBuilder intentBuilder() {
-        return new IntentBuilder();
+    public static Intent createIntent(@NonNull Context context, @NonNull ExerciseId exerciseId) {
+        Bundle extras = new Bundle();
+        extras.putSerializable(EXTRA_SAVED_EXERCISE_ID, exerciseId);
+        return new Intent(context, ExerciseActivity.class).putExtras(extras);
     }
 
     @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
     @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView repsNumberInputView;
 
-    @Inject ExerciseContract.Presenter presenter;
+    private ExerciseContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivityComponent().inject(this);
+        getActivityComponent()
+                .exerciseComponent(new ExerciseModule(getExerciseId()))
+                .inject(this);
 
+        initViews();
+    }
+
+    private ExerciseId getExerciseId() {
+        return (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_SAVED_EXERCISE_ID);
+    }
+
+    private void initViews() {
         setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);
         initToolbar();
 
-        presenter.setView(this);
+        weightNumberInputView.setInputListener(new NumberInputView.InputListener() {
+            @Override
+            public void onIncrementClicked() {
+                presenter.onWeightIncremented();
+            }
+
+            @Override
+            public void onDecrementClicked() {
+                presenter.onWeightDecremented();
+            }
+
+            @Override
+            public void onValueEntered(String s) {
+                presenter.onWeightEntered(s);
+            }
+        });
+
+        repsNumberInputView.setInputListener(new NumberInputView.InputListener() {
+            @Override
+            public void onIncrementClicked() {
+                presenter.onRepsIncremented();
+            }
+
+            @Override
+            public void onDecrementClicked() {
+                presenter.onRepsDecremented();
+            }
+
+            @Override
+            public void onValueEntered(String s) {
+                presenter.onRepsEntered(s);
+            }
+        });
     }
 
     private void initToolbar() {
@@ -59,6 +103,12 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+    }
+
+    @Inject
+    void inject(ExerciseContract.Presenter presenter) {
+        this.presenter = presenter;
+        presenter.init(this);
     }
 
     @Override
@@ -103,23 +153,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void finish(Exercise exercise) {
-        setResult(RESULT_OK, new Intent().putExtra(EXTRA_SAVED_EXERCISE, exercise));
-    }
-
-    public static class IntentBuilder {
-
-        private final Bundle extras = new Bundle();
-
-        private IntentBuilder() {}
-
-        public IntentBuilder exercise(Exercise exercise) {
-            extras.putSerializable(EXTRA_SAVED_EXERCISE, exercise);
-            return this;
-        }
-
-        public Intent build(Context appContext) {
-            return new Intent(appContext, ExerciseActivity.class).putExtras(extras);
-        }
+    public void finish() {
+        setResult(RESULT_OK);
+        finish();
     }
 }
