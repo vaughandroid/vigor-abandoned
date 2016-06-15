@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import vaughandroid.vigor.app.di.ActivityComponent;
 import vaughandroid.vigor.app.di.ActivityComponentSource;
+import vaughandroid.vigor.app.di.ApplicationComponent;
 import vaughandroid.vigor.app.di.ApplicationComponentSource;
 
 /**
@@ -14,7 +15,7 @@ import vaughandroid.vigor.app.di.ApplicationComponentSource;
  *
  * @author Chris
  */
-public abstract class VigorActivity extends AppCompatActivity implements ActivityComponentSource {
+public abstract class VigorActivity extends AppCompatActivity implements ApplicationComponentSource , ActivityComponentSource {
 
     private ActivityComponent activityComponent;
 
@@ -22,8 +23,13 @@ public abstract class VigorActivity extends AppCompatActivity implements Activit
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activityComponent = ((ApplicationComponentSource) getApplication()).getApplicationComponent()
+        activityComponent = getApplicationComponent()
                 .activityComponent();
+    }
+
+    @Override
+    public ApplicationComponent getApplicationComponent() {
+        return ((ApplicationComponentSource) getApplication()).getApplicationComponent();
     }
 
     @Override
