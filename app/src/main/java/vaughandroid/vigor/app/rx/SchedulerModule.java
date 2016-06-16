@@ -20,7 +20,6 @@ public class SchedulerModule {
     @Provides @Named("subscription")
     @ApplicationScope
     public Scheduler provideSubscriptionScheduler() {
-        AndroidSchedulers.mainThread();
         return Schedulers.io();
     }
 

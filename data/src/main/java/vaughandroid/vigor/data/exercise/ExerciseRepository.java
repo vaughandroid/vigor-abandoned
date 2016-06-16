@@ -4,7 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 import rx.Observable;
+import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 
@@ -15,12 +18,22 @@ import vaughandroid.vigor.domain.exercise.ExerciseId;
  */
 public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.ExerciseRepository {
 
+    private final GuidFactory guidFactory;
     // TODO: persist somewhere
     private final HashMap<ExerciseId, Exercise> lookup = new HashMap<>();
+
+    @Inject
+    public ExerciseRepository(GuidFactory guidFactory) {
+        this.guidFactory = guidFactory;
+    }
 
     @NotNull
     @Override
     public Observable<Exercise> addExercise(@NotNull Exercise exercise) {
+        if (exercise.id() == null) {
+            // TODO: Better to do this here, or when the instance is created?
+            exercise = exercise.withId(guidFactory.newGuid());
+        }
         lookup.put(exercise.id(), exercise);
         return Observable.just(exercise);
     }

@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 
+import vaughandroid.vigor.app.mvp.LCEView;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
+
 /**
  * MVP contract for {@link ExerciseActivity}
  *
@@ -12,7 +15,7 @@ import java.math.BigDecimal;
  */
 public interface ExerciseContract {
 
-    interface View {
+    interface View extends LCEView {
         void setWeight(@NonNull BigDecimal weight);
         void setWeightUnits(@NonNull String units);
         void setReps(int reps);
@@ -21,7 +24,8 @@ public interface ExerciseContract {
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
-        void init(@Nullable View view);
+        void setView(@Nullable View view);
+        void setExerciseId(@Nullable ExerciseId exerciseId);
 
         void onWeightIncremented();
         void onWeightDecremented();

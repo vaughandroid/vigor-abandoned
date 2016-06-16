@@ -1,4 +1,4 @@
-package vaughandroid.vigor.data.exercise;
+package vaughandroid.vigor.data.utils;
 
 import javax.inject.Inject;
 
@@ -9,12 +9,12 @@ import vaughandroid.vigor.domain.exercise.ExerciseId;
  *
  * @author Chris
  */
-public class ExerciseIdFactory {
+public class GuidFactory {
 
     @Inject
-    public ExerciseIdFactory() {}
+    public GuidFactory() {}
 
-    public ExerciseId newId() {
+    public ExerciseId newGuid() {
         return ExerciseId.create("" + Math.random()); // TODO: 15/06/2016 implement proper GUID creation
     }
 }

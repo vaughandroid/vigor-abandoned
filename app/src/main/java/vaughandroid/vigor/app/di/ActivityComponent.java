@@ -1,7 +1,7 @@
 package vaughandroid.vigor.app.di;
 
 import dagger.Subcomponent;
-import vaughandroid.vigor.app.exercise.ExerciseComponent;
+import vaughandroid.vigor.app.exercise.ExerciseActivity;
 import vaughandroid.vigor.app.exercise.ExerciseModule;
 import vaughandroid.vigor.app.workout.WorkoutActivity;
 import vaughandroid.vigor.app.workout.WorkoutModule;
@@ -12,12 +12,12 @@ import vaughandroid.vigor.app.workout.WorkoutModule;
  * @author Chris
  */
 @Subcomponent(modules = {
+        ExerciseModule.class,
         WorkoutModule.class,
 })
 @ActivityScope
 public interface ActivityComponent {
 
-    ExerciseComponent exerciseComponent(ExerciseModule exerciseModule);
-
+    void inject(ExerciseActivity activity);
     void inject(WorkoutActivity activity);
 }

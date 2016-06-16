@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
@@ -30,10 +32,14 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     private static final String EXTRA_SAVED_EXERCISE_ID = "savedExerciseId";
 
-    public static Intent createIntent(@NonNull Context context, @NonNull ExerciseId exerciseId) {
+    public static Intent intentForNew(@NonNull Context context) {
+        return new Intent(context, ExerciseActivity.class);
+    }
+
+    public static Intent intentForExisting(@NonNull Context context, @NonNull ExerciseId exerciseId) {
         Bundle extras = new Bundle();
         extras.putSerializable(EXTRA_SAVED_EXERCISE_ID, exerciseId);
-        return new Intent(context, ExerciseActivity.class).putExtras(extras);
+        return intentForNew(context).putExtras(extras);
     }
 
     @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
@@ -44,15 +50,29 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivityComponent()
-                .exerciseComponent(new ExerciseModule(getExerciseId()))
-                .inject(this);
+        getActivityComponent().inject(this);
 
         initViews();
     }
 
+    @Nullable
     private ExerciseId getExerciseId() {
         return (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_SAVED_EXERCISE_ID);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showContent() {
+
+    }
+
+    @Override
+    public void showError() {
+
     }
 
     private void initViews() {
@@ -108,7 +128,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @Inject
     void inject(ExerciseContract.Presenter presenter) {
         this.presenter = presenter;
-        presenter.init(this);
+        presenter.setView(this);
     }
 
     @Override

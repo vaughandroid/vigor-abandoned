@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import rx.Observable;
 import rx.Scheduler;
+import rx.SingleSubscriber;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -29,13 +29,17 @@ public class UseCaseExecutor {
     }
 
     public <T> Subscription subscribe(@NotNull UseCase<T> useCase, @Nullable Subscriber<T> subscriber) {
-        return subscribe(useCase.createObservable(), subscriber);
-    }
-
-    public <T> Subscription subscribe(@NotNull Observable<T> observable, @Nullable Subscriber<T> subscriber) {
-        return observable
+        return useCase.createObservable()
                 .subscribeOn(subscriptionScheduler)
                 .observeOn(observationScheduler)
+                .subscribe(subscriber);
+    }
+
+    public <T> Subscription subscribe(@NotNull UseCase<T> useCase, @Nullable SingleSubscriber<T> subscriber) {
+        return useCase.createObservable()
+                .subscribeOn(subscriptionScheduler)
+                .observeOn(observationScheduler)
+                .toSingle()
                 .subscribe(subscriber);
     }
 }

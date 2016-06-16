@@ -12,13 +12,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.SingleSubscriber;
 import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
-import vaughandroid.vigor.domain.rx.BaseSubscriber;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 
 /**
@@ -31,45 +31,46 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
 
     private final UseCaseExecutor useCaseExecutor;
     private final AddExerciseUseCase addExerciseUseCase;
+    private final GetExerciseUseCase getExerciseUseCase;
     private final List<Subscription> subscriptions = new ArrayList<>();
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Exercise exercise;
-
     @Nullable ExerciseContract.View view;
 
     @Inject
-    public ExercisePresenter(ExerciseId exerciseId, UseCaseExecutor useCaseExecutor,
-            GetExerciseUseCase getExerciseUseCase, AddExerciseUseCase addExerciseUseCase) {
+    public ExercisePresenter(UseCaseExecutor useCaseExecutor, AddExerciseUseCase addExerciseUseCase,
+            GetExerciseUseCase getExerciseUseCase) {
         this.useCaseExecutor = useCaseExecutor;
         this.addExerciseUseCase = addExerciseUseCase;
-
-        getExerciseUseCase.setId(exerciseId);
-        subscriptions.add(useCaseExecutor.subscribe(getExerciseUseCase, new BaseSubscriber<Exercise>() {
-            @Override
-            public void onNext(Exercise exercise) {
-                super.onNext(exercise);
-                setExercise(exercise);
-            }
-        }));
+        this.getExerciseUseCase = getExerciseUseCase;
     }
 
     @Override
-    public void resume() {
-        initView();
-    }
+    public void setExerciseId(@Nullable ExerciseId exerciseId) {
+        if (exerciseId != null) {
+            getExerciseUseCase.setId(exerciseId);
+            subscriptions.add(useCaseExecutor.subscribe(getExerciseUseCase, new SingleSubscriber<Exercise>() {
+                @Override
+                public void onSuccess(Exercise exercise) {
+                    setExercise(exercise);
+                }
 
-    @Override
-    public void destroy() {
-        init(null);
-        for (Subscription subscription : subscriptions) {
-            subscription.unsubscribe();
+                @Override
+                public void onError(Throwable error) {
+                    if (view != null) {
+                        view.showError();
+                    }
+                }
+            }));
+        } else {
+            setExercise(Exercise.builder().build());
         }
-        subscriptions.clear();
     }
 
     @Override
-    public void init(@Nullable ExerciseContract.View view) {
+    public void setView(@Nullable ExerciseContract.View view) {
         this.view = view;
         initView();
     }
@@ -83,6 +84,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
             view.setWeight(exercise.weight());
             view.setWeightUnits("Kg"); // TODO: 15/06/2016 implement weight units setting
             view.setReps(exercise.reps());
+            view.showContent();
         }
     }
 
@@ -131,13 +133,33 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void onValuesConfirmed() {
         addExerciseUseCase.setExercise(exercise);
-        subscriptions.add(useCaseExecutor.subscribe(addExerciseUseCase, new BaseSubscriber<Exercise>() {
+        subscriptions.add(useCaseExecutor.subscribe(addExerciseUseCase, new SingleSubscriber<Exercise>() {
             @Override
-            public void onNext(Exercise exercise) {
-                super.onNext(exercise);
+            public void onSuccess(Exercise exercise) {
                 onSaved(exercise);
             }
+
+            @Override
+            public void onError(Throwable error) {
+                if (view != null) {
+                    view.showError();
+                }
+            }
         }));
+    }
+
+    @Override
+    public void resume() {
+        initView();
+    }
+
+    @Override
+    public void destroy() {
+        setView(null);
+        for (Subscription subscription : subscriptions) {
+            subscription.unsubscribe();
+        }
+        subscriptions.clear();
     }
 
     private void setExercise(@NonNull Exercise exercise) {
