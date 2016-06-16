@@ -31,8 +31,7 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
     @Override
     public Observable<Exercise> addExercise(@NotNull Exercise exercise) {
         if (exercise.id() == null) {
-            // TODO: Better to do this here, or when the instance is created?
-            exercise = exercise.withId(guidFactory.newGuid());
+            exercise = exercise.withId(ExerciseId.create(guidFactory.newGuid()));
         }
         lookup.put(exercise.id(), exercise);
         return Observable.just(exercise);

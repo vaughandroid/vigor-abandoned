@@ -18,6 +18,8 @@ import rx.Subscription;
  */
 public class UseCaseExecutor {
 
+    // TODO: could maintain a list of subscribers?
+
     private final Scheduler subscriptionScheduler;
     private final Scheduler observationScheduler;
 

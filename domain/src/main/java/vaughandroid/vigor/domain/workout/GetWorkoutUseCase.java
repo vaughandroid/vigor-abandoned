@@ -11,28 +11,29 @@ import vaughandroid.vigor.domain.usecase.UseCase;
 /**
  * TODO: javadoc
  *
+ *
  * @author Chris
  */
-public class AddWorkoutUseCase implements UseCase<Workout> {
+public class GetWorkoutUseCase implements UseCase<Workout> {
 
     private final WorkoutRepository repository;
     @Nullable
-    private Workout workout;
+    private WorkoutId workoutId;
 
     @Inject
-    public AddWorkoutUseCase(WorkoutRepository repository) {
+    public GetWorkoutUseCase(WorkoutRepository repository) {
         this.repository = repository;
     }
 
-    public void setWorkout(@NotNull Workout workout) {
-        this.workout = workout;
+    public void setWorkoutId(@NotNull WorkoutId workoutId) {
+        this.workoutId = workoutId;
     }
 
     @Override
     public Observable<Workout> createObservable() {
-        if (workout == null) {
-            throw new IllegalStateException("workout not set");
+        if (workoutId == null) {
+            throw new IllegalStateException("workoutId not set");
         }
-        return repository.addWorkout(workout);
+        return repository.getWorkout(workoutId);
     }
 }

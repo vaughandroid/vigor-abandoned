@@ -6,7 +6,7 @@
 <!--
     This view exists so that we can see a design preview of the included layouts.
     It's needed since merge tags aren't supported in preview yet.
-    See: https://code.google.com/p/android/issues/detail?id=61652
+    See: https://code.google.com/p/android/issues/detail?exerciseId=61652
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"

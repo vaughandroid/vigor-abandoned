@@ -50,7 +50,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void setExerciseId(@Nullable ExerciseId exerciseId) {
         if (exerciseId != null) {
-            getExerciseUseCase.setId(exerciseId);
+            getExerciseUseCase.setExerciseId(exerciseId);
             subscriptions.add(useCaseExecutor.subscribe(getExerciseUseCase, new SingleSubscriber<Exercise>() {
                 @Override
                 public void onSuccess(Exercise exercise) {

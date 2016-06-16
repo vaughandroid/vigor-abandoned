@@ -1,5 +1,6 @@
 package vaughandroid.vigor.domain.exercise;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -15,22 +16,22 @@ import vaughandroid.vigor.domain.usecase.UseCase;
 public class GetExerciseUseCase implements UseCase<Exercise> {
 
     private final ExerciseRepository repository;
-    @Nullable private ExerciseId id;
+    @Nullable private ExerciseId exerciseId;
 
     @Inject
     public GetExerciseUseCase(ExerciseRepository repository) {
         this.repository = repository;
     }
 
-    public void setId(ExerciseId id) {
-        this.id = id;
+    public void setExerciseId(@NotNull ExerciseId exerciseId) {
+        this.exerciseId = exerciseId;
     }
 
     @Override
     public Observable<Exercise> createObservable() {
-        if (id == null) {
-            throw new NullPointerException("id not set");
+        if (exerciseId == null) {
+            throw new IllegalStateException("exerciseId not set");
         }
-        return repository.getExercise(id);
+        return repository.getExercise(exerciseId);
     }
 }

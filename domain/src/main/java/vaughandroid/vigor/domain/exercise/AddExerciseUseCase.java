@@ -30,7 +30,7 @@ public class AddExerciseUseCase implements UseCase<Exercise> {
     @Override
     public @NotNull Observable<Exercise> createObservable() {
         if (exercise == null) {
-            throw new NullPointerException("exercise not set");
+            throw new IllegalStateException("exercise not set");
         }
         return repository.addExercise(exercise);
     }
