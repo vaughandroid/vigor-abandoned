@@ -36,7 +36,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
         return intentForNew(context).putExtra(EXTRA_WORKOUT_ID, workoutId);
     }
 
-    private WorkoutPresenter presenter;
+    @Inject WorkoutPresenter presenter;
 
     @BindView(R.id.content_workout_foo) TextView foo;
 
@@ -45,21 +45,25 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
 
+        initViews();
+        initPresenter();
+    }
+
+    private void initViews() {
         setContentView(R.layout.activity_workout);
         ButterKnife.bind(this);
         initToolbar();
     }
 
-    @Inject
-    void inject(WorkoutPresenter presenter) {
-        this.presenter = presenter;
+    private void initPresenter() {
         presenter.setView(this);
         presenter.setWorkoutId(getWorkoutId());
     }
 
     @Nullable
     private WorkoutId getWorkoutId() {
-        return (WorkoutId) getIntent().getExtras().getSerializable(EXTRA_WORKOUT_ID);
+        return getIntent().getExtras() != null ?
+                (WorkoutId) getIntent().getExtras().getSerializable(EXTRA_WORKOUT_ID) : null;
     }
 
     private void initToolbar() {

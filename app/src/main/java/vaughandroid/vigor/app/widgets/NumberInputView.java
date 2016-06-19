@@ -4,23 +4,29 @@
 
 package vaughandroid.vigor.app.widgets;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.base.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import vaughandroid.vigor.R;
 
@@ -28,20 +34,24 @@ import vaughandroid.vigor.R;
  * @author Chris
  */
 public class NumberInputView extends LinearLayout {
+    // TODO: 19/06/2016 There's likely a way to simplify the EditText interactions
 
-    public interface InputListener {
-        void onIncrementClicked();
-        void onDecrementClicked();
-        void onValueEntered(String s);
+    public interface ValueChangedListener {
+        void onValueChanged(BigDecimal newValue);
     }
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @BindView(R.id.view_number_input_TextInputLayout_value) TextInputLayout valueTextInputLayout;
     @BindView(R.id.view_number_input_EditText_value) EditText valueEditText;
     @BindView(R.id.view_number_input_TextView_units) TextView unitsTextView;
     @BindView(R.id.view_number_input_Button_less) Button lessButton;
     @BindView(R.id.view_number_input_Button_more) Button moreButton;
 
-    @Nullable
-    private InputListener inputListener;
+    @Nullable private BigDecimal value;
+    @Nullable private BigDecimal lastNotifiedValue;
+
+    @Nullable private ValueChangedListener valueChangedListener;
 
     public NumberInputView(Context context) {
         super(context);
@@ -73,20 +83,58 @@ public class NumberInputView extends LinearLayout {
             TypedArray typedArray =
                     context.obtainStyledAttributes(attrs, R.styleable.NumberInputView, defStyle, defStyleRes);
             try {
-                valueEditText.setHint(typedArray.getString(R.styleable.NumberInputView_label));
+                valueTextInputLayout.setHint(typedArray.getString(R.styleable.NumberInputView_label));
+                boolean showUnits = typedArray.getBoolean(R.styleable.NumberInputView_showUnits, false);
+                unitsTextView.setVisibility(showUnits ? VISIBLE : GONE);
             } finally {
                 typedArray.recycle();
             }
         }
     }
 
-    public void setValue(@NonNull BigDecimal value) {
-        valueEditText.setText(value.toPlainString());
+    @Nullable
+    public BigDecimal getValue() {
+        return value;
     }
 
-    @SuppressLint("SetTextI18n")
-    public void setValue(int value) {
-        valueEditText.setText(Integer.toString(value));
+    @NonNull
+    public BigDecimal getValueOrZero() {
+        return value != null ? value : BigDecimal.ZERO;
+    }
+
+    public void setValue(@Nullable BigDecimal value) {
+        setValueInternal(value, true);
+    }
+
+    public void setValue(@Nullable Integer valueInt) {
+        BigDecimal value = valueInt != null ? BigDecimal.valueOf(valueInt) : null;
+        setValueInternal(value, true);
+    }
+
+    private void setValueInternal(@Nullable BigDecimal value, boolean notifyIfChanged) {
+        if (!Objects.equal(this.value, value)) {
+            this.value = value;
+            updateValueEditText(value);
+            if (notifyIfChanged) {
+                notifyValueChangedListenerIfChanged();
+            }
+        }
+    }
+
+    private void updateValueEditText(@Nullable BigDecimal value) {
+        String text = value != null ? value.toPlainString() : "";
+        if (!Objects.equal(text, valueEditText.getText().toString())) {
+            valueEditText.setText(text);
+            valueEditText.setSelection(text.length());
+        }
+    }
+
+    private void notifyValueChangedListenerIfChanged() {
+        if (valueChangedListener != null
+                && !Objects.equal(value, lastNotifiedValue)) {
+            lastNotifiedValue = value;
+            valueChangedListener.onValueChanged(value);
+        }
     }
 
     public void setUnits(@NonNull String units) {
@@ -97,36 +145,37 @@ public class NumberInputView extends LinearLayout {
         unitsTextView.setVisibility(shown ? GONE : VISIBLE);
     }
 
-    public void setMoreEnabled(boolean enabled) {
-        moreButton.setEnabled(enabled);
-    }
-
-    public void setLessEnabled(boolean enabled) {
-        lessButton.setEnabled(enabled);
-    }
-
-    public void setInputListener(@Nullable InputListener inputListener) {
-        this.inputListener = inputListener;
+    public void setValueChangedListener(@Nullable ValueChangedListener valueChangedListener) {
+        this.valueChangedListener = valueChangedListener;
     }
 
     @OnClick(R.id.view_number_input_Button_less)
     void onClickLess() {
-        if (inputListener != null) {
-            inputListener.onDecrementClicked();
-        }
+        setValueInternal(getValueOrZero().subtract(BigDecimal.ONE), true);
     }
 
     @OnClick(R.id.view_number_input_Button_more)
     void onClickMore() {
-        if (inputListener != null) {
-            inputListener.onIncrementClicked();
-        }
+        setValueInternal(getValueOrZero().add(BigDecimal.ONE), true);
     }
 
     @OnTextChanged(R.id.view_number_input_EditText_value)
     void onValueTextChanged() {
-        if (inputListener != null) {
-            inputListener.onValueEntered(valueEditText.getText().toString());
+        String valueString = valueEditText.getText().toString();
+        try {
+            BigDecimal value = new BigDecimal(valueString);
+            setValueInternal(value, false);
+            notifyValueChangedListenerIfChanged();
+        } catch (NumberFormatException e) {
+            logger.warn("Failed to parse value '{}'", valueString);
+        }
+    }
+
+    @OnFocusChange(R.id.view_number_input_EditText_value)
+    void onValueFocusChanged(boolean hasFocus) {
+        if (!hasFocus) {
+            // If the value in the field is invalid, then revert to the last valid value.
+            updateValueEditText(value);
         }
     }
 }

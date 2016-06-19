@@ -79,4 +79,15 @@ ext {
             testSupportRules : "com.android.support.test:rules:${testSupportVersion}",
             robolectric      : "org.robolectric:robolectric:${robolectricVersion}",
     ]
+
+    // Files which conflict during the packaging process
+    packagingExclusions = [
+            'LICENSE.txt',
+            'META-INF/DEPENDENCIES',
+            'META-INF/ASL2.0',
+            'META-INF/NOTICE',
+            'META-INF/LICENSE',
+            'META-INF/maven/com.google.guava/guava/pom.xml',
+            'META-INF/maven/com.google.guava/guava/pom.properties',
+    ]
 }

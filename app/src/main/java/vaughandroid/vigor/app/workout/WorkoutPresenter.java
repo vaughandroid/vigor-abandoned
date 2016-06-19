@@ -50,7 +50,7 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     }
 
     private void initView() {
-        if (view != null) {
+        if (view != null && workout != null) {
             view.setExercises(workout.exercises());
         }
     }

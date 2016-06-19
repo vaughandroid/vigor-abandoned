@@ -16,9 +16,9 @@ import vaughandroid.vigor.domain.exercise.ExerciseId;
 public interface ExerciseContract {
 
     interface View extends LCEView {
-        void setWeight(@NonNull BigDecimal weight);
+        void setWeight(@Nullable BigDecimal weight);
         void setWeightUnits(@NonNull String units);
-        void setReps(int reps);
+        void setReps(@Nullable Integer reps);
 
         void onSaved();
     }
@@ -27,14 +27,8 @@ public interface ExerciseContract {
         void setView(@Nullable View view);
         void setExerciseId(@Nullable ExerciseId exerciseId);
 
-        void onWeightIncremented();
-        void onWeightDecremented();
-        void onWeightEntered(@NonNull String weight);
-
-        void onRepsIncremented();
-        void onRepsDecremented();
-        void onRepsEntered(@NonNull String reps);
-
+        void onWeightEntered(@Nullable BigDecimal weight);
+        void onRepsEntered(@Nullable Integer reps);
         void onValuesConfirmed();
     }
 }

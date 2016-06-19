@@ -28,9 +28,7 @@
     <TextView
         android:id="@+id/view_number_input_TextView_units"
         style="@style/Vigor.Widget.TextView.Units"
-        android:visibility="gone"
-        tools:text="Units"
-        tools:visibility="visible"/>
+        tools:text="Units"/>
 
     <Button
         style="@style/Vigor.Widget.Button.NumberInput"

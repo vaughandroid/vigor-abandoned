@@ -7,11 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
@@ -42,10 +41,10 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         return intentForNew(context).putExtras(extras);
     }
 
+    @Inject ExerciseContract.Presenter presenter;
+
     @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
     @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView repsNumberInputView;
-
-    private ExerciseContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +52,49 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         getActivityComponent().inject(this);
 
         initViews();
+        initPresenter();
+    }
+
+    private void initViews() {
+        setContentView(R.layout.activity_exercise);
+        ButterKnife.bind(this);
+        initToolbar();
+
+        weightNumberInputView.setUnitsShown(true);
+        weightNumberInputView.setValueChangedListener(new NumberInputView.ValueChangedListener() {
+            @Override
+            public void onValueChanged(BigDecimal newValue) {
+                presenter.onWeightEntered(newValue);
+            }
+        });
+
+        repsNumberInputView.setValueChangedListener(new NumberInputView.ValueChangedListener() {
+            @Override
+            public void onValueChanged(BigDecimal newValue) {
+                presenter.onRepsEntered(newValue.intValue());
+            }
+        });
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+    }
+
+    private void initPresenter() {
+        presenter.setView(this);
+        presenter.setExerciseId(getExerciseId());
     }
 
     @Nullable
     private ExerciseId getExerciseId() {
-        return (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_SAVED_EXERCISE_ID);
+        return getIntent().getExtras() != null ?
+                (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_SAVED_EXERCISE_ID) : null;
     }
 
     @Override
@@ -73,62 +110,6 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @Override
     public void showError() {
 
-    }
-
-    private void initViews() {
-        setContentView(R.layout.activity_exercise);
-        ButterKnife.bind(this);
-        initToolbar();
-
-        weightNumberInputView.setInputListener(new NumberInputView.InputListener() {
-            @Override
-            public void onIncrementClicked() {
-                presenter.onWeightIncremented();
-            }
-
-            @Override
-            public void onDecrementClicked() {
-                presenter.onWeightDecremented();
-            }
-
-            @Override
-            public void onValueEntered(String s) {
-                presenter.onWeightEntered(s);
-            }
-        });
-
-        repsNumberInputView.setInputListener(new NumberInputView.InputListener() {
-            @Override
-            public void onIncrementClicked() {
-                presenter.onRepsIncremented();
-            }
-
-            @Override
-            public void onDecrementClicked() {
-                presenter.onRepsDecremented();
-            }
-
-            @Override
-            public void onValueEntered(String s) {
-                presenter.onRepsEntered(s);
-            }
-        });
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-        setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
-    }
-
-    @Inject
-    void inject(ExerciseContract.Presenter presenter) {
-        this.presenter = presenter;
-        presenter.setView(this);
     }
 
     @Override
@@ -158,7 +139,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void setWeight(@NonNull BigDecimal weight) {
+    public void setWeight(@Nullable BigDecimal weight) {
         weightNumberInputView.setValue(weight);
     }
 
@@ -168,7 +149,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void setReps(int reps) {
+    public void setReps(@Nullable Integer reps) {
         repsNumberInputView.setValue(reps);
     }
 

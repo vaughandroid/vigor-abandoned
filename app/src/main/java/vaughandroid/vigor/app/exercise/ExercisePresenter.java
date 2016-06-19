@@ -89,45 +89,19 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     }
 
     @Override
-    public void onWeightIncremented() {
-        setExercise(exercise.withWeight(exercise.weight().add(BigDecimal.ONE)));
+    public void onWeightEntered(@Nullable BigDecimal weight) {
+        setExercise(exercise.withWeight(weight));
     }
 
     @Override
-    public void onWeightDecremented() {
-        setExercise(exercise.withWeight(exercise.weight().subtract(BigDecimal.ONE)));
-    }
-
-    @Override
-    public void onWeightEntered(@NonNull String weight) {
+    public void onRepsEntered(@Nullable Integer reps) {
         try {
-            setExercise(exercise.withWeight(new BigDecimal(weight)));
-        } catch (NumberFormatException e) {
-            logger.warn("Caught invalid weight input: " + weight);
-            // Reset valid values.
-            updateViewValues();
-        }
-    }
-
-    @Override
-    public void onRepsEntered(@NonNull String reps) {
-        try {
-            setExercise(exercise.withReps(Integer.valueOf(reps)));
+            setExercise(exercise.withReps(reps));
         } catch (NumberFormatException e) {
             logger.warn("Caught invalid reps input: " + reps);
             // Reset valid values.
             updateViewValues();
         }
-    }
-
-    @Override
-    public void onRepsIncremented() {
-        setExercise(exercise.withReps(exercise.reps() + 1));
-    }
-
-    @Override
-    public void onRepsDecremented() {
-        setExercise(exercise.withReps(exercise.reps() - 1));
     }
 
     @Override
