@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="divider">@android:color/darker_gray</color>
+    <color name="list_header">#FF000000</color>
 </resources>

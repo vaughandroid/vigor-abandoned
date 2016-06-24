@@ -23,6 +23,7 @@ import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.exercise.ExerciseActivity;
+import vaughandroid.vigor.app.widgets.HorizontalDividerLineItemDecoration;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.workout.WorkoutId;
@@ -73,6 +74,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
         });
         exerciseListRecyclerView.setAdapter(exerciseAdapter);
         exerciseListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        exerciseListRecyclerView.addItemDecoration(new HorizontalDividerLineItemDecoration(this));
         exerciseListRecyclerView.setHasFixedSize(true);
     }
 

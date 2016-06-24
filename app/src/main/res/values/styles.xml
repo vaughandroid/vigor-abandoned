@@ -50,4 +50,25 @@
         <item name="android:tint">?android:textColorPrimaryInverse</item>
     </style>
 
+    <style name="Vigor.List.Item" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:paddingLeft">@dimen/list_padding_left</item>
+        <item name="android:paddingRight">@dimen/list_padding_right</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Vigor.List.Item.Header" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/list_header</item>
+    </style>
+
+    <style name="Vigor.List.Item.Detail" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>
