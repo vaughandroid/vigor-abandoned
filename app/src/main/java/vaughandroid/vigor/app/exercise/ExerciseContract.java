@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 import vaughandroid.vigor.app.mvp.LCEView;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
+import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
  * MVP contract for {@link ExerciseActivity}
@@ -25,7 +26,7 @@ public interface ExerciseContract {
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
         void setView(@Nullable View view);
-        void setExerciseId(@Nullable ExerciseId exerciseId);
+        void init(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
 
         void onWeightEntered(@Nullable BigDecimal weight);
         void onRepsEntered(@Nullable Integer reps);

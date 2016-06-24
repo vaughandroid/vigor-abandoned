@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import vaughandroid.vigor.domain.workout.WorkoutId;
+
 /**
  * Data for an exercise.
  *
@@ -17,12 +19,16 @@ import java.math.BigDecimal;
 public abstract class Exercise implements Serializable {
 
     public static Builder builder() {
-        return new AutoValue_Exercise.Builder();
+        return new AutoValue_Exercise.Builder()
+                .id(ExerciseId.UNASSIGNED);
     }
 
-    @Nullable
+    @NotNull
     public abstract ExerciseId id();
-    public abstract Exercise withId(@Nullable ExerciseId id);
+    public abstract Exercise withId(@NotNull ExerciseId id);
+
+    @NotNull
+    public abstract WorkoutId workoutId();
 
     @Nullable
     public abstract Integer reps();
@@ -34,7 +40,8 @@ public abstract class Exercise implements Serializable {
 
     @AutoValue.Builder
     public abstract static class Builder {
-        public abstract Builder id(@Nullable ExerciseId id);
+        public abstract Builder id(@NotNull ExerciseId id);
+        public abstract Builder workoutId(@NotNull WorkoutId workoutId);
         public abstract Builder reps(@Nullable Integer reps);
         public abstract Builder weight(@NotNull BigDecimal weight);
         public abstract Exercise build();

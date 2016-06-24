@@ -20,14 +20,15 @@ public interface WorkoutContract {
     interface View extends LCEView {
         void setExercises(@NonNull List<Exercise> exercises);
 
-        void openNewExerciseActivity();
-        void openExistingExerciseActivity(@NonNull ExerciseId exerciseId);
+        void openNewExerciseActivity(@NonNull WorkoutId workoutId);
+        void openExistingExerciseActivity(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
         void setView(@Nullable View view);
-        void setWorkoutId(@Nullable WorkoutId workoutId);
+        void setWorkoutId(@NonNull WorkoutId workoutId);
 
         void onAddExercise();
+        void onOpenExercise(@NonNull Exercise exercise);
     }
 }

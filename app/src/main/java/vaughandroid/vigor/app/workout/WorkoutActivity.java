@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.google.common.collect.Lists;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,7 +41,8 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
     @Inject WorkoutPresenter presenter;
 
-    @BindView(R.id.content_workout_foo) TextView foo;
+    @BindView(R.id.content_workout_RecyclerView_exercise_list) RecyclerView exerciseListRecyclerView;
+    private final ExerciseAdapter exerciseAdapter = new ExerciseAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +51,29 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
         initViews();
         initPresenter();
+
+        // XXX TEMP
+        setExercises(Lists.newArrayList(
+                Exercise.builder().workoutId(getWorkoutId()).reps(8).weight(new BigDecimal("456.5")).build(),
+                Exercise.builder().workoutId(getWorkoutId()).reps(13).weight(new BigDecimal("123.5")).build(),
+                Exercise.builder().workoutId(getWorkoutId()).reps(8).weight(new BigDecimal("20")).build()
+        ));
     }
 
     private void initViews() {
         setContentView(R.layout.activity_workout);
         ButterKnife.bind(this);
         initToolbar();
+
+        exerciseAdapter.setUserInteractionListener(new ExerciseAdapter.UserInteractionListener() {
+            @Override
+            public void onItemClicked(@NonNull Exercise exercise) {
+                presenter.onOpenExercise(exercise);
+            }
+        });
+        exerciseListRecyclerView.setAdapter(exerciseAdapter);
+        exerciseListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        exerciseListRecyclerView.setHasFixedSize(true);
     }
 
     private void initPresenter() {
@@ -60,10 +81,14 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
         presenter.setWorkoutId(getWorkoutId());
     }
 
-    @Nullable
+    @NonNull
     private WorkoutId getWorkoutId() {
-        return getIntent().getExtras() != null ?
-                (WorkoutId) getIntent().getExtras().getSerializable(EXTRA_WORKOUT_ID) : null;
+        // TODO: 21/06/2016 Can simplify once we can guarantee presence of the extra
+        WorkoutId result = null;
+        if (getIntent().getExtras() != null) {
+            result = (WorkoutId) getIntent().getExtras().getSerializable(EXTRA_WORKOUT_ID);
+        }
+        return result != null ? result : WorkoutId.UNASSIGNED;
     }
 
     private void initToolbar() {
@@ -100,17 +125,17 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
     @Override
     public void setExercises(@NonNull List<Exercise> exercises) {
-        foo.setText(exercises.size() + " exercises");
+        exerciseAdapter.setExercises(exercises);
     }
 
     @Override
-    public void openNewExerciseActivity() {
-        startActivity(ExerciseActivity.intentForNew(this));
+    public void openNewExerciseActivity(@NonNull WorkoutId workoutId) {
+        startActivity(ExerciseActivity.intentForNew(this, workoutId));
     }
 
     @Override
-    public void openExistingExerciseActivity(@NonNull ExerciseId exerciseId) {
-        startActivity(ExerciseActivity.intentForExisting(this, exerciseId));
+    public void openExistingExerciseActivity(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId) {
+        startActivity(ExerciseActivity.intentForExisting(this, workoutId, exerciseId));
     }
 
     @Override
@@ -127,4 +152,5 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     public void showError() {
 
     }
+
 }

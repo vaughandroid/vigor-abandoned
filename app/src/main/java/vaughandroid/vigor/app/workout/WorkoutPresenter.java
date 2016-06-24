@@ -1,6 +1,9 @@
 package vaughandroid.vigor.app.workout;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.google.common.base.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +15,8 @@ import javax.inject.Inject;
 
 import rx.SingleSubscriber;
 import rx.Subscription;
+import vaughandroid.vigor.domain.exercise.Exercise;
+import vaughandroid.vigor.domain.rx.BaseSubscriber;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 import vaughandroid.vigor.domain.workout.AddWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
@@ -37,7 +42,8 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     @Nullable private WorkoutContract.View view;
 
     @Inject
-    public WorkoutPresenter(UseCaseExecutor useCaseExecutor, AddWorkoutUseCase addWorkoutUseCase, GetWorkoutUseCase getWorkoutUseCase) {
+    public WorkoutPresenter(UseCaseExecutor useCaseExecutor, AddWorkoutUseCase addWorkoutUseCase,
+            GetWorkoutUseCase getWorkoutUseCase) {
         this.useCaseExecutor = useCaseExecutor;
         this.getWorkoutUseCase = getWorkoutUseCase;
         this.addWorkoutUseCase = addWorkoutUseCase;
@@ -56,14 +62,36 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     }
 
     @Override
-    public void setWorkoutId(@Nullable WorkoutId workoutId) {
-        if (workoutId != null) {
-            subscriptions.add(useCaseExecutor.subscribe(getWorkoutUseCase, new SingleSubscriber<Workout>() {
+    public void setWorkoutId(@NonNull WorkoutId workoutId) {
+        if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
+            workout = Workout.builder().build();
+        } else {
+            subscriptions.add(useCaseExecutor.subscribe(getWorkoutUseCase, new BaseSubscriber<Workout>() {
                 @Override
-                public void onSuccess(Workout workout) {
+                public void onError(Throwable error) {
+                    if (view != null) {
+                        view.showError();
+                    }
+                }
+
+                @Override
+                public void onNext(Workout workout) {
                     if (view != null) {
                         view.setExercises(workout.exercises());
                     }
+                }
+            }));
+        }
+    }
+
+    @Override
+    public void onAddExercise() {
+        if (workout == null) {
+            useCaseExecutor.subscribe(addWorkoutUseCase, new SingleSubscriber<Workout>() {
+                @Override
+                public void onSuccess(Workout workout) {
+                    WorkoutPresenter.this.workout = workout;
+                    onAddExercise();
                 }
 
                 @Override
@@ -72,16 +100,17 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
                         view.showError();
                     }
                 }
-            }));
-        } else {
-            workout = Workout.builder().build();
+            });
+        } else if (view != null) {
+            // TODO: 19/06/2016 Find a better way of dealing with IDs
+            view.openNewExerciseActivity(workout.id());
         }
     }
 
     @Override
-    public void onAddExercise() {
+    public void onOpenExercise(@NonNull Exercise exercise) {
         if (view != null) {
-            view.openNewExerciseActivity();
+            view.openExistingExerciseActivity(workout.id(), exercise.id());
         }
     }
 

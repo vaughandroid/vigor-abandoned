@@ -2,6 +2,8 @@ package vaughandroid.vigor.domain.exercise;
 
 import com.google.auto.value.AutoValue;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /**
@@ -12,9 +14,12 @@ import java.io.Serializable;
 @AutoValue
 public abstract class ExerciseId implements Serializable {
 
+    public static final ExerciseId UNASSIGNED = create("unassigned");
+
     public static ExerciseId create(String guid) {
         return new AutoValue_ExerciseId(guid);
     }
 
+    @NotNull
     public abstract String guid();
 }

@@ -1,5 +1,7 @@
 package vaughandroid.vigor.data.exercise;
 
+import com.google.common.base.Objects;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -30,7 +32,7 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
     @NotNull
     @Override
     public Observable<Exercise> addExercise(@NotNull Exercise exercise) {
-        if (exercise.id() == null) {
+        if (Objects.equal(exercise.id(), ExerciseId.UNASSIGNED)) {
             exercise = exercise.withId(ExerciseId.create(guidFactory.newGuid()));
         }
         lookup.put(exercise.id(), exercise);

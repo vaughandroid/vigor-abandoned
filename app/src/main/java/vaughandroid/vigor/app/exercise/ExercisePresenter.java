@@ -3,6 +3,8 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
+import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
  * MVP presenter implementation for {@link ExerciseContract}
@@ -48,8 +51,10 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     }
 
     @Override
-    public void setExerciseId(@Nullable ExerciseId exerciseId) {
-        if (exerciseId != null) {
+    public void init(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId) {
+        if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
+            setExercise(Exercise.builder().workoutId(workoutId).build());
+        } else {
             getExerciseUseCase.setExerciseId(exerciseId);
             subscriptions.add(useCaseExecutor.subscribe(getExerciseUseCase, new SingleSubscriber<Exercise>() {
                 @Override
@@ -64,8 +69,6 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
                     }
                 }
             }));
-        } else {
-            setExercise(Exercise.builder().build());
         }
     }
 

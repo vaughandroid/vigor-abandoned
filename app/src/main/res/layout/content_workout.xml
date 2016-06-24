@@ -13,9 +13,10 @@
     tools:context=".app.workout.WorkoutActivity"
     tools:showIn="@layout/activity_workout">
 
-    <TextView
-        android:id="@+id/content_workout_foo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_workout_RecyclerView_exercise_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

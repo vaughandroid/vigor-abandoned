@@ -4,7 +4,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,10 +20,11 @@ public abstract class Workout implements Serializable {
 
     public static Builder builder() {
         return new AutoValue_Workout.Builder()
+                .id(WorkoutId.UNASSIGNED)
                 .exercises(ImmutableList.<Exercise>of());
     }
 
-    @Nullable
+    @NotNull
     public abstract WorkoutId id();
     public abstract Workout withId(WorkoutId workoutId);
 
@@ -35,7 +35,7 @@ public abstract class Workout implements Serializable {
     @AutoValue.Builder
     public static abstract class Builder {
 
-        public abstract Builder id(@Nullable WorkoutId id);
+        public abstract Builder id(@NotNull WorkoutId id);
         public abstract Builder exercises(@NotNull ImmutableList<Exercise> exercises);
 
         public Builder exercises(List<Exercise> exercises) {

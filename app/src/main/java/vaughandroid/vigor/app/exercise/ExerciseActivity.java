@@ -10,7 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
+
+import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
 
@@ -23,22 +24,25 @@ import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
+import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
  * @author Chris
  */
 public class ExerciseActivity extends VigorActivity implements ExerciseContract.View {
 
-    private static final String EXTRA_SAVED_EXERCISE_ID = "savedExerciseId";
+    private static final String EXTRA_WORKOUT_ID = "workoutId";
+    private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
 
-    public static Intent intentForNew(@NonNull Context context) {
-        return new Intent(context, ExerciseActivity.class);
+    public static Intent intentForNew(@NonNull Context context, @NonNull WorkoutId workoutId) {
+        return intentForExisting(context, workoutId, ExerciseId.UNASSIGNED);
     }
 
-    public static Intent intentForExisting(@NonNull Context context, @NonNull ExerciseId exerciseId) {
-        Bundle extras = new Bundle();
-        extras.putSerializable(EXTRA_SAVED_EXERCISE_ID, exerciseId);
-        return intentForNew(context).putExtras(extras);
+    public static Intent intentForExisting(@NonNull Context context, @NonNull WorkoutId workoutId,
+            @NonNull ExerciseId exerciseId) {
+        return new Intent(context, ExerciseActivity.class)
+                .putExtra(EXTRA_WORKOUT_ID, workoutId)
+                .putExtra(EXTRA_EXERCISE_ID, exerciseId);
     }
 
     @Inject ExerciseContract.Presenter presenter;
@@ -88,13 +92,21 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     private void initPresenter() {
         presenter.setView(this);
-        presenter.setExerciseId(getExerciseId());
+        presenter.init(getWorkoutId(), getExerciseId());
     }
 
-    @Nullable
+    @NonNull
+    private WorkoutId getWorkoutId() {
+        WorkoutId workoutId = (WorkoutId) getIntent().getExtras().getSerializable(EXTRA_WORKOUT_ID);
+        Preconditions.checkNotNull(workoutId, "Missing extra: %s", EXTRA_WORKOUT_ID);
+        return workoutId;
+    }
+
+    @NonNull
     private ExerciseId getExerciseId() {
-        return getIntent().getExtras() != null ?
-                (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_SAVED_EXERCISE_ID) : null;
+        ExerciseId exerciseId = (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_EXERCISE_ID);
+        Preconditions.checkNotNull(exerciseId, "Missing extra: %s", EXTRA_EXERCISE_ID);
+        return exerciseId;
     }
 
     @Override
@@ -134,7 +146,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @OnClick(R.id.content_exercise_Button_confirm)
-    void onClickConfirmButton(View view) {
+    void onClickConfirmButton() {
         presenter.onValuesConfirmed();
     }
 
