@@ -8,7 +8,7 @@ import vaughandroid.vigor.data.utils.GuidFactory;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Module
 public class UtilsModule {

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.google.common.base.Preconditions;
 
@@ -22,8 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
+import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
+import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
@@ -33,6 +36,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     private static final String EXTRA_WORKOUT_ID = "workoutId";
     private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
+
+    private static final int REQUEST_CODE_PICK_TYPE = 1;
 
     public static Intent intentForNew(@NonNull Context context, @NonNull WorkoutId workoutId) {
         return intentForExisting(context, workoutId, ExerciseId.UNASSIGNED);
@@ -47,6 +52,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     @Inject ExerciseContract.Presenter presenter;
 
+    @BindView(R.id.content_exercise_EditText_type) EditText typeEditText;
     @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
     @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView repsNumberInputView;
 
@@ -145,9 +151,33 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_CODE_PICK_TYPE:
+                presenter.onTypePicked(ExerciseTypePickerActivity.getTypeFromResult(data));
+                break;
+            default:
+                logger.warn("onActivityResult called with unexpected request code {}", requestCode);
+                break;
+        }
+    }
+
     @OnClick(R.id.content_exercise_Button_confirm)
     void onClickConfirmButton() {
         presenter.onValuesConfirmed();
+    }
+
+    @Override
+    public void setType(@NonNull ExerciseType type) {
+        typeEditText.setText(type.name());
+    }
+
+    @OnClick(R.id.content_exercise_EditText_type)
+    void onTypeClicked() {
+        presenter.onTypeClicked();
     }
 
     @Override
@@ -163,6 +193,11 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @Override
     public void setReps(@Nullable Integer reps) {
         repsNumberInputView.setValue(reps);
+    }
+
+    @Override
+    public void openTypePicker(@NonNull ExerciseType type) {
+        startActivityForResult(ExerciseTypePickerActivity.intent(this, type), REQUEST_CODE_PICK_TYPE);
     }
 
     @Override

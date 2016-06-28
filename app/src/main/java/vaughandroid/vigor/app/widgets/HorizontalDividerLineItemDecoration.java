@@ -12,7 +12,7 @@ import vaughandroid.vigor.R;
 /**
  * {@link android.support.v7.widget.RecyclerView.ItemDecoration} for drawing a simple divider line between items.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class HorizontalDividerLineItemDecoration extends RecyclerView.ItemDecoration {
 

@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,7 +21,7 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 /**
  * {@link android.support.v7.widget.RecyclerView.Adapter} for displaying {@link Exercise}s.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
@@ -39,7 +36,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Nullable
     private UserInteractionListener userInteractionListener;
 
-    public void setExercises(@NonNull Collection<Exercise> exercises) {
+    public void setExercises(@NonNull List<Exercise> exercises) {
         this.exercises.clear();
         this.exercises.addAll(exercises);
     }
@@ -75,6 +72,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         @BindView(R.id.item_exercise_TextView_name) TextView nameTextView;
         @BindView(R.id.item_exercise_TextView_values) TextView valuesTextView;
 
+        @SuppressWarnings("NullableProblems")
         @NonNull private Exercise exercise;
 
         public ExerciseViewHolder(View itemView) {
@@ -84,7 +82,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         public void setExercise(@NonNull Exercise exercise) {
             this.exercise = exercise;
-            nameTextView.setText(exercise.id().toString());
+            nameTextView.setText(exercise.id().guid());
             Context context = valuesTextView.getContext();
             String valuesText = context.getString(R.string.exercise_list_item_values_weight_and_reps, exercise.weight(),
                     "Kg", exercise.reps()); // XXX weight units

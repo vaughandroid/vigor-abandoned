@@ -17,9 +17,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="Vigor.Widget.EditText.Number" parent="Widget.AppCompat.EditText">
+    <style name="Vigor.Widget.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Vigor.Widget.EditText.Number">
         <item name="android:inputType">number|numberDecimal|numberSigned</item>
     </style>
 
@@ -30,9 +33,12 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
-    <style name="Vigor.Widget.TextView.Units" parent="TextAppearance.AppCompat.Medium">
+    <style name="Vigor.Widget.TextView" parent="TextAppearance.AppCompat.Medium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Vigor.Widget.TextView.Units">
         <item name="android:layout_gravity">bottom</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingLeft">5dp</item>

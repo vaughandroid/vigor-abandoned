@@ -10,10 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,7 +53,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
         initPresenter();
 
         // XXX TEMP
-        setExercises(Lists.newArrayList(
+        setExercises(ImmutableList.of(
                 Exercise.builder().workoutId(getWorkoutId()).reps(8).weight(new BigDecimal("456.5")).build(),
                 Exercise.builder().workoutId(getWorkoutId()).reps(13).weight(new BigDecimal("123.5")).build(),
                 Exercise.builder().workoutId(getWorkoutId()).reps(8).weight(new BigDecimal("20")).build()
@@ -126,7 +125,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     }
 
     @Override
-    public void setExercises(@NonNull List<Exercise> exercises) {
+    public void setExercises(@NonNull ImmutableList<Exercise> exercises) {
         exerciseAdapter.setExercises(exercises);
     }
 

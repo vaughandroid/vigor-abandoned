@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import vaughandroid.vigor.app.di.ActivityComponent;
 import vaughandroid.vigor.app.di.ActivityComponentSource;
 import vaughandroid.vigor.app.di.ApplicationComponent;
@@ -16,6 +19,8 @@ import vaughandroid.vigor.app.di.ApplicationComponentSource;
  * @author Chris
  */
 public abstract class VigorActivity extends AppCompatActivity implements ApplicationComponentSource , ActivityComponentSource {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private ActivityComponent activityComponent;
 

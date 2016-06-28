@@ -21,6 +21,7 @@ import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
+import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
@@ -92,6 +93,13 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     }
 
     @Override
+    public void onTypeClicked() {
+        if (view != null) {
+            view.openTypePicker(exercise.type());
+        }
+    }
+
+    @Override
     public void onWeightEntered(@Nullable BigDecimal weight) {
         setExercise(exercise.withWeight(weight));
     }
@@ -123,6 +131,11 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
                 }
             }
         }));
+    }
+
+    @Override
+    public void onTypePicked(@NonNull ExerciseType typeFromResult) {
+        exercise.withType(typeFromResult);
     }
 
     @Override
