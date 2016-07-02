@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.common.base.Preconditions;
 
@@ -52,7 +52,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     @Inject ExerciseContract.Presenter presenter;
 
-    @BindView(R.id.content_exercise_EditText_type) EditText typeEditText;
+    @BindView(R.id.content_exercise_TextView_type) TextView typeTextView;
     @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
     @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView repsNumberInputView;
 
@@ -172,10 +172,10 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
     @Override
     public void setType(@NonNull ExerciseType type) {
-        typeEditText.setText(type.name());
+        typeTextView.setText(type.name());
     }
 
-    @OnClick(R.id.content_exercise_EditText_type)
+    @OnClick(R.id.content_exercise_TextView_type)
     void onTypeClicked() {
         presenter.onTypeClicked();
     }

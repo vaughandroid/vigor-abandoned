@@ -99,6 +99,6 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
 
     @Override
     public void returnPickedType(@NonNull ExerciseType exerciseType) {
-
+        setResult(RESULT_OK, new Intent().putExtra(EXTRA_TYPE, exerciseType));
     }
 }

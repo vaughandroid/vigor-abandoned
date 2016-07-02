@@ -8,13 +8,9 @@ import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import rx.SingleSubscriber;
-import rx.Subscription;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.rx.BaseSubscriber;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
@@ -33,7 +29,6 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     private final UseCaseExecutor useCaseExecutor;
     private final AddWorkoutUseCase addWorkoutUseCase;
     private final GetWorkoutUseCase getWorkoutUseCase;
-    private final List<Subscription> subscriptions = new ArrayList<>();
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -66,7 +61,7 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
         if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
             workout = Workout.builder().build();
         } else {
-            subscriptions.add(useCaseExecutor.subscribe(getWorkoutUseCase, new BaseSubscriber<Workout>() {
+            useCaseExecutor.subscribe(getWorkoutUseCase, new BaseSubscriber<Workout>() {
                 @Override
                 public void onError(Throwable error) {
                     if (view != null) {
@@ -80,7 +75,7 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
                         view.setExercises(workout.exercises());
                     }
                 }
-            }));
+            });
         }
     }
 
@@ -122,9 +117,6 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     @Override
     public void destroy() {
         setView(null);
-        for (Subscription subscription : subscriptions) {
-            subscription.unsubscribe();
-        }
-        subscriptions.clear();
+        useCaseExecutor.unsubscribeAll();
     }
 }

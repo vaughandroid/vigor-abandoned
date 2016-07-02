@@ -9,7 +9,7 @@ import javax.inject.Named;
 import rx.Scheduler;
 import rx.SingleSubscriber;
 import rx.Subscriber;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Applies {@link Scheduler}s to {@link UseCase}s
@@ -18,10 +18,10 @@ import rx.Subscription;
  */
 public class UseCaseExecutor {
 
-    // TODO: could maintain a list of subscribers?
-
     private final Scheduler subscriptionScheduler;
     private final Scheduler observationScheduler;
+
+    private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     @Inject
     public UseCaseExecutor(@Named("subscription") Scheduler subscriptionScheduler,
@@ -30,18 +30,24 @@ public class UseCaseExecutor {
         this.observationScheduler = observationScheduler;
     }
 
-    public <T> Subscription subscribe(@NotNull UseCase<T> useCase, @Nullable Subscriber<T> subscriber) {
-        return useCase.createObservable()
+    public <T> void subscribe(@NotNull UseCase<T> useCase, @Nullable Subscriber<T> subscriber) {
+        compositeSubscription.add(useCase.createObservable()
                 .subscribeOn(subscriptionScheduler)
                 .observeOn(observationScheduler)
-                .subscribe(subscriber);
+                .subscribe(subscriber));
     }
 
-    public <T> Subscription subscribe(@NotNull UseCase<T> useCase, @Nullable SingleSubscriber<T> subscriber) {
-        return useCase.createObservable()
+    public <T> void subscribe(@NotNull UseCase<T> useCase, @Nullable SingleSubscriber<T> subscriber) {
+        compositeSubscription.add(useCase.createObservable()
                 .subscribeOn(subscriptionScheduler)
                 .observeOn(observationScheduler)
                 .toSingle()
-                .subscribe(subscriber);
+                .subscribe(subscriber));
+    }
+
+    public void unsubscribeAll() {
+        compositeSubscription.unsubscribe();
+        // Need a new CompositeSubscription instance if we are to add new subscriptions.
+        compositeSubscription = new CompositeSubscription();
     }
 }

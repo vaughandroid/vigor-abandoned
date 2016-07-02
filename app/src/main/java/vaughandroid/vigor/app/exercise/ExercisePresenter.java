@@ -9,13 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.SingleSubscriber;
-import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -36,7 +33,6 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     private final UseCaseExecutor useCaseExecutor;
     private final AddExerciseUseCase addExerciseUseCase;
     private final GetExerciseUseCase getExerciseUseCase;
-    private final List<Subscription> subscriptions = new ArrayList<>();
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,7 +53,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
             setExercise(Exercise.builder().workoutId(workoutId).build());
         } else {
             getExerciseUseCase.setExerciseId(exerciseId);
-            subscriptions.add(useCaseExecutor.subscribe(getExerciseUseCase, new SingleSubscriber<Exercise>() {
+            useCaseExecutor.subscribe(getExerciseUseCase, new SingleSubscriber<Exercise>() {
                 @Override
                 public void onSuccess(Exercise exercise) {
                     setExercise(exercise);
@@ -69,7 +65,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
                         view.showError();
                     }
                 }
-            }));
+            });
         }
     }
 
@@ -118,7 +114,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void onValuesConfirmed() {
         addExerciseUseCase.setExercise(exercise);
-        subscriptions.add(useCaseExecutor.subscribe(addExerciseUseCase, new SingleSubscriber<Exercise>() {
+        useCaseExecutor.subscribe(addExerciseUseCase, new SingleSubscriber<Exercise>() {
             @Override
             public void onSuccess(Exercise exercise) {
                 onSaved(exercise);
@@ -130,7 +126,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
                     view.showError();
                 }
             }
-        }));
+        });
     }
 
     @Override
@@ -146,10 +142,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void destroy() {
         setView(null);
-        for (Subscription subscription : subscriptions) {
-            subscription.unsubscribe();
-        }
-        subscriptions.clear();
+        useCaseExecutor.unsubscribeAll();
     }
 
     private void setExercise(@NonNull Exercise exercise) {

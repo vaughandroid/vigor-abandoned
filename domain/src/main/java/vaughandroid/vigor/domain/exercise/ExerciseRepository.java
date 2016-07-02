@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import rx.Observable;
 
 /**
- * Interface for a class which can store & retrieve exercise data.
+ * Interface for a class which can store & retrieve {@link Exercise} data.
  *
  * @author Chris
  */
