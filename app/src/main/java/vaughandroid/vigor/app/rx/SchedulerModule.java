@@ -1,12 +1,13 @@
 package vaughandroid.vigor.app.rx;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import vaughandroid.vigor.app.di.ApplicationScope;
-import vaughandroid.vigor.domain.usecase.ScheduleTransformer;
 
 /**
  * Provides {@link Scheduler}s for injection.
@@ -16,9 +17,15 @@ import vaughandroid.vigor.domain.usecase.ScheduleTransformer;
 @Module
 public class SchedulerModule {
 
-    @Provides
+    @Provides @Named("subscription")
     @ApplicationScope
-    public ScheduleTransformer provideScheduleTransformer() {
-        return new ScheduleTransformer(AndroidSchedulers.mainThread(), Schedulers.io());
+    public Scheduler provideSubscriptionScheduler() {
+        return Schedulers.io();
+    }
+
+    @Provides @Named("observation")
+    @ApplicationScope
+    public Scheduler provideObservationScheduler() {
+        return AndroidSchedulers.mainThread();
     }
 }

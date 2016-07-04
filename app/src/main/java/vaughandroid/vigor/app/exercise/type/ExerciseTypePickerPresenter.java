@@ -90,6 +90,6 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
 
     @Override
     public void destroy() {
-        useCaseExecutor.unsubscribeAll();
+        useCaseExecutor.unsubscribe();
     }
 }

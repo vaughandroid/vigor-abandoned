@@ -142,7 +142,7 @@ public class ExercisePresenter implements ExerciseContract.Presenter {
     @Override
     public void destroy() {
         setView(null);
-        useCaseExecutor.unsubscribeAll();
+        useCaseExecutor.unsubscribe();
     }
 
     private void setExercise(@NonNull Exercise exercise) {

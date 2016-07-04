@@ -1,9 +1,9 @@
 package vaughandroid.vigor.domain.usecase;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -12,44 +12,50 @@ import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Applies {@link Scheduler}s to {@link UseCase}s
+ * Applies {@link Scheduler}s to {@link UseCase}s, as well as managing a set of {@link rx.Subscription}s
  *
  * @author Chris
  */
 public class UseCaseExecutor {
 
-    private final Observable.Transformer<Object, Object> scheduleTransformer;
+    private final Observable.Transformer<Object, Object> transformer;
 
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     @Inject
-    public UseCaseExecutor(ScheduleTransformer scheduleTransformer) {
-        this.scheduleTransformer = scheduleTransformer;
+    public UseCaseExecutor(final @Named("subscription") Scheduler subscriptionScheduler,
+            final @Named("observation") Scheduler observationScheduler) {
+        transformer = new Observable.Transformer<Object, Object>() {
+            @Override
+            public Observable<Object> call(Observable<Object> objectObservable) {
+                return objectObservable
+                        .subscribeOn(subscriptionScheduler)
+                        .observeOn(observationScheduler);
+            }
+        };
     }
 
-    public <T> void subscribe(@NotNull UseCase<T> useCase, @Nullable Subscriber<T> subscriber) {
+    public <T> void subscribe(@NotNull UseCase<T> useCase, @NotNull Subscriber<T> subscriber) {
         compositeSubscription.add(useCase.createObservable()
-                .compose(this.<T>applySchedulers())
+                .compose(this.<T>getTransformer())
                 .subscribe(subscriber));
     }
 
-    public <T> void subscribe(@NotNull UseCase<T> useCase, @Nullable SingleSubscriber<T> subscriber) {
+    public <T> void subscribe(@NotNull UseCase<T> useCase, @NotNull SingleSubscriber<T> subscriber) {
         compositeSubscription.add(useCase.createObservable()
-                .compose(this.<T>applySchedulers())
+                .compose(this.<T>getTransformer())
                 .toSingle()
                 .subscribe(subscriber));
     }
 
-    // TODO: find a way to hide this in the ScheduleTransformer
-    @SuppressWarnings("unchecked")
-    private <T> Observable.Transformer<T, T> applySchedulers() {
-        return (Observable.Transformer<T, T>) scheduleTransformer;
-    }
-
-    public void unsubscribeAll() {
+    public void unsubscribe() {
         compositeSubscription.unsubscribe();
         // Need a new CompositeSubscription instance if we are to add new subscriptions.
         compositeSubscription = new CompositeSubscription();
     }
 
+    @SuppressWarnings("unchecked")
+    private <T> Observable.Transformer<T, T> getTransformer() {
+        return (Observable.Transformer<T, T>) transformer;
+    }
 }

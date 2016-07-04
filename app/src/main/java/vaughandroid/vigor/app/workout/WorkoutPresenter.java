@@ -117,6 +117,6 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     @Override
     public void destroy() {
         setView(null);
-        useCaseExecutor.unsubscribeAll();
+        useCaseExecutor.unsubscribe();
     }
 }
