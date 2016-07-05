@@ -12,9 +12,9 @@ buildscript {
 apply plugin: 'java'
 apply plugin: "net.ltgt.apt"
 
-def globalConfig = rootProject.ext
-sourceCompatibility = globalConfig.javaSourceCompatibility
-targetCompatibility = globalConfig.javaTargetCompatibility
+def globalConfig = rootProject.ext.javaConfig
+sourceCompatibility = globalConfig.sourceCompatibility
+targetCompatibility = globalConfig.targetCompatibility
 
 // Mimic Maven's 'provided' scope for compile-time dependencies.
 // See: https://sinking.in/blog/provided-scope-in-gradle/

@@ -1,22 +1,23 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply from: "${rootDir}/buildsystem/retrolambda.gradle"
 
 android {
     defaultPublishConfig "debug"
 
-    def globalConfig = rootProject.ext
+    def config = rootProject.ext.androidConfig
 
-    compileSdkVersion globalConfig.androidCompileSdkVersion
-    buildToolsVersion globalConfig.androidBuildToolsVersion
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
 
     compileOptions {
-        sourceCompatibility globalConfig.javaSourceCompatibility
-        targetCompatibility globalConfig.javaTargetCompatibility
+        sourceCompatibility config.sourceCompatibility
+        targetCompatibility config.targetCompatibility
     }
 
     defaultConfig {
-        minSdkVersion globalConfig.androidMinSdkVersion
-        targetSdkVersion globalConfig.androidTargetSdkVersion
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
         versionCode 1
     }
 
