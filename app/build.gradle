@@ -41,29 +41,34 @@ android {
 }
 
 dependencies {
-    def javaLibs = rootProject.ext.javaLibs
-    def androidLibs = rootProject.ext.androidLibs
-    def javaTestLibs = rootProject.ext.javaTestLibs
+    def javaLibs        = rootProject.ext.javaLibs
+    def androidLibs     = rootProject.ext.androidLibs
+    def javaTestLibs    = rootProject.ext.javaTestLibs
     def androidTestLibs = rootProject.ext.androidTestLibs
 
     compile project(':domain')
     // TODO: This is required so that we can construct the Repositories. Might be able to get around it?
     compile project(':data')
 
-    compile javaLibs.dagger
-    apt javaLibs.daggerCompiler
-    provided javaLibs.javaxAnnotation
-    compile javaLibs.rxJava
+    compile     javaLibs.dagger
+    apt         javaLibs.daggerCompiler
+    provided    javaLibs.javaxAnnotation
+    compile     javaLibs.rxJava
 
-    compile androidLibs.androidAnnotations
-    compile androidLibs.appCompat
-    compile androidLibs.butterKnife
-    apt androidLibs.butterKnifeCompiler
-    compile androidLibs.design
-    debugCompile androidLibs.leakCanary
-    releaseCompile androidLibs.leakCanaryNoOp
-    compile androidLibs.rxAndroid
-    compile androidLibs.slf4jAndroid
+    compile         androidLibs.androidAnnotations
+    compile         androidLibs.appCompat
+    compile         androidLibs.butterKnife
+    apt             androidLibs.butterKnifeCompiler
+    compile         androidLibs.design
+    debugCompile    androidLibs.leakCanary
+    releaseCompile  androidLibs.leakCanaryNoOp
+    compile         androidLibs.rxAndroid
+    compile         androidLibs.rxBinding
+    compile         androidLibs.rxBindingAppCompatV7
+    compile         androidLibs.rxBindingDesign
+    compile         androidLibs.rxBindingSupportV4
+    compile         androidLibs.rxBindingRecyclerViewV7
+    compile         androidLibs.slf4jAndroid
 
     testCompile javaTestLibs.assertJ
     testCompile javaTestLibs.jUnit
