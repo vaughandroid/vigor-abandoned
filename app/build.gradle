@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply from: "${rootDir}/buildsystem/retrolambda.gradle"
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     def config = rootProject.ext.androidConfig
