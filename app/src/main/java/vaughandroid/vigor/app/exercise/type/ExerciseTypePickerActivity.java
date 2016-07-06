@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.google.common.collect.ImmutableList;
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 import javax.inject.Inject;
 
@@ -18,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
+import rx.Observable;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
@@ -70,6 +73,25 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
 
     private void initPresenter() {
         presenter.setView(this);
+    }
+
+    @Override
+    public Observable<String> searchText() {
+        return RxTextView.textChanges(editText)
+                .map(CharSequence::toString);
+    }
+
+    @Override
+    public Observable<Void> searchTextConfirmed() {
+        return RxTextView.editorActionEvents(editText)
+                .filter(event -> event.actionId() == EditorInfo.IME_NULL
+                        && event.keyEvent().getAction() == KeyEvent.ACTION_DOWN)
+                .map(event -> null);
+    }
+
+    @Override
+    public Observable<ExerciseType> typePicked() {
+        return exerciseTypeAdapter.exerciseTypeClickedObservable();
     }
 
     @Override

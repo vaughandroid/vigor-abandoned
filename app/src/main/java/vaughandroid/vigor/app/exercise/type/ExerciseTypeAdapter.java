@@ -1,7 +1,6 @@
 package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.MainThreadSubscription;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
+import vaughandroid.vigor.utils.Preconditions;
 
 /**
  * {@link android.support.v7.widget.RecyclerView.Adapter} for displaying {@link ExerciseType}s.
@@ -24,22 +27,18 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  */
 public class ExerciseTypeAdapter extends RecyclerView.Adapter<ExerciseTypeAdapter.ExerciseTypeViewHolder> {
 
-    public interface UserInteractionListener {
+    private final List<ExerciseType> exerciseTypes = new ArrayList<>();
+    private final ExerciseTypeOnSubscribe exerciseTypeOnSubscribe = new ExerciseTypeOnSubscribe();
+    private final Observable<ExerciseType> exerciseTypeObservable = Observable.create(exerciseTypeOnSubscribe);
 
-        void onItemClicked(@NonNull ExerciseType type);
-    }
-
-    @NonNull private final List<ExerciseType> exerciseTypes = new ArrayList<>();
-
-    @Nullable private UserInteractionListener userInteractionListener;
 
     public void setExerciseTypes(@NonNull List<ExerciseType> exerciseTypes) {
         this.exerciseTypes.clear();
         this.exerciseTypes.addAll(exerciseTypes);
     }
 
-    public void setUserInteractionListener(@Nullable UserInteractionListener userInteractionListener) {
-        this.userInteractionListener = userInteractionListener;
+    public Observable<ExerciseType> exerciseTypeClickedObservable() {
+        return exerciseTypeObservable;
     }
 
     @Override
@@ -78,8 +77,32 @@ public class ExerciseTypeAdapter extends RecyclerView.Adapter<ExerciseTypeAdapte
 
         @OnClick(R.id.item_exercise_type_TextView)
         void onClick() {
-            if (userInteractionListener != null) {
-                userInteractionListener.onItemClicked(exerciseType);
+            exerciseTypeOnSubscribe.onClick(exerciseType);
+        }
+    }
+
+    private class ExerciseTypeOnSubscribe implements Observable.OnSubscribe<ExerciseType> {
+
+        private final List<Subscriber<? super ExerciseType>> subscribers = new ArrayList<>();
+
+        @Override
+        public void call(Subscriber<? super ExerciseType> subscriber) {
+            Preconditions.checkUiThread();
+            subscribers.add(subscriber);
+
+            subscriber.add(new MainThreadSubscription() {
+                @Override
+                protected void onUnsubscribe() {
+                    subscribers.remove(subscriber);
+                }
+            });
+        }
+
+        void onClick(@NonNull ExerciseType exerciseType) {
+            for (Subscriber<? super ExerciseType> subscriber : subscribers) {
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(exerciseType);
+                }
             }
         }
     }

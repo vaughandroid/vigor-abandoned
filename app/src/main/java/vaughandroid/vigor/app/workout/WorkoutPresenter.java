@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import rx.SingleSubscriber;
 import vaughandroid.vigor.domain.exercise.Exercise;
-import vaughandroid.vigor.domain.rx.BaseSubscriber;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 import vaughandroid.vigor.domain.workout.AddWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
@@ -61,21 +60,17 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
         if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
             workout = Workout.builder().build();
         } else {
-            useCaseExecutor.subscribe(getWorkoutUseCase, new BaseSubscriber<Workout>() {
-                @Override
-                public void onError(Throwable error) {
-                    if (view != null) {
-                        view.showError();
-                    }
-                }
-
-                @Override
-                public void onNext(Workout workout) {
-                    if (view != null) {
-                        view.setExercises(workout.exercises());
-                    }
-                }
-            });
+            useCaseExecutor.subscribe(getWorkoutUseCase,
+                    workout -> {
+                        if (view != null) {
+                            view.setExercises(workout.exercises());
+                        }
+                    },
+                    t -> {
+                        if (view != null) {
+                            view.showError();
+                        }
+                    });
         }
     }
 

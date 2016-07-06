@@ -11,6 +11,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: "net.ltgt.apt"
+apply from: "${rootDir}/buildsystem/retrolambda.gradle"
 
 def globalConfig = rootProject.ext.javaConfig
 sourceCompatibility = globalConfig.sourceCompatibility

@@ -3,8 +3,6 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +19,7 @@ import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
 import vaughandroid.vigor.domain.workout.WorkoutId;
+import vaughandroid.vigor.utils.Objects;
 
 /**
  * MVP presenter implementation for {@link ExerciseContract}

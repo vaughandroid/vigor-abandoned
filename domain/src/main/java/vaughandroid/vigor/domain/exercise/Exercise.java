@@ -34,15 +34,15 @@ public abstract class Exercise implements Serializable {
 
     @NotNull
     public abstract ExerciseType type();
-    public abstract Exercise withType(ExerciseType type);
+    public abstract Exercise withType(@NotNull ExerciseType type);
 
     @Nullable
     public abstract Integer reps();
-    public abstract Exercise withReps(Integer reps);
+    public abstract Exercise withReps(@Nullable Integer reps);
 
     @Nullable
     public abstract BigDecimal weight();
-    public abstract Exercise withWeight(@NotNull BigDecimal weight);
+    public abstract Exercise withWeight(@Nullable BigDecimal weight);
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -50,7 +50,7 @@ public abstract class Exercise implements Serializable {
         public abstract Builder type(@NotNull ExerciseType type);
         public abstract Builder workoutId(@NotNull WorkoutId workoutId);
         public abstract Builder reps(@Nullable Integer reps);
-        public abstract Builder weight(@NotNull BigDecimal weight);
+        public abstract Builder weight(@Nullable BigDecimal weight);
         public abstract Exercise build();
     }
 }
