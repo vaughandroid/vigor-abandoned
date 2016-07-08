@@ -76,12 +76,7 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
     @Override
     public Observable<String> searchText() {
         return RxTextView.textChanges(editText)
-                .map(new Func1<CharSequence, String>() {
-                    @Override
-                    public String call(CharSequence charSequence) {
-                        return charSequence.toString();
-                    }
-                });
+                .map(CharSequence::toString);
     }
 
     @Override

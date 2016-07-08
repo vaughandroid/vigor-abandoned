@@ -26,34 +26,16 @@ public abstract class BasePresenter<View> implements Presenter<View> {
 
     protected BasePresenter(ActivityLifecycleProvider activityLifecycleProvider,
             SchedulingPolicy domainSchedulingPolicy) {
-        domainTransformer = new Observable.Transformer<Object, Object>() {
-            @Override
-            public Observable<Object> call(Observable<Object> objectObservable) {
-                return objectObservable
-                        .compose(domainSchedulingPolicy.apply())
-                        .compose(activityLifecycleProvider.bindToLifecycle());
-            }
-        };
-        uiTransformer = new Observable.Transformer<Object, Object>() {
-            @Override
-            public Observable<Object> call(Observable<Object> objectObservable) {
-                return objectObservable
-                        .compose(activityLifecycleProvider.bindToLifecycle());
-            }
-        };
+        domainTransformer = objectObservable -> objectObservable
+                .compose(domainSchedulingPolicy.apply())
+                .compose(activityLifecycleProvider.bindToLifecycle());
+        uiTransformer = objectObservable -> objectObservable
+                .compose(activityLifecycleProvider.bindToLifecycle());
 
         activityLifecycleProvider.lifecycle()
-                .filter(new Func1<ActivityEvent, Boolean>() {
-                    @Override
-                    public Boolean call(ActivityEvent event) {
-                        return event == ActivityEvent.DESTROY;
-                    }
-                })
-                .subscribe(new Action1<ActivityEvent>() {
-                    @Override
-                    public void call(ActivityEvent event) {
-                        BasePresenter.this.view = null;
-                    }
+                .filter(event -> event == ActivityEvent.DESTROY)
+                .subscribe(event -> {
+                    BasePresenter.this.view = null;
                 });
     }
 

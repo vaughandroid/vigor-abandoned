@@ -52,17 +52,7 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
         } else {
             getWorkoutUseCase.createObservable()
                     .compose(useCaseTransformer())
-                    .subscribe(new Action1<Workout>() {
-                        @Override
-                        public void call(Workout workout1) {
-                            WorkoutPresenter.this.setWorkout(workout1);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable t) {
-                            WorkoutPresenter.this.showError(t);
-                        }
-                    });
+                    .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::showError);
         }
     }
 
@@ -72,17 +62,7 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
         if (workout == null) {
             addWorkoutUseCase.createObservable()
                     .compose(useCaseTransformer())
-                    .subscribe(new Action1<Workout>() {
-                        @Override
-                        public void call(Workout workout1) {
-                            WorkoutPresenter.this.setWorkout(workout1);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable t) {
-                            WorkoutPresenter.this.showError(t);
-                        }
-                    });
+                    .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::showError);
         } else if (getView() != null) {
             // TODO: 19/06/2016 Find a better way of dealing with IDs
             getView().openNewExerciseActivity(workout.id());

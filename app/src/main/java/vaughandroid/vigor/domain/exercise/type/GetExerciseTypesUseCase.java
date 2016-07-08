@@ -34,18 +34,8 @@ public class GetExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
     public Observable<List<ExerciseType>> createObservable() {
         Preconditions.checkState(searchText != null, "searchText not set");
         return exerciseTypeRepository.getExerciseTypeList()
-                .flatMap(new Func1<List<ExerciseType>, Observable<? extends ExerciseType>>() {
-                    @Override
-                    public Observable<? extends ExerciseType> call(List<ExerciseType> iterable) {
-                        return Observable.from(iterable);
-                    }
-                })
-                .filter(new Func1<ExerciseType, Boolean>() {
-                    @Override
-                    public Boolean call(ExerciseType exerciseType) {
-                        return exerciseType.name().contains(searchText);
-                    }
-                })
+                .flatMap(Observable::from)
+                .filter(exerciseType -> exerciseType.name().contains(searchText))
                 .toList();
     }
 }

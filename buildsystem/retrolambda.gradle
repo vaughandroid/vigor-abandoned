@@ -1,8 +1,16 @@
 apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
-    jdk     System.getenv('JAVA8_HOME')
-    oldJdk  System.getenv('JAVA7_HOME')
+    jdk     JAVA8_HOME
+    oldJdk  JAVA7_HOME
+
+    if (!jdk) {
+        throw new GradleException("JAVA8_HOME not defined")
+    }
+    if (!oldJdk) {
+        throw new GradleException("JAVA7_HOME not defined")
+    }
+
     //noinspection GroovyAssignabilityCheck
     javaVersion JavaVersion.VERSION_1_7
 }

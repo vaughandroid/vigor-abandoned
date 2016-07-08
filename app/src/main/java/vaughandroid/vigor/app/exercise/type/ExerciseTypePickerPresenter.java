@@ -55,12 +55,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
         getExerciseTypesUseCase.createObservable()
                 .compose(useCaseTransformer())
-                .subscribe(new Action1<List<ExerciseType>>() {
-                    @Override
-                    public void call(List<ExerciseType> exerciseTypes) {
-                        ExerciseTypePickerPresenter.this.updateView(exerciseTypes);
-                    }
-                });
+                .subscribe(ExerciseTypePickerPresenter.this::updateView);
     }
 
     private void updateView(List<ExerciseType> exerciseTypes) {
