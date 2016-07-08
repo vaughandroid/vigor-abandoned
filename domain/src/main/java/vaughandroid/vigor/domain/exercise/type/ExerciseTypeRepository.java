@@ -1,8 +1,8 @@
 package vaughandroid.vigor.domain.exercise.type;
 
-import com.google.common.collect.ImmutableList;
-
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import rx.Observable;
 
@@ -15,5 +15,5 @@ public interface ExerciseTypeRepository {
 
     @NotNull Observable<ExerciseType> addExerciseType(@NotNull ExerciseType exerciseType);
     @NotNull Observable<ExerciseType> getExerciseType(@NotNull ExerciseTypeId id);
-    @NotNull Observable<ImmutableList<ExerciseType>> getExerciseTypeList();
+    @NotNull Observable<List<ExerciseType>> getExerciseTypeList();
 }

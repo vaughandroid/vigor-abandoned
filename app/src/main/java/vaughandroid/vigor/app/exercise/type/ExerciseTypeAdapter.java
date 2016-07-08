@@ -31,7 +31,6 @@ public class ExerciseTypeAdapter extends RecyclerView.Adapter<ExerciseTypeAdapte
     private final ExerciseTypeOnSubscribe exerciseTypeOnSubscribe = new ExerciseTypeOnSubscribe();
     private final Observable<ExerciseType> exerciseTypeObservable = Observable.create(exerciseTypeOnSubscribe);
 
-
     public void setExerciseTypes(@NonNull List<ExerciseType> exerciseTypes) {
         this.exerciseTypes.clear();
         this.exerciseTypes.addAll(exerciseTypes);

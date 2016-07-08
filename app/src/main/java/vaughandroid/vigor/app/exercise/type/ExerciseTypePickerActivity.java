@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.google.common.collect.ImmutableList;
@@ -18,8 +16,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnEditorAction;
-import butterknife.OnTextChanged;
 import rx.Observable;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
@@ -82,14 +78,6 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
     }
 
     @Override
-    public Observable<Void> searchTextConfirmed() {
-        return RxTextView.editorActionEvents(editText)
-                .filter(event -> event.actionId() == EditorInfo.IME_NULL
-                        && event.keyEvent().getAction() == KeyEvent.ACTION_DOWN)
-                .map(event -> null);
-    }
-
-    @Override
     public Observable<ExerciseType> typePicked() {
         return exerciseTypeAdapter.exerciseTypeClickedObservable();
     }
@@ -97,21 +85,6 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
     @Override
     public void setSearchText(@NonNull String text) {
         editText.setText(text);
-    }
-
-    @OnTextChanged(R.id.activity_exercise_type_picker_EditText)
-    public void onEditTextTextChanged(CharSequence newText) {
-        presenter.onTextEntered(newText.toString());
-    }
-
-    @OnEditorAction(R.id.activity_exercise_type_picker_EditText)
-    boolean onEditTextEditorAction(KeyEvent event) {
-        boolean handled = false;
-        if (event != null) {
-            presenter.onTextConfirmed();
-            handled = true;
-        }
-        return handled;
     }
 
     @Override

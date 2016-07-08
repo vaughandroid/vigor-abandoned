@@ -61,7 +61,7 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
 
     @NotNull
     @Override
-    public Observable<ImmutableList<ExerciseType>> getExerciseTypeList() {
+    public Observable<List<ExerciseType>> getExerciseTypeList() {
         List<ExerciseType> exerciseTypes = Lists.newArrayList(lookup.values());
         Collections.sort(exerciseTypes, new ExerciseType.NameComparator());
         return Observable.just(ImmutableList.copyOf(exerciseTypes));

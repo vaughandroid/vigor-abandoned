@@ -19,6 +19,12 @@ public final class Preconditions {
         }
     }
 
+    public static void checkState(boolean assertion, @NonNull String message, Object... args) {
+        if (!assertion) {
+            throw new IllegalStateException(format(message, args));
+        }
+    }
+
     public static <T> T checkNotNull(T value, @NonNull String message, Object... args) {
         if (value == null) {
             throw new NullPointerException(format(message, args));
