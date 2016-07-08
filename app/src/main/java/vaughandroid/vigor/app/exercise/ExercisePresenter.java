@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import rx.functions.Action1;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
@@ -58,7 +59,17 @@ public class ExercisePresenter extends BasePresenter<ExerciseContract.View>
             getExerciseUseCase.setExerciseId(exerciseId);
             getExerciseUseCase.createObservable()
                     .compose(useCaseTransformer())
-                    .subscribe(this::setExercise, this::showError);
+                    .subscribe(new Action1<Exercise>() {
+                        @Override
+                        public void call(Exercise exercise1) {
+                            ExercisePresenter.this.setExercise(exercise1);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            ExercisePresenter.this.showError(throwable);
+                        }
+                    });
         }
     }
 
@@ -109,7 +120,17 @@ public class ExercisePresenter extends BasePresenter<ExerciseContract.View>
     public void onValuesConfirmed() {
         addExerciseUseCase.setExercise(exercise);
         addExerciseUseCase.createObservable()
-                .subscribe(this::onSaved, this::showError);
+                .subscribe(new Action1<Exercise>() {
+                    @Override
+                    public void call(Exercise exercise1) {
+                        ExercisePresenter.this.onSaved(exercise1);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        ExercisePresenter.this.showError(throwable);
+                    }
+                });
     }
 
     @Override

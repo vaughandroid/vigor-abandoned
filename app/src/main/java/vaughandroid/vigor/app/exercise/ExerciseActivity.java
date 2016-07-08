@@ -70,9 +70,19 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         initToolbar();
 
         weightNumberInputView.setUnitsShown(true);
-        weightNumberInputView.setValueChangedListener(newValue -> presenter.onWeightEntered(newValue));
+        weightNumberInputView.setValueChangedListener(new NumberInputView.ValueChangedListener() {
+            @Override
+            public void onValueChanged(BigDecimal newValue) {
+                presenter.onWeightEntered(newValue);
+            }
+        });
 
-        repsNumberInputView.setValueChangedListener(newValue -> presenter.onRepsEntered(newValue.intValue()));
+        repsNumberInputView.setValueChangedListener(new NumberInputView.ValueChangedListener() {
+            @Override
+            public void onValueChanged(BigDecimal newValue) {
+                presenter.onRepsEntered(newValue.intValue());
+            }
+        });
     }
 
     private void initToolbar() {

@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.functions.Action1;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
@@ -54,7 +55,12 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
         getExerciseTypesUseCase.createObservable()
                 .compose(useCaseTransformer())
-                .subscribe(this::updateView);
+                .subscribe(new Action1<List<ExerciseType>>() {
+                    @Override
+                    public void call(List<ExerciseType> exerciseTypes) {
+                        ExerciseTypePickerPresenter.this.updateView(exerciseTypes);
+                    }
+                });
     }
 
     private void updateView(List<ExerciseType> exerciseTypes) {

@@ -7,6 +7,8 @@ import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.usecase.UseCase;
 
@@ -24,15 +26,35 @@ public abstract class BasePresenter<View> implements Presenter<View> {
 
     protected BasePresenter(ActivityLifecycleProvider activityLifecycleProvider,
             SchedulingPolicy domainSchedulingPolicy) {
-        domainTransformer = objectObservable -> objectObservable
-                .compose(domainSchedulingPolicy.apply())
-                .compose(activityLifecycleProvider.bindToLifecycle());
-        uiTransformer = objectObservable -> objectObservable
-                .compose(activityLifecycleProvider.bindToLifecycle());
+        domainTransformer = new Observable.Transformer<Object, Object>() {
+            @Override
+            public Observable<Object> call(Observable<Object> objectObservable) {
+                return objectObservable
+                        .compose(domainSchedulingPolicy.apply())
+                        .compose(activityLifecycleProvider.bindToLifecycle());
+            }
+        };
+        uiTransformer = new Observable.Transformer<Object, Object>() {
+            @Override
+            public Observable<Object> call(Observable<Object> objectObservable) {
+                return objectObservable
+                        .compose(activityLifecycleProvider.bindToLifecycle());
+            }
+        };
 
         activityLifecycleProvider.lifecycle()
-                .filter(event -> event == ActivityEvent.DESTROY)
-                .subscribe(event -> this.view = null);
+                .filter(new Func1<ActivityEvent, Boolean>() {
+                    @Override
+                    public Boolean call(ActivityEvent event) {
+                        return event == ActivityEvent.DESTROY;
+                    }
+                })
+                .subscribe(new Action1<ActivityEvent>() {
+                    @Override
+                    public void call(ActivityEvent event) {
+                        BasePresenter.this.view = null;
+                    }
+                });
     }
 
     @Override

@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.functions.Func1;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
@@ -75,7 +76,12 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
     @Override
     public Observable<String> searchText() {
         return RxTextView.textChanges(editText)
-                .map(CharSequence::toString);
+                .map(new Func1<CharSequence, String>() {
+                    @Override
+                    public String call(CharSequence charSequence) {
+                        return charSequence.toString();
+                    }
+                });
     }
 
     @Override

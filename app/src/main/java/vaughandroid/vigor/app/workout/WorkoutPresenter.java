@@ -7,6 +7,7 @@ import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import javax.inject.Inject;
 
+import rx.functions.Action1;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
@@ -51,7 +52,17 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
         } else {
             getWorkoutUseCase.createObservable()
                     .compose(useCaseTransformer())
-                    .subscribe(this::setWorkout, this::showError);
+                    .subscribe(new Action1<Workout>() {
+                        @Override
+                        public void call(Workout workout1) {
+                            WorkoutPresenter.this.setWorkout(workout1);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable t) {
+                            WorkoutPresenter.this.showError(t);
+                        }
+                    });
         }
     }
 
@@ -61,7 +72,17 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
         if (workout == null) {
             addWorkoutUseCase.createObservable()
                     .compose(useCaseTransformer())
-                    .subscribe(this::setWorkout, this::showError);
+                    .subscribe(new Action1<Workout>() {
+                        @Override
+                        public void call(Workout workout1) {
+                            WorkoutPresenter.this.setWorkout(workout1);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable t) {
+                            WorkoutPresenter.this.showError(t);
+                        }
+                    });
         } else if (getView() != null) {
             // TODO: 19/06/2016 Find a better way of dealing with IDs
             getView().openNewExerciseActivity(workout.id());

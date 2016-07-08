@@ -13,9 +13,14 @@ public class SchedulingPolicy {
     private final Observable.Transformer<Object, Object> transformer;
 
     public SchedulingPolicy(Scheduler subscriptionScheduler, Scheduler observationScheduler) {
-        transformer = objectObservable -> objectObservable
-                .subscribeOn(subscriptionScheduler)
-                .observeOn(observationScheduler);
+        transformer = new Observable.Transformer<Object, Object>() {
+            @Override
+            public Observable<Object> call(Observable<Object> objectObservable) {
+                return objectObservable
+                        .subscribeOn(subscriptionScheduler)
+                        .observeOn(observationScheduler);
+            }
+        };
     }
 
     /**
