@@ -1,18 +1,15 @@
 package vaughandroid.vigor.app.workout;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.common.base.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import javax.inject.Inject;
 
-import rx.SingleSubscriber;
+import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.Exercise;
-import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.workout.AddWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.Workout;
@@ -23,34 +20,26 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
-public class WorkoutPresenter implements WorkoutContract.Presenter {
+public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
+        implements WorkoutContract.Presenter {
 
-    private final UseCaseExecutor useCaseExecutor;
     private final AddWorkoutUseCase addWorkoutUseCase;
     private final GetWorkoutUseCase getWorkoutUseCase;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private Workout workout;
 
-    @Nullable private WorkoutContract.View view;
-
     @Inject
-    public WorkoutPresenter(UseCaseExecutor useCaseExecutor, AddWorkoutUseCase addWorkoutUseCase,
+    public WorkoutPresenter(ActivityLifecycleProvider activityLifecycleProvider,
+            SchedulingPolicy domainSchedulingPolicy, AddWorkoutUseCase addWorkoutUseCase,
             GetWorkoutUseCase getWorkoutUseCase) {
-        this.useCaseExecutor = useCaseExecutor;
+        super(activityLifecycleProvider, domainSchedulingPolicy);
         this.getWorkoutUseCase = getWorkoutUseCase;
         this.addWorkoutUseCase = addWorkoutUseCase;
     }
 
     @Override
-    public void setView(@Nullable WorkoutContract.View view) {
-        this.view = view;
-        initView();
-    }
-
-    private void initView() {
-        if (view != null && workout != null) {
+    protected void initView(@NonNull WorkoutContract.View view) {
+        if (workout != null) {
             view.setExercises(workout.exercises());
         }
     }
@@ -60,58 +49,42 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
         if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
             workout = Workout.builder().build();
         } else {
-            useCaseExecutor.subscribe(getWorkoutUseCase,
-                    workout -> {
-                        if (view != null) {
-                            view.setExercises(workout.exercises());
-                        }
-                    },
-                    t -> {
-                        if (view != null) {
-                            view.showError();
-                        }
-                    });
+            getWorkoutUseCase.createObservable()
+                    .compose(useCaseTransformer())
+                    .subscribe(this::setWorkout, this::showError);
         }
     }
+
 
     @Override
     public void onAddExercise() {
         if (workout == null) {
-            useCaseExecutor.subscribe(addWorkoutUseCase, new SingleSubscriber<Workout>() {
-                @Override
-                public void onSuccess(Workout workout) {
-                    WorkoutPresenter.this.workout = workout;
-                    onAddExercise();
-                }
-
-                @Override
-                public void onError(Throwable error) {
-                    if (view != null) {
-                        view.showError();
-                    }
-                }
-            });
-        } else if (view != null) {
+            addWorkoutUseCase.createObservable()
+                    .compose(useCaseTransformer())
+                    .subscribe(this::setWorkout, this::showError);
+        } else if (getView() != null) {
             // TODO: 19/06/2016 Find a better way of dealing with IDs
-            view.openNewExerciseActivity(workout.id());
+            getView().openNewExerciseActivity(workout.id());
+        }
+    }
+
+    private void setWorkout(Workout workout) {
+        this.workout = workout;
+        if (getView() != null) {
+            getView().setExercises(workout.exercises());
+        }
+    }
+
+    private void showError(Throwable t) {
+        if (getView() != null) {
+            getView().showError();
         }
     }
 
     @Override
     public void onOpenExercise(@NonNull Exercise exercise) {
-        if (view != null) {
-            view.openExistingExerciseActivity(workout.id(), exercise.id());
+        if (getView() != null) {
+            getView().openExistingExerciseActivity(workout.id(), exercise.id());
         }
-    }
-
-    @Override
-    public void resume() {
-        initView();
-    }
-
-    @Override
-    public void destroy() {
-        setView(null);
-        useCaseExecutor.unsubscribe();
     }
 }

@@ -14,14 +14,14 @@ import vaughandroid.vigor.domain.usecase.UseCase;
  *
  * @author chris.vaughan@laterooms.com
  */
-public class GetAllExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
+public class GetExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
 
     private final ExerciseTypeRepository exerciseTypeRepository;
 
     private String searchText;
 
     @Inject
-    public GetAllExerciseTypesUseCase(ExerciseTypeRepository exerciseTypeRepository) {
+    public GetExerciseTypesUseCase(ExerciseTypeRepository exerciseTypeRepository) {
         this.exerciseTypeRepository = exerciseTypeRepository;
     }
 

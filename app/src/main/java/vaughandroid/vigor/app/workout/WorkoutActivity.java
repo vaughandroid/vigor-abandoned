@@ -65,12 +65,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
         ButterKnife.bind(this);
         initToolbar();
 
-        exerciseAdapter.setUserInteractionListener(new ExerciseAdapter.UserInteractionListener() {
-            @Override
-            public void onItemClicked(@NonNull Exercise exercise) {
-                presenter.onOpenExercise(exercise);
-            }
-        });
+        exerciseAdapter.setUserInteractionListener(exercise -> presenter.onOpenExercise(exercise));
         exerciseListRecyclerView.setAdapter(exerciseAdapter);
         exerciseListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         exerciseListRecyclerView.addItemDecoration(new HorizontalDividerLineItemDecoration(this));

@@ -9,8 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
 
-import com.google.common.collect.ImmutableList;
 import com.jakewharton.rxbinding.widget.RxTextView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -88,8 +89,8 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
     }
 
     @Override
-    public void setListEntries(@NonNull ImmutableList<ExerciseType> entries) {
-        exerciseTypeAdapter.setExerciseTypes(entries);
+    public void setListEntries(@NonNull List<ExerciseType> entries) {
+
     }
 
     @Override

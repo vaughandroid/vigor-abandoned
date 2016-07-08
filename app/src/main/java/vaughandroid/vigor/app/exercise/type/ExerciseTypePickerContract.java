@@ -25,8 +25,7 @@ public interface ExerciseTypePickerContract {
         void returnPickedType(@NonNull ExerciseType exerciseType);
     }
 
-    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
-        void setView(@NonNull View view);
+    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
         void init(@NonNull ExerciseType exerciseType);
     }
 }

@@ -8,6 +8,7 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import vaughandroid.vigor.app.di.ApplicationScope;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 
 /**
  * Provides {@link Scheduler}s for injection.
@@ -27,5 +28,12 @@ public class SchedulerModule {
     @ApplicationScope
     public Scheduler provideObservationScheduler() {
         return AndroidSchedulers.mainThread();
+    }
+
+    @Provides
+    @ApplicationScope
+    public SchedulingPolicy provideSchedulingPolicy(@Named("subscription") Scheduler subscriptionScheduler,
+            @Named("observation") Scheduler observationScheduler) {
+        return new SchedulingPolicy(subscriptionScheduler, observationScheduler);
     }
 }

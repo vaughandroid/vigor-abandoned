@@ -14,6 +14,7 @@ import vaughandroid.vigor.app.workout.WorkoutModule;
  * @author Chris
  */
 @Subcomponent(modules = {
+        ActivityModule.class,
         ExerciseModule.class,
         ExerciseTypeModule.class,
         WorkoutModule.class,

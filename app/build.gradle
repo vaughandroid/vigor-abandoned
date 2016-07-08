@@ -54,6 +54,7 @@ dependencies {
     // TODO: This is required so that we can construct the Repositories. Might be able to get around it?
     compile project(':data')
 
+    provided    javaLibs.autoValue
     compile     javaLibs.dagger
     apt         javaLibs.daggerCompiler
     provided    javaLibs.javaxAnnotation
@@ -72,6 +73,8 @@ dependencies {
     compile         androidLibs.rxBindingDesign
     compile         androidLibs.rxBindingSupportV4
     compile         androidLibs.rxBindingRecyclerViewV7
+    compile         androidLibs.rxLifecycle
+    compile         androidLibs.rxLifecycleComponents
     compile         androidLibs.slf4jAndroid
 
     testCompile javaTestLibs.assertJ

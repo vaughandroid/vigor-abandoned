@@ -1,7 +1,6 @@
 package vaughandroid.vigor.app.workout;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
@@ -24,8 +23,7 @@ public interface WorkoutContract {
         void openExistingExerciseActivity(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
     }
 
-    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
-        void setView(@Nullable View view);
+    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
         void setWorkoutId(@NonNull WorkoutId workoutId);
 
         void onAddExercise();

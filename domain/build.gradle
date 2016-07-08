@@ -14,11 +14,14 @@ apply plugin: "net.ltgt.apt"
 apply from: "${rootDir}/buildsystem/retrolambda.gradle"
 
 def globalConfig = rootProject.ext.javaConfig
+//noinspection GroovyUnusedAssignment
 sourceCompatibility = globalConfig.sourceCompatibility
+//noinspection GroovyUnusedAssignment
 targetCompatibility = globalConfig.targetCompatibility
 
 // Mimic Maven's 'provided' scope for compile-time dependencies.
 // See: https://sinking.in/blog/provided-scope-in-gradle/
+// TODO: look into compileOnly
 configurations {
     provided
 }
@@ -37,10 +40,10 @@ dependencies {
     def javaTestLibs = rootProject.ext.javaTestLibs
 
     apt javaLibs.autoValue
-    compile javaLibs.autoValue // TODO: Should be compileOnly?
+    provided javaLibs.autoValue
     apt javaLibs.autoValueWith
     compile javaLibs.dagger
-    provided javaLibs.daggerCompiler
+    apt javaLibs.daggerCompiler
     compile javaLibs.guava
     provided javaLibs.javaxAnnotation
     compile javaLibs.jetBrainsAnnotations

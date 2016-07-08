@@ -16,5 +16,5 @@ import vaughandroid.vigor.app.rx.UtilsModule;
 @ApplicationScope
 public interface ApplicationComponent {
 
-    ActivityComponent activityComponent();
+    ActivityComponent activityComponent(ActivityModule activityModule);
 }

@@ -38,6 +38,7 @@ dependencies {
 
     compile project(':domain')
 
+    provided javaLibs.autoValue
     compile javaLibs.dagger
     apt javaLibs.daggerCompiler
     provided javaLibs.javaxAnnotation

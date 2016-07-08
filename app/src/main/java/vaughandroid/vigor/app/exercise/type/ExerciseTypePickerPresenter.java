@@ -1,13 +1,18 @@
 package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import com.trello.rxlifecycle.ActivityLifecycleProvider;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
+import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
+import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
-import vaughandroid.vigor.domain.exercise.type.GetAllExerciseTypesUseCase;
-import vaughandroid.vigor.domain.usecase.UseCaseExecutor;
+import vaughandroid.vigor.domain.exercise.type.GetExerciseTypesUseCase;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.utils.Preconditions;
 
 /**
@@ -15,65 +20,48 @@ import vaughandroid.vigor.utils.Preconditions;
  *
  * @author chris.vaughan@laterooms.com
  */
-public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.Presenter {
+public class ExerciseTypePickerPresenter extends BasePresenter<View> implements ExerciseTypePickerContract.Presenter {
 
-    private final UseCaseExecutor useCaseExecutor;
-    private final GetAllExerciseTypesUseCase getAllExerciseTypesUseCase;
-
-    @Nullable private ExerciseTypePickerContract.View view;
+    private final GetExerciseTypesUseCase getExerciseTypesUseCase;
 
     @NonNull private ExerciseType exerciseType = ExerciseType.UNSET;
 
     @Inject
-    public ExerciseTypePickerPresenter(UseCaseExecutor useCaseExecutor, GetAllExerciseTypesUseCase getAllExerciseTypesUseCase) {
-        this.useCaseExecutor = useCaseExecutor;
-        this.getAllExerciseTypesUseCase = getAllExerciseTypesUseCase;
+    public ExerciseTypePickerPresenter(ActivityLifecycleProvider activityLifecycleProvider,
+            SchedulingPolicy schedulingPolicy, GetExerciseTypesUseCase getExerciseTypesUseCase) {
+        super(activityLifecycleProvider, schedulingPolicy);
+        this.getExerciseTypesUseCase = getExerciseTypesUseCase;
     }
 
-    @Override
-    public void setView(@NonNull ExerciseTypePickerContract.View view) {
-        this.view = view;
-
-        // XXX need to manage view subscriptions, or could use RxLifecycle?
-        view.typePicked()
-                .subscribe(exerciseType -> {
-                    this.exerciseType = exerciseType;
-                    if (this.view != null) {
-                        this.view.returnPickedType(exerciseType);
-                    }
-                });
-        view.searchText()
-                .subscribe(text -> {
-                    getAllExerciseTypesUseCase.setSearchText(text);
-                    useCaseExecutor.subscribe(getAllExerciseTypesUseCase);
-                });
-        initView();
-    }
-
-    private void initView() {
-        Preconditions.checkState(view != null, "view not set");
+    protected void initView(@NonNull View view) {
         view.setSearchText(exerciseType.name());
+
+        view.searchText()
+                .compose(uiTransformer())
+                .subscribe();
+        view.typePicked()
+                .compose(uiTransformer())
+                .subscribe();
     }
 
     @Override
     public void init(@NonNull ExerciseType exerciseType) {
+        View view = getView();
+        Preconditions.checkState(view != null, "view == null");
+
         this.exerciseType = exerciseType;
-        initView();
-        useCaseExecutor.subscribe(getAllExerciseTypesUseCase,
-                (exerciseTypes) -> {
-                    if (view != null) {
-                        view.setListEntries(exerciseTypes);
-                    }
-                });
+        initView(view);
+
+        getExerciseTypesUseCase.createObservable()
+                .compose(useCaseTransformer())
+                .subscribe(this::updateView);
     }
 
-    @Override
-    public void resume() {
-
+    private void updateView(List<ExerciseType> exerciseTypes) {
+        View view1 = getView();
+        if (view1 != null) {
+            view1.setListEntries(exerciseTypes);
+        }
     }
 
-    @Override
-    public void destroy() {
-        useCaseExecutor.unsubscribe();
-    }
 }

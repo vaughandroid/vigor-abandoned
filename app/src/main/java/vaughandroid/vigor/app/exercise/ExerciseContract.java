@@ -28,8 +28,7 @@ public interface ExerciseContract {
         void onSaved();
     }
 
-    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter {
-        void setView(@Nullable View view);
+    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
         void init(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
 
         void onTypeClicked();
