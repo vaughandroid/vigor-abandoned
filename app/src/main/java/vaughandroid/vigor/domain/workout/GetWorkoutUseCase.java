@@ -14,23 +14,23 @@ import vaughandroid.vigor.domain.usecase.UseCase;
  *
  * @author Chris
  */
-public class GetWorkoutUseCase implements UseCase<Workout> {
+public class GetWorkoutUseCase implements UseCase<vaughandroid.vigor.domain.workout.Workout> {
 
     private final WorkoutRepository repository;
     @Nullable
-    private WorkoutId workoutId;
+    private vaughandroid.vigor.domain.workout.WorkoutId workoutId;
 
     @Inject
     public GetWorkoutUseCase(WorkoutRepository repository) {
         this.repository = repository;
     }
 
-    public void setWorkoutId(@NotNull WorkoutId workoutId) {
+    public void setWorkoutId(@NotNull vaughandroid.vigor.domain.workout.WorkoutId workoutId) {
         this.workoutId = workoutId;
     }
 
     @Override
-    public Observable<Workout> createObservable() {
+    public Observable<vaughandroid.vigor.domain.workout.Workout> createObservable() {
         if (workoutId == null) {
             throw new IllegalStateException("workoutId not set");
         }

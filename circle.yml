@@ -17,11 +17,9 @@ test:
     - circle-android wait-for-boot
     # Unit tests
     - >
-      ./gradlew unitTests --console=plain
+      ./gradlew :app:test --console=plain
       && cp -a app/build/test-results/debug/*.xml $CIRCLE_ARTIFACTS
-      && cp -a domain/build/test-results/*.xml $CIRCLE_ARTIFACTS
-      && cp -a data/build/test-results/debug/*.xml $CIRCLE_ARTIFACTS
     # Acceptance tests
     - >
-      ./gradlew acceptanceTests --console=plain
+      ./gradlew :app:connectedAndroidTest --console=plain
       && cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_ARTIFACTS

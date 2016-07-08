@@ -13,23 +13,3 @@ buildscript {
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
     }
 }
-
-task appUnitTests(dependsOn: [':app:test']) {
-    description 'Run unit tests for the app layer.'
-}
-
-task domainUnitTests(dependsOn: [':domain:test']) {
-    description 'Run unit tests for the domain layer.'
-}
-
-task dataUnitTests(dependsOn: [':data:testDebugUnitTest']) {
-    description 'Run unit tests for the data layer.'
-}
-
-task unitTests(dependsOn: ['appUnitTests', 'domainUnitTests', 'dataUnitTests']) {
-    description 'Run unit tests for both domain and data layers.'
-}
-
-task acceptanceTests(dependsOn: [':app:connectedAndroidTest']) {
-    description 'Run application acceptance tests.'
-}

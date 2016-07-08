@@ -20,7 +20,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 public abstract class Exercise implements Serializable {
 
     public static Builder builder() {
-        return new AutoValue_Exercise.Builder()
+        return new $AutoValue_Exercise.Builder()
                 .id(ExerciseId.UNASSIGNED)
                 .type(ExerciseType.UNSET);
     }

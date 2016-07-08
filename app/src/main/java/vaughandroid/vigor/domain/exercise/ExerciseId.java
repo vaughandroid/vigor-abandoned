@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
+import vaughandroid.vigor.domain.exercise.AutoValue_ExerciseId;
+
 /**
  * ID for an {@link Exercise}
  *

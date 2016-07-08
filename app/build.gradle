@@ -50,15 +50,15 @@ dependencies {
     def javaTestLibs    = rootProject.ext.javaTestLibs
     def androidTestLibs = rootProject.ext.androidTestLibs
 
-    compile project(':domain')
-    // TODO: This is required so that we can construct the Repositories. Might be able to get around it?
-    compile project(':data')
-
     provided    javaLibs.autoValue
+    apt         javaLibs.autoValueWith
     compile     javaLibs.dagger
     apt         javaLibs.daggerCompiler
+    compile     javaLibs.guava
     provided    javaLibs.javaxAnnotation
+    compile     javaLibs.jetBrainsAnnotations // TODO: can remove
     compile     javaLibs.rxJava
+    compile     javaLibs.slf4j
 
     compile         androidLibs.androidAnnotations
     compile         androidLibs.appCompat

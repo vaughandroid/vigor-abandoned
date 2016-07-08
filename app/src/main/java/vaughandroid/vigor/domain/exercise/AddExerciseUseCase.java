@@ -9,26 +9,26 @@ import rx.Observable;
 import vaughandroid.vigor.domain.usecase.UseCase;
 
 /**
- * {@link UseCase} for adding new {@link Exercise} data.
+ * {@link UseCase} for adding new {@link vaughandroid.vigor.domain.exercise.Exercise} data.
  *
  * @author Chris
  */
-public class AddExerciseUseCase implements UseCase<Exercise> {
+public class AddExerciseUseCase implements UseCase<vaughandroid.vigor.domain.exercise.Exercise> {
 
     private final ExerciseRepository repository;
-    private @Nullable Exercise exercise;
+    private @Nullable vaughandroid.vigor.domain.exercise.Exercise exercise;
 
     @Inject
     public AddExerciseUseCase(ExerciseRepository repository) {
         this.repository = repository;
     }
 
-    public void setExercise(@NotNull Exercise exercise) {
+    public void setExercise(@NotNull vaughandroid.vigor.domain.exercise.Exercise exercise) {
         this.exercise = exercise;
     }
 
     @Override
-    public @NotNull Observable<Exercise> createObservable() {
+    public @NotNull Observable<vaughandroid.vigor.domain.exercise.Exercise> createObservable() {
         if (exercise == null) {
             throw new IllegalStateException("exercise not set");
         }

@@ -12,5 +12,5 @@ import rx.Observable;
 public interface ExerciseRepository {
 
     @NotNull Observable<Exercise> addExercise(@NotNull Exercise exercise);
-    @NotNull Observable<Exercise> getExercise(@NotNull ExerciseId id);
+    @NotNull Observable<Exercise> getExercise(@NotNull vaughandroid.vigor.domain.exercise.ExerciseId id);
 }
