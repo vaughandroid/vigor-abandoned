@@ -28,6 +28,9 @@ public abstract class ExerciseType implements Serializable {
 
     @NotNull
     public abstract String name();
+    public String nameLowercase() {
+        return name().toLowerCase();
+    }
 
     /**
      * Orders {@link ExerciseType}s by {@link ExerciseType#name()}

@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
 import vaughandroid.vigor.app.di.ActivityScope;
+import vaughandroid.vigor.app.exercise.ExerciseContract.View;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -30,7 +30,7 @@ import vaughandroid.vigor.utils.Objects;
  * @author Chris
  */
 @ActivityScope
-public class ExercisePresenter extends BasePresenter<ExerciseContract.View>
+public class ExercisePresenter extends BasePresenter<View>
         implements ExerciseContract.Presenter {
 
     private final AddExerciseUseCase addExerciseUseCase;
@@ -70,16 +70,18 @@ public class ExercisePresenter extends BasePresenter<ExerciseContract.View>
     }
 
     @Override
-    protected void initView(@NonNull ExerciseContract.View view) {
+    protected void initView(@NonNull View view) {
         updateViewValues();
     }
 
     private void updateViewValues() {
-        if (getView() != null && exercise != null) {
-            getView().setWeight(exercise.weight());
-            getView().setWeightUnits("Kg"); // TODO: 15/06/2016 implement weight units setting
-            getView().setReps(exercise.reps());
-            getView().showContent();
+        View view = getView();
+        if (view != null && exercise != null) {
+            view.setType(exercise.type());
+            view.setWeight(exercise.weight());
+            view.setWeightUnits("Kg"); // TODO: 15/06/2016 implement weight units setting
+            view.setReps(exercise.reps());
+            view.showContent();
         }
     }
 
@@ -115,7 +117,7 @@ public class ExercisePresenter extends BasePresenter<ExerciseContract.View>
 
     @Override
     public void onTypePicked(@NonNull ExerciseType typeFromResult) {
-        exercise.withType(typeFromResult);
+        setExercise(exercise.withType(typeFromResult));
     }
 
     private void setExercise(@NonNull Exercise exercise) {

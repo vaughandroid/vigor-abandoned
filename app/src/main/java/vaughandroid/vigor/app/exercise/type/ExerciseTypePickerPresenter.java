@@ -36,13 +36,6 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
     protected void initView(@NonNull View view) {
         view.setSearchText(exerciseType.name());
-
-        view.searchText()
-                .compose(uiTransformer())
-                .subscribe();
-        view.typePicked()
-                .compose(uiTransformer())
-                .subscribe();
     }
 
     @Override
@@ -60,14 +53,24 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
         getExerciseTypesUseCase.createObservable()
                 .compose(useCaseTransformer())
-                .subscribe(ExerciseTypePickerPresenter.this::updateView);
+                .subscribe(this::onListUpdated);
+
+        view.typePicked()
+                .compose(uiTransformer())
+                .subscribe(this::onTypePicked);
     }
 
-    private void updateView(List<ExerciseType> exerciseTypes) {
-        View view1 = getView();
-        if (view1 != null) {
-            view1.setListEntries(exerciseTypes);
+    private void onTypePicked(@NonNull ExerciseType exerciseType) {
+        View view = getView();
+        if (view != null) {
+            view.returnPickedType(exerciseType);
         }
     }
 
+    private void onListUpdated(List<ExerciseType> exerciseTypes) {
+        View view = getView();
+        if (view != null) {
+            view.setListEntries(exerciseTypes);
+        }
+    }
 }
