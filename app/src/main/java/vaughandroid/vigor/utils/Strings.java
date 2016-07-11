@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 /**
  * Utilities for working with {@link String}s.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class Strings {
 

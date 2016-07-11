@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 /**
  * Utility methods for working with {@link Object}s
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class Objects {
 

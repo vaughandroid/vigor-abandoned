@@ -34,6 +34,7 @@ public class ExerciseTypeAdapter extends RecyclerView.Adapter<ExerciseTypeAdapte
     public void setExerciseTypes(@NonNull List<ExerciseType> exerciseTypes) {
         this.exerciseTypes.clear();
         this.exerciseTypes.addAll(exerciseTypes);
+        notifyDataSetChanged();
     }
 
     public Observable<ExerciseType> exerciseTypeClickedObservable() {

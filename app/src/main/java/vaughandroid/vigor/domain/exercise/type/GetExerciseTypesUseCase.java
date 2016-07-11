@@ -1,19 +1,19 @@
 package vaughandroid.vigor.domain.exercise.type;
 
-import com.google.common.base.Preconditions;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Func1;
 import vaughandroid.vigor.domain.usecase.UseCase;
+import vaughandroid.vigor.utils.Lists;
 
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class GetExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
 
@@ -26,16 +26,14 @@ public class GetExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
         this.exerciseTypeRepository = exerciseTypeRepository;
     }
 
-    public void setSearchText(String searchText) {
+    public void setSearchText(@NonNull String searchText) {
+        // XXX must re-subscribe to the use case each time the search text is changed. Could possibly change this by making the search text observable
         this.searchText = searchText;
     }
 
     @Override
     public Observable<List<ExerciseType>> createObservable() {
-        Preconditions.checkState(searchText != null, "searchText not set");
         return exerciseTypeRepository.getExerciseTypeList()
-                .flatMap(Observable::from)
-                .filter(exerciseType -> exerciseType.name().contains(searchText))
-                .toList();
+                .map(list -> Lists.filterList(list, input -> input.name().contains(searchText)));
     }
 }

@@ -15,7 +15,7 @@ import vaughandroid.vigor.domain.usecase.UseCase;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public abstract class BasePresenter<View> implements Presenter<View> {
 

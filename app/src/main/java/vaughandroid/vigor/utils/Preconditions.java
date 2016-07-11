@@ -9,7 +9,7 @@ import static vaughandroid.vigor.utils.Strings.format;
 /**
  * Simple preconditions.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public final class Preconditions {
 

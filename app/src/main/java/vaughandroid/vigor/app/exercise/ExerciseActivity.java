@@ -146,7 +146,9 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
         switch (requestCode) {
             case REQUEST_CODE_PICK_TYPE:
-                presenter.onTypePicked(ExerciseTypePickerActivity.getTypeFromResult(data));
+                if (resultCode == RESULT_OK) {
+                    presenter.onTypePicked(ExerciseTypePickerActivity.getTypeFromResult(data));
+                }
                 break;
             default:
                 logger.warn("onActivityResult called with unexpected request code {}", requestCode);

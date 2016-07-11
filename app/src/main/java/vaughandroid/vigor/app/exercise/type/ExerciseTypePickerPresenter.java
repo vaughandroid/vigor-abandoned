@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
+import rx.Observable;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
@@ -19,7 +19,7 @@ import vaughandroid.vigor.utils.Preconditions;
 /**
  * MVP Presenter for the {@link ExerciseTypePickerActivity}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class ExerciseTypePickerPresenter extends BasePresenter<View> implements ExerciseTypePickerContract.Presenter {
 
@@ -52,6 +52,11 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
         this.exerciseType = exerciseType;
         initView(view);
+
+        Observable.just(exerciseType)
+                .map(ExerciseType::name)
+                .mergeWith(view.searchText())
+                .subscribe(getExerciseTypesUseCase::setSearchText);
 
         getExerciseTypesUseCase.createObservable()
                 .compose(useCaseTransformer())

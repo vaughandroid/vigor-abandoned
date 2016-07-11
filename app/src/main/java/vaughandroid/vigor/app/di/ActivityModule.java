@@ -11,7 +11,7 @@ import vaughandroid.vigor.app.VigorActivity;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Module
 public class ActivityModule {

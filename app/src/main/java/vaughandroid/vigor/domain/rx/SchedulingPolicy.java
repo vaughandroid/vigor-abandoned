@@ -6,7 +6,7 @@ import rx.Scheduler;
 /**
  * Helper for applying {@link rx.Scheduler}s to {@link rx.Observable}s.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class SchedulingPolicy {
 
