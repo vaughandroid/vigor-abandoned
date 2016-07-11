@@ -1,10 +1,10 @@
 package vaughandroid.vigor.data.exercise.type;
 
+import android.support.annotation.NonNull;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,9 +39,9 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
         addExerciseType(ExerciseType.create(ExerciseTypeId.UNASSIGNED, "Sit-ups"));
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Observable<ExerciseType> addExerciseType(@NotNull ExerciseType exerciseType) {
+    public Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType) {
         if (Objects.equal(exerciseType.id(), ExerciseTypeId.UNASSIGNED)) {
             exerciseType = exerciseType.withId(ExerciseTypeId.create(guidFactory.newGuid()));
         }
@@ -49,9 +49,9 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
         return Observable.just(exerciseType);
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Observable<ExerciseType> getExerciseType(@NotNull ExerciseTypeId id) {
+    public Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id) {
         Observable<ExerciseType> result = Observable.empty();
         if (lookup.containsKey(id)) {
             result = Observable.just(lookup.get(id));
@@ -59,7 +59,7 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
         return result;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Observable<List<ExerciseType>> getExerciseTypeList() {
         List<ExerciseType> exerciseTypes = Lists.newArrayList(lookup.values());

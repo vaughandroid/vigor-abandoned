@@ -3,7 +3,7 @@ package vaughandroid.vigor.domain.exercise.type;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ComparisonChain;
 
-import org.jetbrains.annotations.NotNull;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -22,11 +22,11 @@ public abstract class ExerciseType implements Serializable {
         return new AutoValue_ExerciseType(id, name);
     }
 
-    @NotNull
+    @NonNull
     public abstract ExerciseTypeId id();
-    public abstract ExerciseType withId(@NotNull ExerciseTypeId id);
+    public abstract ExerciseType withId(@NonNull ExerciseTypeId id);
 
-    @NotNull
+    @NonNull
     public abstract String name();
     public String nameLowercase() {
         return name().toLowerCase();

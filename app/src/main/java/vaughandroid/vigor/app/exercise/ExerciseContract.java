@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import java.math.BigDecimal;
 
 import vaughandroid.vigor.app.mvp.LCEView;
+import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
@@ -25,7 +26,7 @@ public interface ExerciseContract {
 
         void openTypePicker(@NonNull ExerciseType type);
 
-        void onSaved();
+        void onSaved(Exercise exercise);
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {

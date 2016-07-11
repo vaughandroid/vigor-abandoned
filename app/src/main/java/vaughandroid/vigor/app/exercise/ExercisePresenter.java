@@ -128,7 +128,7 @@ public class ExercisePresenter extends BasePresenter<View>
     private void onSaved(Exercise exercise) {
         this.setExercise(exercise);
         if (getView() != null) {
-            getView().onSaved();
+            getView().onSaved(exercise);
         }
     }
 }

@@ -29,7 +29,6 @@ ext {
     daggerVersion = '2.4'
     guavaVersion = '19.0'
     javaxAnnotationVersion = '1.0'
-    jetBrainsAnnotationsVersion = '13.0'
     rxJavaVersion = '1.1.5'
     slf4jVersion = '1.7.21'
     javaLibs = [
@@ -39,7 +38,6 @@ ext {
             daggerCompiler      : "com.google.dagger:dagger-compiler:${daggerVersion}",
             guava               : "com.google.guava:guava:${guavaVersion}",
             javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            jetBrainsAnnotations: "org.jetbrains:annotations:${jetBrainsAnnotationsVersion}",
             rxJava              : "io.reactivex:rxjava:${rxJavaVersion}",
             slf4j               : "org.slf4j:slf4j-api:${slf4jVersion}",
     ]

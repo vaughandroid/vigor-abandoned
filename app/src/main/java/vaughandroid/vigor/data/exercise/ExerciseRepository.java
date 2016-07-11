@@ -1,8 +1,8 @@
 package vaughandroid.vigor.data.exercise;
 
-import com.google.common.base.Objects;
+import android.support.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
+import com.google.common.base.Objects;
 
 import java.util.HashMap;
 
@@ -29,9 +29,9 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
         this.guidFactory = guidFactory;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Observable<Exercise> addExercise(@NotNull Exercise exercise) {
+    public Observable<Exercise> addExercise(@NonNull Exercise exercise) {
         if (Objects.equal(exercise.id(), ExerciseId.UNASSIGNED)) {
             exercise = exercise.withId(ExerciseId.create(guidFactory.newGuid()));
         }
@@ -39,9 +39,9 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
         return Observable.just(exercise);
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Observable<Exercise> getExercise(@NotNull ExerciseId id) {
+    public Observable<Exercise> getExercise(@NonNull ExerciseId id) {
         Observable<Exercise> result = Observable.empty();
         if (lookup.containsKey(id)) {
             Observable.just(lookup.get(id));

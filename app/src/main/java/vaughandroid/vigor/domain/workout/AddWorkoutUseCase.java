@@ -1,7 +1,7 @@
 package vaughandroid.vigor.domain.workout;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ public class AddWorkoutUseCase implements UseCase<vaughandroid.vigor.domain.work
         this.repository = repository;
     }
 
-    public void setWorkout(@NotNull vaughandroid.vigor.domain.workout.Workout workout) {
+    public void setWorkout(@NonNull vaughandroid.vigor.domain.workout.Workout workout) {
         this.workout = workout;
     }
 

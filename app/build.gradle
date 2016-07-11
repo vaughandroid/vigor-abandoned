@@ -56,7 +56,6 @@ dependencies {
     apt         javaLibs.daggerCompiler
     compile     javaLibs.guava
     provided    javaLibs.javaxAnnotation
-    compile     javaLibs.jetBrainsAnnotations // TODO: can remove
     compile     javaLibs.rxJava
     compile     javaLibs.slf4j
 

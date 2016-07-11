@@ -21,8 +21,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
+import vaughandroid.vigor.app.errors.UnexpectedActivityResultException;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
+import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
@@ -36,6 +38,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     private static final String EXTRA_WORKOUT_ID = "workoutId";
     private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
 
+    private static final String RESULT_EXERCISE = "exercise";
+
     private static final int REQUEST_CODE_PICK_TYPE = 1;
 
     public static Intent intentForNew(@NonNull Context context, @NonNull WorkoutId workoutId) {
@@ -47,6 +51,14 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         return new Intent(context, ExerciseActivity.class)
                 .putExtra(EXTRA_WORKOUT_ID, workoutId)
                 .putExtra(EXTRA_EXERCISE_ID, exerciseId);
+    }
+
+    @NonNull
+    public static Exercise getExerciseFromResult(@NonNull Intent data) {
+        if (!data.hasExtra(RESULT_EXERCISE)) {
+            throw new IllegalArgumentException("Invalid data");
+        }
+        return (Exercise) data.getSerializableExtra(RESULT_EXERCISE);
     }
 
     @Inject ExerciseContract.Presenter presenter;
@@ -151,8 +163,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
                 }
                 break;
             default:
-                logger.warn("onActivityResult called with unexpected request code {}", requestCode);
-                break;
+                throw new UnexpectedActivityResultException(requestCode, resultCode, data);
         }
     }
 
@@ -192,7 +203,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void onSaved() {
+    public void onSaved(Exercise exercise) {
         setResult(RESULT_OK);
         finish();
     }

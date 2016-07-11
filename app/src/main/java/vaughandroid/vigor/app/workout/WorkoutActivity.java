@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
+import vaughandroid.vigor.app.errors.UnexpectedActivityResultException;
 import vaughandroid.vigor.app.exercise.ExerciseActivity;
 import vaughandroid.vigor.app.widgets.HorizontalDividerLineItemDecoration;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -30,6 +31,9 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 public class WorkoutActivity extends VigorActivity implements WorkoutContract.View {
 
     private static final String EXTRA_WORKOUT_ID = "workoutId";
+
+    private static final int REQUEST_CODE_EXERCISE_ADD = 1;
+    private static final int REQUEST_CODE_EXERCISE_EDIT = 2;
 
     public static Intent intentForNew(@NonNull Context context) {
         return new Intent(context, WorkoutActivity.class);
@@ -126,12 +130,28 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
     @Override
     public void openNewExerciseActivity(@NonNull WorkoutId workoutId) {
-        startActivity(ExerciseActivity.intentForNew(this, workoutId));
+        startActivityForResult(ExerciseActivity.intentForNew(this, workoutId), REQUEST_CODE_EXERCISE_ADD);
     }
 
     @Override
     public void openExistingExerciseActivity(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId) {
-        startActivity(ExerciseActivity.intentForExisting(this, workoutId, exerciseId));
+        startActivityForResult(ExerciseActivity.intentForExisting(this, workoutId, exerciseId), REQUEST_CODE_EXERCISE_EDIT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_CODE_EXERCISE_ADD:
+                presenter.onExerciseAdded(ExerciseActivity.getExerciseFromResult(data));
+                break;
+            case REQUEST_CODE_EXERCISE_EDIT:
+                presenter.onExerciseUpdated(ExerciseActivity.getExerciseFromResult(data));
+                break;
+            default:
+                throw new UnexpectedActivityResultException(requestCode, resultCode, data);
+        }
     }
 
     @Override

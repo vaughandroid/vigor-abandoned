@@ -1,7 +1,7 @@
 package vaughandroid.vigor.domain.exercise;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -23,12 +23,12 @@ public class AddExerciseUseCase implements UseCase<vaughandroid.vigor.domain.exe
         this.repository = repository;
     }
 
-    public void setExercise(@NotNull vaughandroid.vigor.domain.exercise.Exercise exercise) {
+    public void setExercise(@NonNull vaughandroid.vigor.domain.exercise.Exercise exercise) {
         this.exercise = exercise;
     }
 
     @Override
-    public @NotNull Observable<vaughandroid.vigor.domain.exercise.Exercise> createObservable() {
+    public @NonNull Observable<vaughandroid.vigor.domain.exercise.Exercise> createObservable() {
         if (exercise == null) {
             throw new IllegalStateException("exercise not set");
         }

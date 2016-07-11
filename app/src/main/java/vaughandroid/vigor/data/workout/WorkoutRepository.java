@@ -1,6 +1,6 @@
 package vaughandroid.vigor.data.workout;
 
-import org.jetbrains.annotations.NotNull;
+import android.support.annotation.NonNull;
 
 import java.util.HashMap;
 
@@ -27,9 +27,9 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
         this.guidFactory = guidFactory;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Observable<Workout> addWorkout(@NotNull Workout workout) {
+    public Observable<Workout> addWorkout(@NonNull Workout workout) {
         if (workout.id() == null) {
             workout = workout.withId(WorkoutId.create(guidFactory.newGuid()));
         }
@@ -37,9 +37,9 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
         return Observable.just(workout);
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Observable<Workout> getWorkout(@NotNull WorkoutId id) {
+    public Observable<Workout> getWorkout(@NonNull WorkoutId id) {
         Observable<Workout> result = Observable.empty();
         if (lookup.containsKey(id)) {
             result = Observable.just(lookup.get(id));

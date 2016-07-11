@@ -1,7 +1,7 @@
 package vaughandroid.vigor.domain.workout;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -25,7 +25,7 @@ public class GetWorkoutUseCase implements UseCase<vaughandroid.vigor.domain.work
         this.repository = repository;
     }
 
-    public void setWorkoutId(@NotNull vaughandroid.vigor.domain.workout.WorkoutId workoutId) {
+    public void setWorkoutId(@NonNull vaughandroid.vigor.domain.workout.WorkoutId workoutId) {
         this.workoutId = workoutId;
     }
 

@@ -7,8 +7,8 @@ import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
 import vaughandroid.vigor.app.mvp.BasePresenter;
+import vaughandroid.vigor.app.workout.WorkoutContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.workout.AddWorkoutUseCase;
@@ -21,7 +21,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
-public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
+public class WorkoutPresenter extends BasePresenter<View>
         implements WorkoutContract.Presenter {
 
     private final AddWorkoutUseCase addWorkoutUseCase;
@@ -39,7 +39,7 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
     }
 
     @Override
-    protected void initView(@NonNull WorkoutContract.View view) {
+    protected void initView(@NonNull View view) {
         if (workout != null) {
             view.setExercises(workout.exercises());
         }
@@ -59,13 +59,10 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
 
     @Override
     public void onAddExercise() {
-        if (workout == null) {
-            addWorkoutUseCase.createObservable()
-                    .compose(useCaseTransformer())
-                    .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::showError);
-        } else if (getView() != null) {
-            // TODO: 19/06/2016 Find a better way of dealing with IDs
-            getView().openNewExerciseActivity(workout.id());
+        // TODO: 19/06/2016 Find a better way of dealing with IDs
+        View view = getView();
+        if (view != null) {
+            view.openNewExerciseActivity(workout.id());
         }
     }
 
@@ -87,5 +84,15 @@ public class WorkoutPresenter extends BasePresenter<WorkoutContract.View>
         if (getView() != null) {
             getView().openExistingExerciseActivity(workout.id(), exercise.id());
         }
+    }
+
+    @Override
+    public void onExerciseAdded(@NonNull Exercise exercise) {
+
+    }
+
+    @Override
+    public void onExerciseUpdated(@NonNull Exercise exercise) {
+
     }
 }

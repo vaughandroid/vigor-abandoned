@@ -2,8 +2,8 @@ package vaughandroid.vigor.domain.exercise;
 
 import com.google.auto.value.AutoValue;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,16 +25,16 @@ public abstract class Exercise implements Serializable {
                 .type(ExerciseType.UNSET);
     }
 
-    @NotNull
+    @NonNull
     public abstract ExerciseId id();
-    public abstract Exercise withId(@NotNull ExerciseId id);
+    public abstract Exercise withId(@NonNull ExerciseId id);
 
-    @NotNull
+    @NonNull
     public abstract WorkoutId workoutId();
 
-    @NotNull
+    @NonNull
     public abstract ExerciseType type();
-    public abstract Exercise withType(@NotNull ExerciseType type);
+    public abstract Exercise withType(@NonNull ExerciseType type);
 
     @Nullable
     public abstract Integer reps();
@@ -46,9 +46,9 @@ public abstract class Exercise implements Serializable {
 
     @AutoValue.Builder
     public abstract static class Builder {
-        public abstract Builder id(@NotNull ExerciseId id);
-        public abstract Builder type(@NotNull ExerciseType type);
-        public abstract Builder workoutId(@NotNull WorkoutId workoutId);
+        public abstract Builder id(@NonNull ExerciseId id);
+        public abstract Builder type(@NonNull ExerciseType type);
+        public abstract Builder workoutId(@NonNull WorkoutId workoutId);
         public abstract Builder reps(@Nullable Integer reps);
         public abstract Builder weight(@Nullable BigDecimal weight);
         public abstract Exercise build();

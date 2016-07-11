@@ -1,6 +1,6 @@
 package vaughandroid.vigor.domain.exercise.type;
 
-import org.jetbrains.annotations.NotNull;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import rx.Observable;
  */
 public interface ExerciseTypeRepository {
 
-    @NotNull Observable<vaughandroid.vigor.domain.exercise.type.ExerciseType> addExerciseType(@NotNull vaughandroid.vigor.domain.exercise.type.ExerciseType exerciseType);
-    @NotNull Observable<vaughandroid.vigor.domain.exercise.type.ExerciseType> getExerciseType(@NotNull ExerciseTypeId id);
-    @NotNull Observable<List<vaughandroid.vigor.domain.exercise.type.ExerciseType>> getExerciseTypeList();
+    @NonNull Observable<vaughandroid.vigor.domain.exercise.type.ExerciseType> addExerciseType(@NonNull vaughandroid.vigor.domain.exercise.type.ExerciseType exerciseType);
+    @NonNull Observable<vaughandroid.vigor.domain.exercise.type.ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
+    @NonNull Observable<List<vaughandroid.vigor.domain.exercise.type.ExerciseType>> getExerciseTypeList();
 }

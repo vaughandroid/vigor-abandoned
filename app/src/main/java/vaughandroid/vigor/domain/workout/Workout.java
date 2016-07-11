@@ -3,7 +3,7 @@ package vaughandroid.vigor.domain.workout;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 
-import org.jetbrains.annotations.NotNull;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,19 +24,19 @@ public abstract class Workout implements Serializable {
                 .exercises(ImmutableList.<vaughandroid.vigor.domain.exercise.Exercise>of());
     }
 
-    @NotNull
+    @NonNull
     public abstract WorkoutId id();
     public abstract Workout withId(WorkoutId workoutId);
 
-    @NotNull
+    @NonNull
     public abstract ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises();
-    public abstract Workout withExercises(@NotNull ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises);
+    public abstract Workout withExercises(@NonNull ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises);
 
     @AutoValue.Builder
     public static abstract class Builder {
 
-        public abstract Builder id(@NotNull WorkoutId id);
-        public abstract Builder exercises(@NotNull ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises);
+        public abstract Builder id(@NonNull WorkoutId id);
+        public abstract Builder exercises(@NonNull ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises);
 
         public Builder exercises(List<vaughandroid.vigor.domain.exercise.Exercise> exercises) {
             exercises(ImmutableList.copyOf(exercises));

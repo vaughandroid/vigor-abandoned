@@ -28,5 +28,8 @@ public interface WorkoutContract {
 
         void onAddExercise();
         void onOpenExercise(@NonNull Exercise exercise);
+
+        void onExerciseAdded(@NonNull Exercise exercise);
+        void onExerciseUpdated(@NonNull Exercise exercise);
     }
 }
