@@ -4,8 +4,6 @@ import com.google.auto.value.AutoValue;
 
 import java.io.Serializable;
 
-import vaughandroid.vigor.domain.workout.AutoValue_WorkoutId;
-
 /**
  * TODO: javadoc
  *

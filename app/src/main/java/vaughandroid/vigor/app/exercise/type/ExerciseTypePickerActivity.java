@@ -32,9 +32,9 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
 
     private static final String EXTRA_TYPE = "exerciseType";
 
-    public static Intent intent(@NonNull Context context, @NonNull ExerciseType currentType) {
+    public static Intent intent(@NonNull Context context, @NonNull ExerciseType exerciseType) {
         return new Intent(context, ExerciseTypePickerActivity.class)
-                .putExtra(EXTRA_TYPE, currentType);
+                .putExtra(EXTRA_TYPE, exerciseType);
     }
 
     @NonNull

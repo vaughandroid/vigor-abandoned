@@ -1,12 +1,10 @@
 package vaughandroid.vigor.domain.exercise;
 
-import com.google.auto.value.AutoValue;
-
 import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import com.google.auto.value.AutoValue;
 
-import vaughandroid.vigor.domain.exercise.AutoValue_ExerciseId;
+import java.io.Serializable;
 
 /**
  * ID for an {@link Exercise}

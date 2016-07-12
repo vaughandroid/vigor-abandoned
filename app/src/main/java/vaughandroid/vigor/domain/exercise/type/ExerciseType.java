@@ -1,9 +1,9 @@
 package vaughandroid.vigor.domain.exercise.type;
 
+import android.support.annotation.NonNull;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ComparisonChain;
-
-import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.Comparator;

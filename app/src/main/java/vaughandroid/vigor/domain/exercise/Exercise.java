@@ -1,9 +1,9 @@
 package vaughandroid.vigor.domain.exercise;
 
-import com.google.auto.value.AutoValue;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

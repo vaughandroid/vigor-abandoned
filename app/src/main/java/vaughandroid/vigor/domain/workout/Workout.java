@@ -1,14 +1,12 @@
 package vaughandroid.vigor.domain.workout;
 
+import android.support.annotation.NonNull;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.List;
-
-import vaughandroid.vigor.domain.workout.$AutoValue_Workout;
 
 /**
  * TODO: javadoc

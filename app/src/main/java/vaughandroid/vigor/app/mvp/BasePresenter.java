@@ -7,8 +7,6 @@ import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.usecase.UseCase;
 

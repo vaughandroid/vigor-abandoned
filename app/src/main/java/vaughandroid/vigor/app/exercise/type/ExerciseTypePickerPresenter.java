@@ -46,7 +46,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
         this.exerciseType = exerciseType;
         initView(view);
 
-        Observable.just(exerciseType)
+        Observable.just(this.exerciseType)
                 .map(ExerciseType::name)
                 .mergeWith(view.searchText())
                 .subscribe(getExerciseTypesUseCase::setSearchText);
