@@ -203,8 +203,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     }
 
     @Override
-    public void onSaved(Exercise exercise) {
-        setResult(RESULT_OK);
+    public void onSaved(@NonNull Exercise exercise) {
+        setResult(RESULT_OK, new Intent().putExtra(RESULT_EXERCISE, exercise));
         finish();
     }
 }

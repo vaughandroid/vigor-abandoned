@@ -26,7 +26,7 @@ public interface ExerciseContract {
 
         void openTypePicker(@NonNull ExerciseType type);
 
-        void onSaved(Exercise exercise);
+        void onSaved(@NonNull Exercise exercise);
     }
 
     interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
