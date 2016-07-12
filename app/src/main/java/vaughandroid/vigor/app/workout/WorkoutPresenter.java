@@ -3,7 +3,11 @@ package vaughandroid.vigor.app.workout;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -91,11 +95,20 @@ public class WorkoutPresenter extends BasePresenter<View>
 
     @Override
     public void onExerciseAdded(@NonNull Exercise exercise) {
-
+        List<Exercise> exercises = new ArrayList<>(workout.exercises());
+        exercises.add(exercise);
+        setWorkout(workout.withExercises(ImmutableList.copyOf(exercises)));
     }
 
     @Override
     public void onExerciseUpdated(@NonNull Exercise exercise) {
-
+        List<Exercise> exercises = new ArrayList<>(workout.exercises());
+        for (int i = 0; i < exercises.size(); i++) {
+            if (exercises.get(i).id().equals(exercise.id())) {
+                exercises.set(i, exercise);
+                break;
+            }
+        }
+        setWorkout(workout.withExercises(ImmutableList.copyOf(exercises)));
     }
 }

@@ -144,10 +144,14 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
         switch (requestCode) {
             case REQUEST_CODE_EXERCISE_ADD:
-                presenter.onExerciseAdded(ExerciseActivity.getExerciseFromResult(data));
+                if (resultCode == RESULT_OK) {
+                    presenter.onExerciseAdded(ExerciseActivity.getExerciseFromResult(data));
+                }
                 break;
             case REQUEST_CODE_EXERCISE_EDIT:
-                presenter.onExerciseUpdated(ExerciseActivity.getExerciseFromResult(data));
+                if (resultCode == RESULT_OK) {
+                    presenter.onExerciseUpdated(ExerciseActivity.getExerciseFromResult(data));
+                }
                 break;
             default:
                 throw new UnexpectedActivityResultException(requestCode, resultCode, data);

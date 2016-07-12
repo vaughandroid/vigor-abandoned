@@ -39,6 +39,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void setExercises(@NonNull List<Exercise> exercises) {
         this.exercises.clear();
         this.exercises.addAll(exercises);
+        notifyDataSetChanged();
     }
 
     /**
@@ -85,7 +86,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             nameTextView.setText(exercise.id().guid());
             Context context = valuesTextView.getContext();
             String valuesText = context.getString(R.string.exercise_list_item_values_weight_and_reps, exercise.weight(),
-                    "Kg", exercise.reps()); // XXX weight units
+                    "Kg", exercise.reps()); // TODO: weight units
             valuesTextView.setText(valuesText);
         }
 
