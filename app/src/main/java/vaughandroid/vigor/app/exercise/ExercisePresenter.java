@@ -64,8 +64,9 @@ public class ExercisePresenter extends BasePresenter<View>
     }
 
     private void showError(Throwable throwable) {
-        if (getView() != null) {
-            getView().showError();
+        View view = getView();
+        if (view != null) {
+            view.showError();
         }
     }
 
@@ -87,8 +88,9 @@ public class ExercisePresenter extends BasePresenter<View>
 
     @Override
     public void onTypeClicked() {
-        if (getView() != null) {
-            getView().openTypePicker(exercise.type());
+        View view = getView();
+        if (view != null) {
+            view.openTypePicker(exercise.type());
         }
     }
 
@@ -125,10 +127,11 @@ public class ExercisePresenter extends BasePresenter<View>
         updateViewValues();
     }
 
-    private void onSaved(Exercise exercise) {
+    private void onSaved(@NonNull Exercise exercise) {
         this.setExercise(exercise);
-        if (getView() != null) {
-            getView().onSaved(exercise);
+        View view = getView();
+        if (view != null) {
+            view.onSaved(exercise);
         }
     }
 }

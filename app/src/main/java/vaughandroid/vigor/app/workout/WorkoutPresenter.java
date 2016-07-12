@@ -68,21 +68,24 @@ public class WorkoutPresenter extends BasePresenter<View>
 
     private void setWorkout(Workout workout) {
         this.workout = workout;
-        if (getView() != null) {
-            getView().setExercises(workout.exercises());
+        View view = getView();
+        if (view != null) {
+            view.setExercises(workout.exercises());
         }
     }
 
     private void showError(Throwable t) {
-        if (getView() != null) {
-            getView().showError();
+        View view = getView();
+        if (view != null) {
+            view.showError();
         }
     }
 
     @Override
     public void onOpenExercise(@NonNull Exercise exercise) {
-        if (getView() != null) {
-            getView().openExistingExerciseActivity(workout.id(), exercise.id());
+        View view = getView();
+        if (view != null) {
+            view.openExistingExerciseActivity(workout.id(), exercise.id());
         }
     }
 
