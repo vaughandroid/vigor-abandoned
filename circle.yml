@@ -1,0 +1,25 @@
+general:
+  branches:
+    only:
+      - master # list of branches to build
+dependencies:
+  pre:
+    # Update Android SDK Packages
+    - echo y | android update sdk --no-ui --all --filter tools
+    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
+test:
+  override:
+    # Start the emulator
+    - emulator -avd circleci-android22 -no-audio -no-window:
+        background: true
+        parallel: true
+    # Wait for the emulator to boot
+    - circle-android wait-for-boot
+    # Unit tests
+    - >
+      ./gradlew :app:test --console=plain
+      && cp -a app/build/test-results/debug/*.xml $CIRCLE_ARTIFACTS
+    # Acceptance tests
+    - >
+      ./gradlew :app:connectedAndroidTest --console=plain
+      && cp -r app/build/outputs/androidTest-results/connected/*.xml $CIRCLE_ARTIFACTS

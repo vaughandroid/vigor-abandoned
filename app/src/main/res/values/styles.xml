@@ -17,4 +17,65 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="Vigor.Widget.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Vigor.Widget.EditText.Number">
+        <item name="android:inputType">number|numberDecimal|numberSigned</item>
+    </style>
+
+    <style name="Vigor.Widget.Button.NumberInput" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+    </style>
+
+    <style name="Vigor.Widget.TextView" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Vigor.Widget.TextView.Units">
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+    </style>
+
+    <style name="Vigor.Widget.Button.Confirm" parent="Widget.AppCompat.Button.Colored">
+    </style>
+
+    <style name="Vigor.Widget.FloatingActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_margin">@dimen/fab_margin</item>
+        <item name="android:tint">?android:textColorPrimaryInverse</item>
+    </style>
+
+    <style name="Vigor.List.Item" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:paddingLeft">@dimen/list_padding_left</item>
+        <item name="android:paddingRight">@dimen/list_padding_right</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Vigor.List.Item.Header" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/list_header</item>
+    </style>
+
+    <style name="Vigor.List.Item.Detail" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>
