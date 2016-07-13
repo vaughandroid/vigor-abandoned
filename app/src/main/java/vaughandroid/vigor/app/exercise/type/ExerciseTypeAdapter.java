@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.internal.Preconditions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,6 @@ import rx.Subscriber;
 import rx.android.MainThreadSubscription;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
-import vaughandroid.vigor.utils.Preconditions;
 
 /**
  * {@link android.support.v7.widget.RecyclerView.Adapter} for displaying {@link ExerciseType}s.

@@ -21,7 +21,6 @@ import rx.Observable;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
-import vaughandroid.vigor.utils.Preconditions;
 
 /**
  * Activity for picking an {@link ExerciseType}
@@ -76,7 +75,7 @@ public class ExerciseTypePickerActivity extends VigorActivity implements Exercis
 
     private ExerciseType getExerciseType() {
         Intent intent = getIntent();
-        Preconditions.checkState(intent.hasExtra(EXTRA_TYPE), "Missing extra: '{}'", EXTRA_TYPE);
+        com.google.common.base.Preconditions.checkState(intent.hasExtra(EXTRA_TYPE), "Missing extra: '%s'", EXTRA_TYPE);
         return (ExerciseType) intent.getSerializableExtra(EXTRA_TYPE);
     }
 

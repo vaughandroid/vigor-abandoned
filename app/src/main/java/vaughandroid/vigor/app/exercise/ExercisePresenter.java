@@ -3,6 +3,7 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Objects;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import org.slf4j.Logger;
@@ -22,7 +23,6 @@ import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.workout.WorkoutId;
-import vaughandroid.vigor.utils.Objects;
 
 /**
  * MVP presenter implementation for {@link ExerciseContract}

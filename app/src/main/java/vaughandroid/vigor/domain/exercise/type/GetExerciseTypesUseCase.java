@@ -2,7 +2,8 @@ package vaughandroid.vigor.domain.exercise.type;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import javax.inject.Inject;
 
@@ -10,14 +11,13 @@ import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.Subject;
 import vaughandroid.vigor.domain.usecase.UseCase;
-import vaughandroid.vigor.utils.Lists;
 
 /**
  * TODO: javadoc
  *
  * @author chris.vaughan@laterooms.com
  */
-public class GetExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
+public class GetExerciseTypesUseCase implements UseCase<ImmutableList<ExerciseType>> {
 
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final Subject<String, String> searchTextSubject = BehaviorSubject.create("");
@@ -33,11 +33,11 @@ public class GetExerciseTypesUseCase implements UseCase<List<ExerciseType>> {
     }
 
     @Override
-    public Observable<List<ExerciseType>> createObservable() {
+    public Observable<ImmutableList<ExerciseType>> createObservable() {
         return Observable.combineLatest(
                 exerciseTypeRepository.getExerciseTypeList(),
                 searchTextSubject,
                 (exerciseTypes, searchText) ->
-                        Lists.filterList(exerciseTypes, input -> input.nameLowercase().contains(searchText)));
+                        ImmutableList.copyOf(Iterables.filter(exerciseTypes, input -> input.nameLowercase().contains(searchText))));
     }
 }

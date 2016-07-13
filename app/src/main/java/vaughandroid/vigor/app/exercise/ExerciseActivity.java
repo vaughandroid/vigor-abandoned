@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.common.base.Preconditions;
+
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
@@ -28,7 +30,6 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
-import vaughandroid.vigor.utils.Preconditions;
 
 /**
  * @author Chris
@@ -105,14 +106,14 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     @NonNull
     private WorkoutId getWorkoutId() {
         WorkoutId workoutId = (WorkoutId) getIntent().getExtras().getSerializable(EXTRA_WORKOUT_ID);
-        Preconditions.checkNotNull(workoutId, "Missing extra: {}", EXTRA_WORKOUT_ID);
+        Preconditions.checkNotNull(workoutId, "Missing extra: %s", EXTRA_WORKOUT_ID);
         return workoutId;
     }
 
     @NonNull
     private ExerciseId getExerciseId() {
         ExerciseId exerciseId = (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_EXERCISE_ID);
-        Preconditions.checkNotNull(exerciseId, "Missing extra: {}", EXTRA_EXERCISE_ID);
+        Preconditions.checkNotNull(exerciseId, "Missing extra: %s", EXTRA_EXERCISE_ID);
         return exerciseId;
     }
 

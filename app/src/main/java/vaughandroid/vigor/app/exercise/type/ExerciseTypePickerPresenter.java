@@ -2,6 +2,7 @@ package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Preconditions;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
 import java.util.List;
@@ -14,7 +15,6 @@ import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.exercise.type.GetExerciseTypesUseCase;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
-import vaughandroid.vigor.utils.Preconditions;
 
 /**
  * MVP Presenter for the {@link ExerciseTypePickerActivity}

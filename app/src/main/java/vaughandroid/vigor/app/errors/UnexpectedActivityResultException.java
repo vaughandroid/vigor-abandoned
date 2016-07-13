@@ -2,8 +2,6 @@ package vaughandroid.vigor.app.errors;
 
 import android.content.Intent;
 
-import vaughandroid.vigor.utils.Strings;
-
 /**
  * TODO: javadoc
  *
@@ -12,7 +10,7 @@ import vaughandroid.vigor.utils.Strings;
 public class UnexpectedActivityResultException extends RuntimeException {
 
     public UnexpectedActivityResultException(int requestCode, int resultCode, Intent data) {
-        super(Strings.format("Unexpected activity result, request code: {}, result code: {}, data: {}",
+        super(String.format("Unexpected activity result, request code: %s, result code: %s, data: %s",
                 requestCode, resultCode, data));
     }
 }
