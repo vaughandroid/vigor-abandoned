@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "478418661590",
+    "firebase_url": "https://vigor-6dbec.firebaseio.com",
+    "project_id": "vigor-6dbec",
+    "storage_bucket": "vigor-6dbec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478418661590:android:7bab0169fec45ea8",
+        "android_client_info": {
+          "package_name": "me.vaughandroid.vigor.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478418661590-28vnglkgmijdd2ge7heaidvapmgemhdi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.vaughandroid.vigor.debug",
+            "certificate_hash": "0F756CC903E04D3F01D192A1626E0A0B867FEE01"
+          }
+        },
+        {
+          "client_id": "478418661590-7cc3vsmc8q87a82l6lka0l6lvg3msl4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkOeQxCkD4FUKApoUiiDuMZjKXu5ntzKQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478418661590-7cc3vsmc8q87a82l6lka0l6lvg3msl4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

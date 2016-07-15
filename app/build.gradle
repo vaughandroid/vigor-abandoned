@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "vaughandroid.vigor"
+        applicationId "me.vaughandroid.vigor"
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode 1
