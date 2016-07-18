@@ -33,6 +33,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro',
+                    "${rootDir}/buildsystem/proguard/firebase.pro",
                     "${rootDir}/buildsystem/proguard/retrolambda.pro"
         }
     }
