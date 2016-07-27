@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * TODO: javadoc
+ * Data for a workout session.
  *
  * @author Chris
  */

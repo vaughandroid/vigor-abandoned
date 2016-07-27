@@ -11,7 +11,7 @@ import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.usecase.UseCase;
 
 /**
- * TODO: javadoc
+ * Base class for MVP Presenters.
  *
  * @author Chris
  */

@@ -9,7 +9,7 @@ import rx.Observable;
 import vaughandroid.vigor.domain.usecase.UseCase;
 
 /**
- * TODO: javadoc
+ * Use case for adding a new {@link Workout}
  *
  * @author Chris
  */

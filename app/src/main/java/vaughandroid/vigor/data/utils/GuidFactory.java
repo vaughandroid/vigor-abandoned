@@ -3,7 +3,7 @@ package vaughandroid.vigor.data.utils;
 import javax.inject.Inject;
 
 /**
- * TODO: javadoc
+ * Creates GUIDs used for various IDs
  *
  * @author Chris
  */

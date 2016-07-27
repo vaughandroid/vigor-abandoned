@@ -12,7 +12,7 @@ import vaughandroid.vigor.domain.workout.Workout;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
- * TODO: javadoc
+ * Repository for dealing with {@link Workout}s
  *
  * @author Chris
  */

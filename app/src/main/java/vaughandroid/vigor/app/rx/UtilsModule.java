@@ -6,8 +6,6 @@ import vaughandroid.vigor.app.di.ApplicationScope;
 import vaughandroid.vigor.data.utils.GuidFactory;
 
 /**
- * TODO: javadoc
- *
  * @author Chris
  */
 @Module

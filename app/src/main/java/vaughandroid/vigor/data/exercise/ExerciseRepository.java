@@ -4,14 +4,18 @@ import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
 
-import java.util.HashMap;
+import java.text.MessageFormat;
 
 import javax.inject.Inject;
 
 import rx.Observable;
+import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
 import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
+import vaughandroid.vigor.domain.exercise.type.ExerciseType;
+import vaughandroid.vigor.domain.exercise.type.ExerciseTypeId;
+import vaughandroid.vigor.domain.exercise.type.ExerciseTypeRepository;
 
 /**
  * Implementation of {@link vaughandroid.vigor.domain.exercise.ExerciseRepository}
@@ -21,12 +25,15 @@ import vaughandroid.vigor.domain.exercise.ExerciseId;
 public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.ExerciseRepository {
 
     private final GuidFactory guidFactory;
-    // TODO: persist somewhere
-    private final HashMap<ExerciseId, Exercise> lookup = new HashMap<>();
+    private final ExerciseTypeRepository exerciseTypeRepository;
+    private final FirebaseDatabaseWrapper firebaseDatabaseWrapper;
 
     @Inject
-    public ExerciseRepository(GuidFactory guidFactory) {
+    public ExerciseRepository(GuidFactory guidFactory, ExerciseTypeRepository exerciseTypeRepository,
+            FirebaseDatabaseWrapper firebaseDatabaseWrapper) {
         this.guidFactory = guidFactory;
+        this.exerciseTypeRepository = exerciseTypeRepository;
+        this.firebaseDatabaseWrapper = firebaseDatabaseWrapper;
     }
 
     @NonNull
@@ -35,17 +42,19 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
         if (Objects.equal(exercise.id(), ExerciseId.UNASSIGNED)) {
             exercise = exercise.withId(ExerciseId.create(guidFactory.newGuid()));
         }
-        lookup.put(exercise.id(), exercise);
         return Observable.just(exercise);
     }
 
     @NonNull
     @Override
     public Observable<Exercise> getExercise(@NonNull ExerciseId id) {
-        Observable<Exercise> result = Observable.empty();
-        if (lookup.containsKey(id)) {
-            Observable.just(lookup.get(id));
-        }
-        return result;
+        String path = MessageFormat.format("exercises/{}", id.guid());
+        return firebaseDatabaseWrapper.observe(path, ExerciseDto.class)
+                .flatMap(
+                        // Fetch type
+                        dto -> exerciseTypeRepository.getExerciseType(ExerciseTypeId.create(dto.type.guid)),
+                        // Combine DTO and type
+                        (ExerciseDto dto, ExerciseType type) -> new ExerciseMapper().fromDto(dto, type));
+
     }
 }

@@ -7,8 +7,6 @@ import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.workout.WorkoutRepository;
 
 /**
- * TODO: javadoc
- *
  * @author Chris
  */
 @Module

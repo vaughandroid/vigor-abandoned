@@ -9,8 +9,6 @@ import dagger.Provides;
 import vaughandroid.vigor.app.VigorActivity;
 
 /**
- * TODO: javadoc
- *
  * @author Chris
  */
 @Module

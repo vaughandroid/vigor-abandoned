@@ -3,18 +3,25 @@ package vaughandroid.vigor.data.firebase.database;
 import com.google.common.base.Preconditions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+
+import javax.inject.Inject;
 
 import rx.Observable;
-import vaughandroid.vigor.data.firebase.database.rx.RxFirebase;
+import vaughandroid.vigor.app.di.ApplicationScope;
 
 /**
  * Firebase database wrapper class.
  *
  * @author Chris
  */
+@ApplicationScope
 public class FirebaseDatabaseWrapper {
 
     private FirebaseDatabase mDatabase;
+
+    @Inject
+    public FirebaseDatabaseWrapper() {}
 
     public void init() {
         mDatabase = FirebaseDatabase.getInstance();
@@ -23,8 +30,22 @@ public class FirebaseDatabaseWrapper {
     }
 
     public Observable<Boolean> connectedStatus() {
+        checkInitialised();
+        DatabaseReference ref = mDatabase.getReference(".info/connected");
+        return Observable.create(ValueEventOnSubscribe.forClass(ref, Boolean.class));
+    }
+
+    public <T> Observable<T> observe(String path, Class<T> clazz) {
+        checkInitialised();
+        return Observable.create(ValueEventOnSubscribe.forClass(mDatabase.getReference(path), clazz));
+    }
+
+    public <T> Observable<T> observe(String path, GenericTypeIndicator<T> genericTypeIndicator) {
+        checkInitialised();
+        return Observable.create(ValueEventOnSubscribe.forGenericTypeIndicator(mDatabase.getReference(path), genericTypeIndicator));
+    }
+
+    private void checkInitialised() {
         Preconditions.checkState(mDatabase != null, "not initialised!");
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(".info/connected");
-        return RxFirebase.observe(ref, Boolean.class);
     }
 }
