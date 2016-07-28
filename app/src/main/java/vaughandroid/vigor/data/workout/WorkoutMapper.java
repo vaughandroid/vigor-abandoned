@@ -32,4 +32,11 @@ public class WorkoutMapper {
                 .exercises(exerciseMapper.fromDtoList(dto.exerciseDtos, exerciseTypeMap))
                 .build();
     }
+
+    WorkoutDto fromWorkout(@NonNull Workout workout) {
+        WorkoutDto dto = new WorkoutDto();
+        dto.guid = workout.id().guid();
+        dto.exerciseDtos = exerciseMapper.fromExerciseList(workout.exercises());
+        return dto;
+    }
 }

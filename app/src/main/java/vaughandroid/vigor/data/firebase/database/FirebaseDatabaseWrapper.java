@@ -8,6 +8,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.subjects.PublishSubject;
 import vaughandroid.vigor.app.di.ApplicationScope;
 
 /**
@@ -43,6 +44,18 @@ public class FirebaseDatabaseWrapper {
     public <T> Observable<T> observe(String path, GenericTypeIndicator<T> genericTypeIndicator) {
         checkInitialised();
         return Observable.create(ValueEventOnSubscribe.forGenericTypeIndicator(mDatabase.getReference(path), genericTypeIndicator));
+    }
+
+    public Observable<Void> set(String path, Object value) {
+        PublishSubject<Void> subject = PublishSubject.create();
+        mDatabase.getReference(path).setValue(value, (databaseError, databaseReference) -> {
+            if (databaseError != null) {
+                subject.onError(new FirebaseDatabaseException(databaseError));
+            } else {
+                subject.onCompleted();
+            }
+        });
+        return subject.asObservable();
     }
 
     private void checkInitialised() {

@@ -42,17 +42,24 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
         if (Objects.equal(workout.id(), WorkoutId.UNASSIGNED)) {
             workout = workout.withId(WorkoutId.create(guidFactory.newGuid()));
         }
-        // XXX
-        return Observable.just(workout);
+        final Workout finalWorkout = workout;
+
+        WorkoutDto dto = workoutMapper.fromWorkout(finalWorkout);
+        return firebaseDatabaseWrapper.set(getPath(finalWorkout.id()), dto)
+                .map(ignored -> finalWorkout);
     }
 
     @NonNull
     @Override
     public Observable<Workout> getWorkout(@NonNull WorkoutId id) {
-        String path = MessageFormat.format("workouts/{}", id.guid());
         return Observable.combineLatest(
-                firebaseDatabaseWrapper.observe(path, WorkoutDto.class),
+                firebaseDatabaseWrapper.observe(getPath(id), WorkoutDto.class),
                 exerciseTypeRepository.getExerciseTypeMap(),
                 workoutMapper::fromDto);
+    }
+
+    @NonNull
+    private String getPath(@NonNull WorkoutId id) {
+        return MessageFormat.format("workouts/{}", id.guid());
     }
 }

@@ -58,4 +58,12 @@ public class ExerciseMapper {
         }
         return exercises;
     }
+
+    public List<ExerciseDto> fromExerciseList(List<Exercise> exercises) {
+        List<ExerciseDto> dtos = new ArrayList<>(exercises.size());
+        for (Exercise exercise : exercises) {
+            dtos.add(fromExercise(exercise));
+        }
+        return dtos;
+    }
 }
