@@ -6,7 +6,9 @@ import com.google.common.base.Objects;
 import com.google.firebase.database.GenericTypeIndicator;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -48,6 +50,7 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
         if (Objects.equal(exerciseType.id(), ExerciseTypeId.UNASSIGNED)) {
             exerciseType = exerciseType.withId(ExerciseTypeId.create(guidFactory.newGuid()));
         }
+        // XXX
         return Observable.just(exerciseType);
     }
 
@@ -64,5 +67,19 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
     public Observable<List<ExerciseType>> getExerciseTypeList() {
         return firebaseDatabaseWrapper.observe("exerciseTypes", new GenericTypeIndicator<List<ExerciseTypeDto>>() {})
                 .map(mapper::fromDtoList);
+    }
+
+    @NonNull
+    @Override
+    public Observable<Map<ExerciseTypeId, ExerciseType>> getExerciseTypeMap() {
+        return firebaseDatabaseWrapper.observe("exerciseTypes", new GenericTypeIndicator<List<ExerciseTypeDto>>() {})
+                .map(mapper::fromDtoList)
+                .map(list -> {
+                    Map<ExerciseTypeId, ExerciseType> map = new HashMap<>();
+                    for (ExerciseType exerciseType : list) {
+                        map.put(exerciseType.id(), exerciseType);
+                    }
+                    return map;
+                });
     }
 }

@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
  *
  * @author Chris
  */
-class ExerciseDto {
+public class ExerciseDto {
 
     @NonNull public String guid;
 
