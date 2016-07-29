@@ -1,7 +1,7 @@
 package vaughandroid.vigor.data.firebase.database;
 
 import com.google.common.base.Preconditions;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 
@@ -22,7 +22,8 @@ public class FirebaseDatabaseWrapper {
     private FirebaseDatabase mDatabase;
 
     @Inject
-    public FirebaseDatabaseWrapper() {}
+    public FirebaseDatabaseWrapper() {
+    }
 
     public void init() {
         mDatabase = FirebaseDatabase.getInstance();
@@ -32,29 +33,37 @@ public class FirebaseDatabaseWrapper {
 
     public Observable<Boolean> connectedStatus() {
         checkInitialised();
-        DatabaseReference ref = mDatabase.getReference(".info/connected");
-        return Observable.create(ValueEventOnSubscribe.forClass(ref, Boolean.class));
+        return observe(".info/connected", Boolean.class);
+    }
+
+    public Observable<Boolean> dataExists(String path) {
+        checkInitialised();
+        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path), DataSnapshot::exists));
     }
 
     public <T> Observable<T> observe(String path, Class<T> clazz) {
         checkInitialised();
-        return Observable.create(ValueEventOnSubscribe.forClass(mDatabase.getReference(path), clazz));
+        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path),
+                dataSnapshot -> dataSnapshot.getValue(clazz)));
     }
 
     public <T> Observable<T> observe(String path, GenericTypeIndicator<T> genericTypeIndicator) {
         checkInitialised();
-        return Observable.create(ValueEventOnSubscribe.forGenericTypeIndicator(mDatabase.getReference(path), genericTypeIndicator));
+        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path),
+                dataSnapshot -> dataSnapshot.getValue(genericTypeIndicator)));
     }
 
     public Observable<Void> set(String path, Object value) {
+        checkInitialised();
         PublishSubject<Void> subject = PublishSubject.create();
-        mDatabase.getReference(path).setValue(value, (databaseError, databaseReference) -> {
-            if (databaseError != null) {
-                subject.onError(new FirebaseDatabaseException(databaseError));
-            } else {
-                subject.onCompleted();
-            }
-        });
+        mDatabase.getReference(path)
+                .setValue(value, (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        subject.onError(new FirebaseDatabaseException(databaseError));
+                    } else {
+                        subject.onCompleted();
+                    }
+                });
         return subject.asObservable();
     }
 

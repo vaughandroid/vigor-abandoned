@@ -3,10 +3,11 @@ package vaughandroid.vigor.data.exercise.type;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Ordering;
 import com.google.firebase.database.GenericTypeIndicator;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +36,6 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
         this.guidFactory = guidFactory;
         this.mapper = mapper;
         this.firebaseDatabaseWrapper = firebaseDatabaseWrapper;
-
-        // XXX need proper data
-        addExerciseType(ExerciseType.create(ExerciseTypeId.UNASSIGNED, "Squats"));
-        addExerciseType(ExerciseType.create(ExerciseTypeId.UNASSIGNED, "Chin-ups"));
-        addExerciseType(ExerciseType.create(ExerciseTypeId.UNASSIGNED, "Bench Press"));
-        addExerciseType(ExerciseType.create(ExerciseTypeId.UNASSIGNED, "Press-ups"));
-        addExerciseType(ExerciseType.create(ExerciseTypeId.UNASSIGNED, "Sit-ups"));
     }
 
     @NonNull
@@ -53,40 +47,52 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
         final ExerciseType finalExerciseType = exerciseType;
 
         ExerciseTypeDto dto = mapper.fromExerciseType(finalExerciseType);
-        return firebaseDatabaseWrapper.set(getPath(finalExerciseType.id()), dto)
+        return firebaseDatabaseWrapper.set(getPathForId(finalExerciseType.id()), dto)
                 .map(ignored -> finalExerciseType);
     }
 
     @NonNull
     @Override
     public Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id) {
-        return firebaseDatabaseWrapper.observe(getPath(id), ExerciseTypeDto.class)
+        return firebaseDatabaseWrapper.observe(getPathForId(id), ExerciseTypeDto.class)
                 .map(mapper::fromDto);
     }
 
     @NonNull
     @Override
     public Observable<List<ExerciseType>> getExerciseTypeList() {
-        return firebaseDatabaseWrapper.observe("exerciseTypes", new GenericTypeIndicator<List<ExerciseTypeDto>>() {})
-                .map(mapper::fromDtoList);
+        return firebaseDatabaseWrapper.observe(getPathForAll(), new GenericTypeIndicator<Map<String, ExerciseTypeDto>>() {})
+                .map(mapper::fromDtoMap)
+                .map(map -> {
+                    List<ExerciseType> list = new ArrayList<>(map.size());
+                    for (ExerciseType exerciseType : map.values()) {
+                        list.add(exerciseType);
+                    }
+                    return list;
+                })
+                .map(this::sortList);
     }
 
     @NonNull
     @Override
     public Observable<Map<ExerciseTypeId, ExerciseType>> getExerciseTypeMap() {
-        return firebaseDatabaseWrapper.observe("exerciseTypes", new GenericTypeIndicator<List<ExerciseTypeDto>>() {})
-                .map(mapper::fromDtoList)
-                .map(list -> {
-                    Map<ExerciseTypeId, ExerciseType> map = new HashMap<>();
-                    for (ExerciseType exerciseType : list) {
-                        map.put(exerciseType.id(), exerciseType);
-                    }
-                    return map;
-                });
+        return firebaseDatabaseWrapper.observe(getPathForAll(), new GenericTypeIndicator<Map<String, ExerciseTypeDto>>() {})
+                .map(mapper::fromDtoMap);
     }
 
     @NonNull
-    private String getPath(@NonNull ExerciseTypeId id) {
-        return MessageFormat.format("exerciseTypes/{}", id.guid());
+    private String getPathForAll() {
+        return "exerciseTypes";
+    }
+
+    @NonNull
+    private String getPathForId(@NonNull ExerciseTypeId id) {
+        return MessageFormat.format("{}/{}", getPathForAll(), id.guid());
+    }
+
+    private List<ExerciseType> sortList(List<ExerciseType> list) {
+        return Ordering.natural().onResultOf(ExerciseType::name)
+                .compound(Ordering.natural().onResultOf(ExerciseType::guid))
+                .sortedCopy(list);
     }
 }

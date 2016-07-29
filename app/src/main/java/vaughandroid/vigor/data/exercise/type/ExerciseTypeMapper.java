@@ -1,7 +1,7 @@
 package vaughandroid.vigor.data.exercise.type;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -31,11 +31,12 @@ public class ExerciseTypeMapper {
         return dto;
     }
 
-    public List<ExerciseType> fromDtoList(List<ExerciseTypeDto> dtos) {
-        List<ExerciseType> exerciseTypes = new ArrayList<>(dtos.size());
-        for (ExerciseTypeDto dto : dtos) {
-            exerciseTypes.add(fromDto(dto));
+    public Map<ExerciseTypeId, ExerciseType> fromDtoMap(Map<String, ExerciseTypeDto> dtoMap) {
+        Map<ExerciseTypeId, ExerciseType> exerciseTypeMap = new HashMap<>();
+        for (Map.Entry<String, ExerciseTypeDto> pair : dtoMap.entrySet()) {
+            ExerciseType exerciseType = fromDto(pair.getValue());
+            exerciseTypeMap.put(exerciseType.id(), exerciseType);
         }
-        return exerciseTypes;
+        return exerciseTypeMap;
     }
 }

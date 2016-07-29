@@ -1,9 +1,9 @@
 package vaughandroid.vigor.app.di;
 
 import dagger.Component;
+import vaughandroid.vigor.app.VigorApplication;
 import vaughandroid.vigor.app.rx.SchedulerModule;
 import vaughandroid.vigor.app.rx.UtilsModule;
-import vaughandroid.vigor.data.firebase.database.FirebaseModule;
 
 /**
  * Injector of {@link ApplicationScope}d instances.
@@ -11,7 +11,6 @@ import vaughandroid.vigor.data.firebase.database.FirebaseModule;
  * @author Chris
  */
 @Component(modules = {
-        FirebaseModule.class,
         SchedulerModule.class,
         UtilsModule.class,
 })
@@ -19,4 +18,6 @@ import vaughandroid.vigor.data.firebase.database.FirebaseModule;
 public interface ApplicationComponent {
 
     ActivityComponent activityComponent(ActivityModule activityModule);
+
+    void inject(VigorApplication application);
 }

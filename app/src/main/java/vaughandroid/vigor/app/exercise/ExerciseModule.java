@@ -1,13 +1,10 @@
 package vaughandroid.vigor.app.exercise;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import vaughandroid.vigor.app.di.ActivityScope;
-import vaughandroid.vigor.data.exercise.ExerciseMapper;
-import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
-import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.ExerciseRepository;
-import vaughandroid.vigor.domain.exercise.type.ExerciseTypeRepository;
 
 /**
  * Provides exercise-related classes for injection.
@@ -25,10 +22,8 @@ public class ExerciseModule {
 
     @Provides
     @ActivityScope
-    public ExerciseRepository provideExerciseRepository(GuidFactory guidFactory,
-            ExerciseTypeRepository exerciseTypeRepository, ExerciseMapper exerciseMapper,
-            FirebaseDatabaseWrapper firebaseDatabaseWrapper) {
-        return new vaughandroid.vigor.data.exercise.ExerciseRepository(guidFactory, exerciseTypeRepository,
-                exerciseMapper, firebaseDatabaseWrapper);
+    @Binds
+    public ExerciseRepository provideExerciseRepository(vaughandroid.vigor.data.exercise.ExerciseRepository exerciseRepository) {
+        return exerciseRepository;
     }
 }
