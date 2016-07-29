@@ -3,6 +3,8 @@ package vaughandroid.vigor.data.exercise.type;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 import com.google.firebase.database.GenericTypeIndicator;
 
@@ -60,7 +62,7 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
 
     @NonNull
     @Override
-    public Observable<List<ExerciseType>> getExerciseTypeList() {
+    public Observable<ImmutableList<ExerciseType>> getExerciseTypeList() {
         return firebaseDatabaseWrapper.observe(getPathForAll(), new GenericTypeIndicator<Map<String, ExerciseTypeDto>>() {})
                 .map(mapper::fromDtoMap)
                 .map(map -> {
@@ -73,11 +75,18 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
                 .map(this::sortList);
     }
 
+    private ImmutableList<ExerciseType> sortList(List<ExerciseType> list) {
+        return Ordering.natural().onResultOf(ExerciseType::name)
+                .compound(Ordering.natural().onResultOf(ExerciseType::guid))
+                .immutableSortedCopy(list);
+    }
+
     @NonNull
     @Override
-    public Observable<Map<ExerciseTypeId, ExerciseType>> getExerciseTypeMap() {
+    public Observable<ImmutableMap<ExerciseTypeId, ExerciseType>> getExerciseTypeMap() {
         return firebaseDatabaseWrapper.observe(getPathForAll(), new GenericTypeIndicator<Map<String, ExerciseTypeDto>>() {})
-                .map(mapper::fromDtoMap);
+                .map(mapper::fromDtoMap)
+                .map(ImmutableMap::copyOf);
     }
 
     @NonNull
@@ -88,11 +97,5 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
     @NonNull
     private String getPathForId(@NonNull ExerciseTypeId id) {
         return MessageFormat.format("{}/{}", getPathForAll(), id.guid());
-    }
-
-    private List<ExerciseType> sortList(List<ExerciseType> list) {
-        return Ordering.natural().onResultOf(ExerciseType::name)
-                .compound(Ordering.natural().onResultOf(ExerciseType::guid))
-                .sortedCopy(list);
     }
 }
