@@ -18,7 +18,11 @@ public abstract class ExerciseType implements Serializable {
 
     public static final ExerciseType UNSET = create(ExerciseTypeId.UNASSIGNED, "");
 
-    public static ExerciseType create(ExerciseTypeId id, String name) {
+    public static ExerciseType create(@NonNull String name) {
+        return create(ExerciseTypeId.UNASSIGNED, name);
+    }
+
+    public static ExerciseType create(@NonNull ExerciseTypeId id, @NonNull String name) {
         return builder()
                 .id(id)
                 .name(name)

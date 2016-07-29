@@ -14,7 +14,9 @@ import rx.Observable;
  */
 public interface ExerciseTypeRepository {
 
+    @NonNull Observable<Boolean> isInitialised();
     @NonNull Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
+    @NonNull Observable<ImmutableList<ExerciseType>> addExerciseTypes(@NonNull Iterable<ExerciseType> exerciseTypes);
     @NonNull Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
     @NonNull Observable<ImmutableList<ExerciseType>> getExerciseTypeList();
     @NonNull Observable<ImmutableMap<ExerciseTypeId, ExerciseType>> getExerciseTypeMap();

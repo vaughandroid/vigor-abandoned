@@ -38,7 +38,13 @@ public class FirebaseDatabaseWrapper {
 
     public Observable<Boolean> dataExists(String path) {
         checkInitialised();
-        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path), DataSnapshot::exists));
+        /* TODO: This notifies whenever any of the (direct?) children of the path changes, so it's extremely inefficient.
+         * Look at:
+         * 1. Use a query to only get data for that node and not it's children
+         * 2. Return a Single instead
+         */
+        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path), DataSnapshot::exists))
+                .distinct();
     }
 
     public <T> Observable<T> observe(String path, Class<T> clazz) {

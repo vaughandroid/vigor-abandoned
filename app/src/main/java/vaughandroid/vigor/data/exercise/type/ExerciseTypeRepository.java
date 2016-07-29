@@ -10,6 +10,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,12 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
 
     @NonNull
     @Override
+    public Observable<Boolean> isInitialised() {
+        return firebaseDatabaseWrapper.dataExists(getPathForAll());
+    }
+
+    @NonNull
+    @Override
     public Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType) {
         if (Objects.equal(exerciseType.id(), ExerciseTypeId.UNASSIGNED)) {
             exerciseType = exerciseType.withId(ExerciseTypeId.create(guidFactory.newGuid()));
@@ -55,6 +62,23 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
 
     @NonNull
     @Override
+    public Observable<ImmutableList<ExerciseType>> addExerciseTypes(@NonNull Iterable<ExerciseType> exerciseTypes) {
+        List<Observable<ExerciseType>> list = new ArrayList<>();
+        for (ExerciseType exerciseType : exerciseTypes) {
+            list.add(addExerciseType(exerciseType));
+        }
+        return Observable.combineLatest(list,
+                addedTypes -> {
+                    ImmutableList.Builder<ExerciseType> builder = ImmutableList.builder();
+                    for (Object o : addedTypes) {
+                        builder.add((ExerciseType) o);
+                    }
+                    return builder.build();
+                });
+    }
+
+    @NonNull
+    @Override
     public Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id) {
         return firebaseDatabaseWrapper.observe(getPathForId(id), ExerciseTypeDto.class)
                 .map(mapper::fromDto);
@@ -63,8 +87,7 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
     @NonNull
     @Override
     public Observable<ImmutableList<ExerciseType>> getExerciseTypeList() {
-        return firebaseDatabaseWrapper.observe(getPathForAll(), new GenericTypeIndicator<Map<String, ExerciseTypeDto>>() {})
-                .map(mapper::fromDtoMap)
+        return getExerciseTypeMap()
                 .map(map -> {
                     List<ExerciseType> list = new ArrayList<>(map.size());
                     for (ExerciseType exerciseType : map.values()) {
@@ -84,7 +107,9 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
     @NonNull
     @Override
     public Observable<ImmutableMap<ExerciseTypeId, ExerciseType>> getExerciseTypeMap() {
+        //noinspection Convert2Diamond
         return firebaseDatabaseWrapper.observe(getPathForAll(), new GenericTypeIndicator<Map<String, ExerciseTypeDto>>() {})
+                .map(map -> map != null ? map : new HashMap<String, ExerciseTypeDto>())
                 .map(mapper::fromDtoMap)
                 .map(ImmutableMap::copyOf);
     }
@@ -96,6 +121,6 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
 
     @NonNull
     private String getPathForId(@NonNull ExerciseTypeId id) {
-        return MessageFormat.format("{}/{}", getPathForAll(), id.guid());
+        return MessageFormat.format("{0}/{1}", getPathForAll(), id.guid());
     }
 }
