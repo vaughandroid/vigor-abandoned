@@ -1,6 +1,5 @@
 package vaughandroid.vigor.app.exercise;
 
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import vaughandroid.vigor.app.di.ActivityScope;
@@ -22,7 +21,6 @@ public class ExerciseModule {
 
     @Provides
     @ActivityScope
-    @Binds
     public ExerciseRepository provideExerciseRepository(vaughandroid.vigor.data.exercise.ExerciseRepository exerciseRepository) {
         return exerciseRepository;
     }
