@@ -3,9 +3,9 @@ package vaughandroid.vigor.app.errors;
 import android.content.Intent;
 
 /**
- * TODO: javadoc
+ * Thrown when an Activity receives an unexpected or invalid result {@link Intent}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class UnexpectedActivityResultException extends RuntimeException {
 

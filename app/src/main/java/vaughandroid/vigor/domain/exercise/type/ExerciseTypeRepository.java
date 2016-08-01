@@ -2,18 +2,24 @@ package vaughandroid.vigor.domain.exercise.type;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import rx.Observable;
+import rx.Single;
 
 /**
- * Interface for a class which can store & retrieve {@link vaughandroid.vigor.domain.exercise.type.ExerciseType} data.
+ * Interface for a class which can store & retrieve {@link ExerciseType} data.
  *
  * @author Chris
  */
 public interface ExerciseTypeRepository {
 
-    @NonNull Observable<vaughandroid.vigor.domain.exercise.type.ExerciseType> addExerciseType(@NonNull vaughandroid.vigor.domain.exercise.type.ExerciseType exerciseType);
-    @NonNull Observable<vaughandroid.vigor.domain.exercise.type.ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
-    @NonNull Observable<List<vaughandroid.vigor.domain.exercise.type.ExerciseType>> getExerciseTypeList();
+    @NonNull
+    Single<Boolean> isInitialised();
+    @NonNull Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
+    @NonNull Observable<ImmutableList<ExerciseType>> addExerciseTypes(@NonNull Iterable<ExerciseType> exerciseTypes);
+    @NonNull Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
+    @NonNull Observable<ImmutableList<ExerciseType>> getExerciseTypeList();
+    @NonNull Observable<ImmutableMap<ExerciseTypeId, ExerciseType>> getExerciseTypeMap();
 }

@@ -13,9 +13,9 @@ import rx.subjects.Subject;
 import vaughandroid.vigor.domain.usecase.UseCase;
 
 /**
- * TODO: javadoc
+ * Use case for getting a list of {@link ExerciseType}s. The list may optionally be filtered.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class GetExerciseTypesUseCase implements UseCase<ImmutableList<ExerciseType>> {
 

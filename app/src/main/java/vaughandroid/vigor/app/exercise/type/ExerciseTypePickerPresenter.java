@@ -14,6 +14,7 @@ import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.exercise.type.GetExerciseTypesUseCase;
+import vaughandroid.vigor.domain.exercise.type.InitExerciseTypesUseCase;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 
 /**
@@ -23,14 +24,17 @@ import vaughandroid.vigor.domain.rx.SchedulingPolicy;
  */
 public class ExerciseTypePickerPresenter extends BasePresenter<View> implements ExerciseTypePickerContract.Presenter {
 
+    private final InitExerciseTypesUseCase initExerciseTypesUseCase;
     private final GetExerciseTypesUseCase getExerciseTypesUseCase;
 
     @NonNull private ExerciseType exerciseType = ExerciseType.UNSET;
 
     @Inject
     public ExerciseTypePickerPresenter(ActivityLifecycleProvider activityLifecycleProvider,
-            SchedulingPolicy schedulingPolicy, GetExerciseTypesUseCase getExerciseTypesUseCase) {
+            SchedulingPolicy schedulingPolicy, InitExerciseTypesUseCase initExerciseTypesUseCase,
+            GetExerciseTypesUseCase getExerciseTypesUseCase) {
         super(activityLifecycleProvider, schedulingPolicy);
+        this.initExerciseTypesUseCase = initExerciseTypesUseCase;
         this.getExerciseTypesUseCase = getExerciseTypesUseCase;
     }
 
@@ -45,6 +49,10 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
         this.exerciseType = exerciseType;
         initView(view);
+
+        initExerciseTypesUseCase.createObservable()
+                .compose(useCaseTransformer())
+                .subscribe();
 
         Observable.just(this.exerciseType)
                 .map(ExerciseType::name)

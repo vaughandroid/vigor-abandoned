@@ -1,6 +1,7 @@
 package vaughandroid.vigor.app.di;
 
 import dagger.Component;
+import vaughandroid.vigor.app.VigorApplication;
 import vaughandroid.vigor.app.rx.SchedulerModule;
 import vaughandroid.vigor.app.rx.UtilsModule;
 
@@ -17,4 +18,6 @@ import vaughandroid.vigor.app.rx.UtilsModule;
 public interface ApplicationComponent {
 
     ActivityComponent activityComponent(ActivityModule activityModule);
+
+    void inject(VigorApplication application);
 }

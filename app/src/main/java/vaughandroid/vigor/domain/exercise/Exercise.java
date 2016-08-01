@@ -31,9 +31,17 @@ public abstract class Exercise implements Serializable {
 
     @NonNull
     public abstract WorkoutId workoutId();
+    @NonNull
+    public String workoutGuid() {
+        return workoutId().guid();
+    }
 
     @NonNull
     public abstract ExerciseType type();
+    @NonNull
+    public String typeGuid() {
+        return type().guid();
+    }
     public abstract Exercise withType(@NonNull ExerciseType type);
 
     @Nullable
@@ -42,6 +50,11 @@ public abstract class Exercise implements Serializable {
 
     @Nullable
     public abstract BigDecimal weight();
+    @Nullable
+    public String weightAsString() {
+        //noinspection ConstantConditions
+        return weight() != null ? weight().toPlainString() : null;
+    }
     public abstract Exercise withWeight(@Nullable BigDecimal weight);
 
     @AutoValue.Builder

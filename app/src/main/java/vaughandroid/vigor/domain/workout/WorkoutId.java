@@ -5,7 +5,7 @@ import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 
 /**
- * TODO: javadoc
+ * Unique ID for a {@link Workout}
  *
  * @author Chris
  */

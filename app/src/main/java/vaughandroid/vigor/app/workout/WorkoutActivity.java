@@ -12,8 +12,6 @@ import android.view.MenuItem;
 
 import com.google.common.collect.ImmutableList;
 
-import java.math.BigDecimal;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -55,13 +53,6 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
         initViews();
         initPresenter();
-
-        // XXX TEMP
-        setExercises(ImmutableList.of(
-                Exercise.builder().workoutId(getWorkoutId()).reps(8).weight(new BigDecimal("456.5")).build(),
-                Exercise.builder().workoutId(getWorkoutId()).reps(13).weight(new BigDecimal("123.5")).build(),
-                Exercise.builder().workoutId(getWorkoutId()).reps(8).weight(new BigDecimal("20")).build()
-        ));
     }
 
     private void initViews() {

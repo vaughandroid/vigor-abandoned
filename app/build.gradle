@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "vaughandroid.vigor"
+        applicationId "me.vaughandroid.vigor"
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode 1
@@ -33,6 +33,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro',
+                    "${rootDir}/buildsystem/proguard/firebase.pro",
                     "${rootDir}/buildsystem/proguard/retrolambda.pro"
         }
     }
@@ -64,6 +65,10 @@ dependencies {
     compile         androidLibs.butterKnife
     apt             androidLibs.butterKnifeCompiler
     compile         androidLibs.design
+    compile         androidLibs.firebaseAuth
+    compile         androidLibs.firebaseCore
+    compile         androidLibs.firebaseConfig
+    compile         androidLibs.firebaseDatabase
     debugCompile    androidLibs.leakCanary
     releaseCompile  androidLibs.leakCanaryNoOp
     compile         androidLibs.rxAndroid
@@ -93,3 +98,6 @@ dependencies {
     // Fix dependency version conflicts.
     androidTestCompile androidLibs.androidAnnotations
 }
+
+// For some reason, this has to go at the bottom of the script.
+apply plugin: 'com.google.gms.google-services'

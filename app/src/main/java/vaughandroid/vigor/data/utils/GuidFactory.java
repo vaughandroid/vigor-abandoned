@@ -1,9 +1,11 @@
 package vaughandroid.vigor.data.utils;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 /**
- * TODO: javadoc
+ * Creates GUIDs used for various IDs
  *
  * @author Chris
  */
@@ -13,6 +15,6 @@ public class GuidFactory {
     public GuidFactory() {}
 
     public String newGuid() {
-        return "" + Math.random(); // TODO: 15/06/2016 implement proper GUID creation
+        return UUID.randomUUID().toString();
     }
 }
