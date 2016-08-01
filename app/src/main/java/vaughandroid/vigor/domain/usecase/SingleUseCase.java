@@ -10,9 +10,9 @@ import vaughandroid.vigor.domain.rx.SchedulingPolicy;
  */
 public abstract class SingleUseCase<T> extends UseCase {
 
-    public SingleUseCase(SchedulingPolicy schedulingPolicy) {
-        super(schedulingPolicy);
-    }
+  public SingleUseCase(SchedulingPolicy schedulingPolicy) {
+    super(schedulingPolicy);
+  }
 
-    public abstract Single<T> createSingle();
+  public abstract Single<T> createSingle();
 }

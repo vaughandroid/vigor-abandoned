@@ -8,15 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
-
-import com.jakewharton.rxbinding.widget.RxTextView;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
@@ -27,82 +23,73 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  *
  * @author Chris
  */
-public class ExerciseTypePickerActivity extends VigorActivity implements ExerciseTypePickerContract.View {
+public class ExerciseTypePickerActivity extends VigorActivity
+    implements ExerciseTypePickerContract.View {
 
-    private static final String EXTRA_TYPE = "exerciseType";
+  private static final String EXTRA_TYPE = "exerciseType";
+  private final ExerciseTypeAdapter exerciseTypeAdapter = new ExerciseTypeAdapter();
+  @Inject ExerciseTypePickerContract.Presenter presenter;
+  @BindView(R.id.activity_exercise_type_picker_EditText) EditText editText;
+  @BindView(R.id.activity_exercise_type_picker_RecyclerView) RecyclerView exerciseTypeRecyclerView;
 
-    public static Intent intent(@NonNull Context context, @NonNull ExerciseType exerciseType) {
-        return new Intent(context, ExerciseTypePickerActivity.class)
-                .putExtra(EXTRA_TYPE, exerciseType);
+  public static Intent intent(@NonNull Context context, @NonNull ExerciseType exerciseType) {
+    return new Intent(context, ExerciseTypePickerActivity.class).putExtra(EXTRA_TYPE, exerciseType);
+  }
+
+  @NonNull public static ExerciseType getTypeFromResult(@NonNull Intent data) {
+    if (!data.hasExtra(EXTRA_TYPE)) {
+      throw new IllegalArgumentException("Invalid data");
     }
+    return (ExerciseType) data.getSerializableExtra(EXTRA_TYPE);
+  }
 
-    @NonNull
-    public static ExerciseType getTypeFromResult(@NonNull Intent data) {
-        if (!data.hasExtra(EXTRA_TYPE)) {
-            throw new IllegalArgumentException("Invalid data");
-        }
-        return (ExerciseType) data.getSerializableExtra(EXTRA_TYPE);
-    }
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getActivityComponent().inject(this);
 
-    @Inject ExerciseTypePickerContract.Presenter presenter;
+    initViews();
+    initPresenter();
+  }
 
-    @BindView(R.id.activity_exercise_type_picker_EditText) EditText editText;
-    @BindView(R.id.activity_exercise_type_picker_RecyclerView) RecyclerView exerciseTypeRecyclerView;
-    private final ExerciseTypeAdapter exerciseTypeAdapter = new ExerciseTypeAdapter();
+  private void initViews() {
+    setContentView(R.layout.activity_exercise_type_picker);
+    ButterKnife.bind(this);
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getActivityComponent().inject(this);
+    exerciseTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    exerciseTypeRecyclerView.setAdapter(exerciseTypeAdapter);
+    exerciseTypeRecyclerView.setHasFixedSize(true);
+  }
 
-        initViews();
-        initPresenter();
-    }
+  private void initPresenter() {
+    presenter.setView(this);
+    presenter.init(getExerciseType());
+  }
 
-    private void initViews() {
-        setContentView(R.layout.activity_exercise_type_picker);
-        ButterKnife.bind(this);
+  private ExerciseType getExerciseType() {
+    Intent intent = getIntent();
+    com.google.common.base.Preconditions.checkState(intent.hasExtra(EXTRA_TYPE),
+        "Missing extra: '%s'", EXTRA_TYPE);
+    return (ExerciseType) intent.getSerializableExtra(EXTRA_TYPE);
+  }
 
-        exerciseTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        exerciseTypeRecyclerView.setAdapter(exerciseTypeAdapter);
-        exerciseTypeRecyclerView.setHasFixedSize(true);
-    }
+  @Override public Observable<String> searchText() {
+    return RxTextView.textChanges(editText).map(CharSequence::toString);
+  }
 
-    private void initPresenter() {
-        presenter.setView(this);
-        presenter.init(getExerciseType());
-    }
+  @Override public Observable<ExerciseType> typePicked() {
+    return exerciseTypeAdapter.exerciseTypeClickedObservable();
+  }
 
-    private ExerciseType getExerciseType() {
-        Intent intent = getIntent();
-        com.google.common.base.Preconditions.checkState(intent.hasExtra(EXTRA_TYPE), "Missing extra: '%s'", EXTRA_TYPE);
-        return (ExerciseType) intent.getSerializableExtra(EXTRA_TYPE);
-    }
+  @Override public void setSearchText(@NonNull String text) {
+    editText.setText(text);
+  }
 
-    @Override
-    public Observable<String> searchText() {
-        return RxTextView.textChanges(editText)
-                .map(CharSequence::toString);
-    }
+  @Override public void setListEntries(@NonNull List<ExerciseType> entries) {
+    exerciseTypeAdapter.setExerciseTypes(entries);
+  }
 
-    @Override
-    public Observable<ExerciseType> typePicked() {
-        return exerciseTypeAdapter.exerciseTypeClickedObservable();
-    }
-
-    @Override
-    public void setSearchText(@NonNull String text) {
-        editText.setText(text);
-    }
-
-    @Override
-    public void setListEntries(@NonNull List<ExerciseType> entries) {
-        exerciseTypeAdapter.setExerciseTypes(entries);
-    }
-
-    @Override
-    public void returnPickedType(@NonNull ExerciseType exerciseType) {
-        setResult(RESULT_OK, new Intent().putExtra(EXTRA_TYPE, exerciseType));
-        finish();
-    }
+  @Override public void returnPickedType(@NonNull ExerciseType exerciseType) {
+    setResult(RESULT_OK, new Intent().putExtra(EXTRA_TYPE, exerciseType));
+    finish();
+  }
 }

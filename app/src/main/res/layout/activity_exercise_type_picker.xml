@@ -5,17 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".app.exercise.type.ExerciseTypePickerActivity">
+    tools:context=".app.exercise.type.ExerciseTypePickerActivity"
+    >
 
-    <EditText
-        android:id="@+id/activity_exercise_type_picker_EditText"
-        style="@style/Vigor.Widget.EditText"
-        android:inputType="text"/>
+  <EditText
+      android:id="@+id/activity_exercise_type_picker_EditText"
+      android:inputType="text"
+      style="@style/Vigor.Widget.EditText"
+      />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_exercise_type_picker_RecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"/>
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/activity_exercise_type_picker_RecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="0px"
+      android:layout_weight="1"
+      />
 
 </LinearLayout>

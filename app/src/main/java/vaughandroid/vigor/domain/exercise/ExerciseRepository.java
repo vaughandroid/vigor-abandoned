@@ -1,7 +1,6 @@
 package vaughandroid.vigor.domain.exercise;
 
 import android.support.annotation.NonNull;
-
 import rx.Observable;
 
 /**
@@ -11,6 +10,8 @@ import rx.Observable;
  */
 public interface ExerciseRepository {
 
-    @NonNull Observable<Exercise> addExercise(@NonNull Exercise exercise);
-    @NonNull Observable<Exercise> getExercise(@NonNull vaughandroid.vigor.domain.exercise.ExerciseId id);
+  @NonNull Observable<Exercise> addExercise(@NonNull Exercise exercise);
+
+  @NonNull Observable<Exercise> getExercise(
+      @NonNull vaughandroid.vigor.domain.exercise.ExerciseId id);
 }

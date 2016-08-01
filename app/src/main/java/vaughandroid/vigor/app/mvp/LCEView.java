@@ -7,7 +7,9 @@ package vaughandroid.vigor.app.mvp;
  */
 public interface LCEView {
 
-    void showLoading();
-    void showContent();
-    void showError();
+  void showLoading();
+
+  void showContent();
+
+  void showError();
 }

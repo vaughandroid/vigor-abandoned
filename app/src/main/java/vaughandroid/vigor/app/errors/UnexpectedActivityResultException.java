@@ -9,8 +9,8 @@ import android.content.Intent;
  */
 public class UnexpectedActivityResultException extends RuntimeException {
 
-    public UnexpectedActivityResultException(int requestCode, int resultCode, Intent data) {
-        super(String.format("Unexpected activity result, request code: %s, result code: %s, data: %s",
-                requestCode, resultCode, data));
-    }
+  public UnexpectedActivityResultException(int requestCode, int resultCode, Intent data) {
+    super(String.format("Unexpected activity result, request code: %s, result code: %s, data: %s",
+        requestCode, resultCode, data));
+  }
 }

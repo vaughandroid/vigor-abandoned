@@ -1,7 +1,6 @@
 package vaughandroid.vigor.domain.workout;
 
 import android.support.annotation.NonNull;
-
 import rx.Observable;
 
 /**
@@ -11,6 +10,7 @@ import rx.Observable;
  */
 public interface WorkoutRepository {
 
-    @NonNull Observable<Workout> addWorkout(@NonNull Workout workout);
-    @NonNull Observable<Workout> getWorkout(@NonNull vaughandroid.vigor.domain.workout.WorkoutId id);
+  @NonNull Observable<Workout> addWorkout(@NonNull Workout workout);
+
+  @NonNull Observable<Workout> getWorkout(@NonNull vaughandroid.vigor.domain.workout.WorkoutId id);
 }

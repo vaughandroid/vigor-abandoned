@@ -1,9 +1,7 @@
 package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
-
 import java.util.List;
-
 import rx.Observable;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 
@@ -14,18 +12,19 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  */
 public interface ExerciseTypePickerContract {
 
-    interface View {
-        Observable<String> searchText();
+  interface View {
+    Observable<String> searchText();
 
-        Observable<ExerciseType> typePicked();
+    Observable<ExerciseType> typePicked();
 
-        void setSearchText(@NonNull String text);
-        void setListEntries(@NonNull List<ExerciseType> entries);
+    void setSearchText(@NonNull String text);
 
-        void returnPickedType(@NonNull ExerciseType exerciseType);
-    }
+    void setListEntries(@NonNull List<ExerciseType> entries);
 
-    interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
-        void init(@NonNull ExerciseType exerciseType);
-    }
+    void returnPickedType(@NonNull ExerciseType exerciseType);
+  }
+
+  interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
+    void init(@NonNull ExerciseType exerciseType);
+  }
 }

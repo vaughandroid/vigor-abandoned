@@ -10,22 +10,17 @@ import rx.Scheduler;
  */
 public class SchedulingPolicy {
 
-    private final Observable.Transformer<Object, Object> transformer;
+  private final Observable.Transformer<Object, Object> transformer;
 
-    public SchedulingPolicy(Scheduler subscriptionScheduler, Scheduler observationScheduler) {
-        transformer = objectObservable -> objectObservable
-                .subscribeOn(subscriptionScheduler)
-                .observeOn(observationScheduler);
-    }
+  public SchedulingPolicy(Scheduler subscriptionScheduler, Scheduler observationScheduler) {
+    transformer = objectObservable -> objectObservable.subscribeOn(subscriptionScheduler)
+        .observeOn(observationScheduler);
+  }
 
-    /**
-     * Needs to be called with the annoying {@code instance.<T>apply()} syntax.
-     *
-     * @param <T>
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public <T> Observable.Transformer<T, T> apply() {
-        return (Observable.Transformer<T, T>) transformer;
-    }
+  /**
+   * Needs to be called with the annoying {@code instance.<T>apply()} syntax.
+   */
+  @SuppressWarnings("unchecked") public <T> Observable.Transformer<T, T> apply() {
+    return (Observable.Transformer<T, T>) transformer;
+  }
 }

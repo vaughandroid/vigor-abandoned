@@ -8,24 +8,23 @@ import android.support.annotation.Nullable;
  *
  * @author Chris
  */
-@SuppressWarnings("NullableProblems")
-public class ExerciseDto {
+@SuppressWarnings("NullableProblems") public class ExerciseDto {
 
+  @NonNull public String guid;
+
+  @NonNull public WorkoutDto workout;
+
+  @NonNull public ExerciseTypeDto type;
+
+  @Nullable public Integer reps;
+
+  @Nullable public String weight;
+
+  static class WorkoutDto {
     @NonNull public String guid;
+  }
 
-    @NonNull public WorkoutDto workout;
-
-    @NonNull public ExerciseTypeDto type;
-
-    @Nullable public Integer reps;
-
-    @Nullable public String weight;
-
-    static class WorkoutDto {
-        @NonNull public String guid;
-    }
-
-    static class ExerciseTypeDto {
-        @NonNull public String guid;
-    }
+  static class ExerciseTypeDto {
+    @NonNull public String guid;
+  }
 }

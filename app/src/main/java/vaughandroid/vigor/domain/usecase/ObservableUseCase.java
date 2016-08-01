@@ -10,9 +10,9 @@ import vaughandroid.vigor.domain.rx.SchedulingPolicy;
  */
 public abstract class ObservableUseCase<T> extends UseCase {
 
-    public abstract Observable<T> createObservable();
+  public ObservableUseCase(SchedulingPolicy schedulingPolicy) {
+    super(schedulingPolicy);
+  }
 
-    public ObservableUseCase(SchedulingPolicy schedulingPolicy) {
-        super(schedulingPolicy);
-    }
+  public abstract Observable<T> createObservable();
 }

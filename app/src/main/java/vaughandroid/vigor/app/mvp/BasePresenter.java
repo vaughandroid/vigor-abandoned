@@ -2,7 +2,6 @@ package vaughandroid.vigor.app.mvp;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 
@@ -13,30 +12,28 @@ import com.trello.rxlifecycle.ActivityLifecycleProvider;
  */
 public abstract class BasePresenter<View> implements Presenter<View> {
 
-    @NonNull protected final ActivityLifecycleProvider activityLifecycleProvider;
+  @NonNull protected final ActivityLifecycleProvider activityLifecycleProvider;
 
-    @Nullable private View view;
+  @Nullable private View view;
 
-    protected BasePresenter(@NonNull ActivityLifecycleProvider activityLifecycleProvider) {
-        this.activityLifecycleProvider = activityLifecycleProvider;
+  protected BasePresenter(@NonNull ActivityLifecycleProvider activityLifecycleProvider) {
+    this.activityLifecycleProvider = activityLifecycleProvider;
 
-        activityLifecycleProvider.lifecycle()
-                .filter(event -> event == ActivityEvent.DESTROY)
-                .subscribe(event -> {
-                    BasePresenter.this.view = null;
-                });
-    }
+    activityLifecycleProvider.lifecycle()
+        .filter(event -> event == ActivityEvent.DESTROY)
+        .subscribe(event -> {
+          BasePresenter.this.view = null;
+        });
+  }
 
-    @Override
-    public void setView(@NonNull View view) {
-        this.view = view;
-        initView(view);
-    }
+  @Override @Nullable public View getView() {
+    return view;
+  }
 
-    @Override @Nullable
-    public View getView() {
-        return view;
-    }
+  @Override public void setView(@NonNull View view) {
+    this.view = view;
+    initView(view);
+  }
 
-    protected abstract void initView(@NonNull View view);
+  protected abstract void initView(@NonNull View view);
 }
