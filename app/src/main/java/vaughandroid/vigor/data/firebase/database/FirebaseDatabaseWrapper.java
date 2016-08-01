@@ -8,6 +8,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import rx.subjects.PublishSubject;
 import vaughandroid.vigor.app.di.ApplicationScope;
 
@@ -36,15 +37,13 @@ public class FirebaseDatabaseWrapper {
         return observe(".info/connected", Boolean.class);
     }
 
-    public Observable<Boolean> dataExists(String path) {
+    public Single<Boolean> dataExists(String path) {
         checkInitialised();
-        /* TODO: This notifies whenever any of the (direct?) children of the path changes, so it's extremely inefficient.
-         * Look at:
-         * 1. Use a query to only get data for that node and not it's children
-         * 2. Return a Single instead
-         */
-        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path), DataSnapshot::exists))
-                .distinct();
+        // TODO: This also notifies when the child changes, so it's inefficient.
+        // TODO: More efficient to create it as a single.
+        return Observable.create(DataChangeOnSubscribe.create(mDatabase.getReference(path).limitToFirst(1),
+                DataSnapshot::exists))
+                .toSingle();
     }
 
     public <T> Observable<T> observe(String path, Class<T> clazz) {

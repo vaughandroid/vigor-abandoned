@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Single;
 import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
 import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
@@ -43,7 +44,7 @@ public class ExerciseTypeRepository implements vaughandroid.vigor.domain.exercis
 
     @NonNull
     @Override
-    public Observable<Boolean> isInitialised() {
+    public Single<Boolean> isInitialised() {
         return firebaseDatabaseWrapper.dataExists(getPathForAll());
     }
 

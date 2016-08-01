@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import rx.Observable;
@@ -19,16 +19,16 @@ import rx.subscriptions.Subscriptions;
  */
 public class DataChangeOnSubscribe<T> implements Observable.OnSubscribe<T> {
 
-    public static <T> DataChangeOnSubscribe<T> create(@NonNull DatabaseReference databaseReference,
+    public static <T> DataChangeOnSubscribe<T> create(@NonNull Query query,
             @NonNull Func1<DataSnapshot, T> onSnapshotReceived) {
-        return new DataChangeOnSubscribe<>(databaseReference, onSnapshotReceived);
+        return new DataChangeOnSubscribe<>(query, onSnapshotReceived);
     }
 
-    private final DatabaseReference databaseReference;
+    private final Query query;
     private final Func1<DataSnapshot, T> onSnapshotReceived;
 
-    private DataChangeOnSubscribe(DatabaseReference databaseReference, Func1<DataSnapshot, T> onSnapshotReceived) {
-        this.databaseReference = databaseReference;
+    private DataChangeOnSubscribe(Query query, Func1<DataSnapshot, T> onSnapshotReceived) {
+        this.query = query;
         this.onSnapshotReceived = onSnapshotReceived;
     }
 
@@ -45,8 +45,8 @@ public class DataChangeOnSubscribe<T> implements Observable.OnSubscribe<T> {
                 subscriber.onError(new FirebaseDatabaseException(databaseError));
             }
         };
-        databaseReference.addValueEventListener(listener);
+        query.addValueEventListener(listener);
 
-        subscriber.add(Subscriptions.create(() -> databaseReference.removeEventListener(listener)));
+        subscriber.add(Subscriptions.create(() -> query.removeEventListener(listener)));
     }
 }

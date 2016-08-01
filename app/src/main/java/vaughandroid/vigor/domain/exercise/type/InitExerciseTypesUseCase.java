@@ -27,8 +27,9 @@ public class InitExerciseTypesUseCase implements UseCase<Boolean> {
 
     @Override
     public Observable<Boolean> createObservable() {
+        // TODO: This is a Single, not an Observable
         return exerciseTypeRepository.isInitialised()
-                .doOnNext(isInitialised -> {
+                .doOnSuccess(isInitialised -> {
                     logger.debug("is initialised: {}", isInitialised);
                     if (!isInitialised) {
                         exerciseTypeRepository.addExerciseTypes(ImmutableList.of(
@@ -39,6 +40,7 @@ public class InitExerciseTypesUseCase implements UseCase<Boolean> {
                                 ExerciseType.create("Bent-over Row")
                         ));
                     }
-                });
+                })
+                .toObservable();
     }
 }

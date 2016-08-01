@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import rx.Observable;
+import rx.Single;
 
 /**
  * Interface for a class which can store & retrieve {@link ExerciseType} data.
@@ -14,7 +15,8 @@ import rx.Observable;
  */
 public interface ExerciseTypeRepository {
 
-    @NonNull Observable<Boolean> isInitialised();
+    @NonNull
+    Single<Boolean> isInitialised();
     @NonNull Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
     @NonNull Observable<ImmutableList<ExerciseType>> addExerciseTypes(@NonNull Iterable<ExerciseType> exerciseTypes);
     @NonNull Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
