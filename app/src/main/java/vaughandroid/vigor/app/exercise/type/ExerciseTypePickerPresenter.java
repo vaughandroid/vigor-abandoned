@@ -44,7 +44,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     this.exerciseType = exerciseType;
     initView(view);
 
-    initExerciseTypesUseCase.createSingle()
+    initExerciseTypesUseCase.perform()
         .compose(activityLifecycleProvider.bindToLifecycle().forSingle())
         .subscribe();
 
@@ -53,7 +53,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
         .mergeWith(view.searchText())
         .subscribe(getExerciseTypesUseCase::setSearchText);
 
-    getExerciseTypesUseCase.createObservable()
+    getExerciseTypesUseCase.perform()
         .compose(activityLifecycleProvider.bindToLifecycle())
         .subscribe(this::onListUpdated);
 

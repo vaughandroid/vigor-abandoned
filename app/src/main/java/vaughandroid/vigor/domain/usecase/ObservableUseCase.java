@@ -4,7 +4,7 @@ import rx.Observable;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 
 /**
- * TODO: javadoc
+ * Base class for {@link UseCase}s which return an {@link Observable}
  *
  * @author Chris
  */
@@ -14,5 +14,10 @@ public abstract class ObservableUseCase<T> extends UseCase {
     super(schedulingPolicy);
   }
 
-  public abstract Observable<T> createObservable();
+  public final Observable<T> perform() {
+    return createObservable().compose(schedulingPolicy.observableTransformer())
+        .doOnError(t -> logger.error("Error", t));
+  }
+
+  protected abstract Observable<T> createObservable();
 }

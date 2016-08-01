@@ -28,7 +28,7 @@ public class AddExerciseUseCase extends ObservableUseCase<Exercise> {
     this.exercise = exercise;
   }
 
-  @Override public @NonNull Observable<Exercise> createObservable() {
+  @Override protected @NonNull Observable<Exercise> createObservable() {
     if (exercise == null) {
       throw new IllegalStateException("exercise not set");
     }

@@ -18,8 +18,4 @@ public abstract class UseCase {
   protected UseCase(SchedulingPolicy schedulingPolicy) {
     this.schedulingPolicy = schedulingPolicy;
   }
-
-  protected <T> Observable.Transformer<T, T> getTransformer() {
-    return schedulingPolicy.apply();
-  }
 }

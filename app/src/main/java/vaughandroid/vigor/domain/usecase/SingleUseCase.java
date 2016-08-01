@@ -4,7 +4,7 @@ import rx.Single;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 
 /**
- * TODO: javadoc
+ * Base class for {@link UseCase}s which return a {@link Single}
  *
  * @author Chris
  */
@@ -14,5 +14,10 @@ public abstract class SingleUseCase<T> extends UseCase {
     super(schedulingPolicy);
   }
 
-  public abstract Single<T> createSingle();
+  public final Single<T> perform() {
+    return createSingle().compose(schedulingPolicy.singleTransformer())
+        .doOnError(t -> logger.error("Error", t));
+  }
+
+  protected abstract Single<T> createSingle();
 }

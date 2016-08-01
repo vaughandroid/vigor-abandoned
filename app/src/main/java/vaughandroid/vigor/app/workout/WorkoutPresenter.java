@@ -44,7 +44,7 @@ public class WorkoutPresenter extends BasePresenter<View> implements WorkoutCont
     if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
       workout = Workout.builder().build();
     } else {
-      getWorkoutUseCase.createObservable()
+      getWorkoutUseCase.perform()
           .compose(activityLifecycleProvider.bindToLifecycle())
           .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::showError);
     }

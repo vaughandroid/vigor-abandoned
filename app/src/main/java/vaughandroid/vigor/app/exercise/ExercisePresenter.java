@@ -47,7 +47,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
       setExercise(Exercise.builder().workoutId(workoutId).build());
     } else {
       getExerciseUseCase.setExerciseId(exerciseId);
-      getExerciseUseCase.createObservable()
+      getExerciseUseCase.perform()
           .compose(activityLifecycleProvider.bindToLifecycle())
           .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::showError);
     }
@@ -98,7 +98,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 
   @Override public void onValuesConfirmed() {
     addExerciseUseCase.setExercise(exercise);
-    addExerciseUseCase.createObservable()
+    addExerciseUseCase.perform()
         .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::showError);
   }
 

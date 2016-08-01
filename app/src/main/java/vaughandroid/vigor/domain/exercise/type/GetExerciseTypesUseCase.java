@@ -31,7 +31,7 @@ public class GetExerciseTypesUseCase extends ObservableUseCase<ImmutableList<Exe
     searchTextSubject.onNext(searchText.toLowerCase());
   }
 
-  @Override public Observable<ImmutableList<ExerciseType>> createObservable() {
+  @Override protected Observable<ImmutableList<ExerciseType>> createObservable() {
     return Observable.combineLatest(exerciseTypeRepository.getExerciseTypeList(), searchTextSubject,
         (exerciseTypes, searchText) -> ImmutableList.copyOf(
             Iterables.filter(exerciseTypes, input -> input.nameLowercase().contains(searchText))));
