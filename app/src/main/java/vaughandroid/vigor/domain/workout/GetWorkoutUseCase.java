@@ -6,31 +6,32 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 
 import rx.Observable;
-import vaughandroid.vigor.domain.usecase.UseCase;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
+import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 
 /**
  * Use case for retrieving a {@link Workout}
  *
- *
  * @author Chris
  */
-public class GetWorkoutUseCase implements UseCase<vaughandroid.vigor.domain.workout.Workout> {
+public class GetWorkoutUseCase extends ObservableUseCase<Workout> {
 
     private final WorkoutRepository repository;
     @Nullable
-    private vaughandroid.vigor.domain.workout.WorkoutId workoutId;
+    private WorkoutId workoutId;
 
     @Inject
-    public GetWorkoutUseCase(WorkoutRepository repository) {
+    public GetWorkoutUseCase(SchedulingPolicy schedulingPolicy, WorkoutRepository repository) {
+        super(schedulingPolicy);
         this.repository = repository;
     }
 
-    public void setWorkoutId(@NonNull vaughandroid.vigor.domain.workout.WorkoutId workoutId) {
+    public void setWorkoutId(@NonNull WorkoutId workoutId) {
         this.workoutId = workoutId;
     }
 
     @Override
-    public Observable<vaughandroid.vigor.domain.workout.Workout> createObservable() {
+    public Observable<Workout> createObservable() {
         if (workoutId == null) {
             throw new IllegalStateException("workoutId not set");
         }

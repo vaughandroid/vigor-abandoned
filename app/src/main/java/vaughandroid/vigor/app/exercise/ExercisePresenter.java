@@ -46,7 +46,7 @@ public class ExercisePresenter extends BasePresenter<View>
             SchedulingPolicy domainSchedulingPolicy,
             AddExerciseUseCase addExerciseUseCase,
             GetExerciseUseCase getExerciseUseCase) {
-        super(activityLifecycleProvider, domainSchedulingPolicy);
+        super(activityLifecycleProvider);
         this.addExerciseUseCase = addExerciseUseCase;
         this.getExerciseUseCase = getExerciseUseCase;
     }
@@ -58,7 +58,7 @@ public class ExercisePresenter extends BasePresenter<View>
         } else {
             getExerciseUseCase.setExerciseId(exerciseId);
             getExerciseUseCase.createObservable()
-                    .compose(useCaseTransformer())
+                    .compose(activityLifecycleProvider.bindToLifecycle())
                     .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::showError);
         }
     }

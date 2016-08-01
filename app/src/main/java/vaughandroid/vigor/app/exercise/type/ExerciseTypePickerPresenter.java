@@ -15,7 +15,6 @@ import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.exercise.type.GetExerciseTypesUseCase;
 import vaughandroid.vigor.domain.exercise.type.InitExerciseTypesUseCase;
-import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 
 /**
  * MVP Presenter for the {@link ExerciseTypePickerActivity}
@@ -31,9 +30,9 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
 
     @Inject
     public ExerciseTypePickerPresenter(ActivityLifecycleProvider activityLifecycleProvider,
-            SchedulingPolicy schedulingPolicy, InitExerciseTypesUseCase initExerciseTypesUseCase,
+            InitExerciseTypesUseCase initExerciseTypesUseCase,
             GetExerciseTypesUseCase getExerciseTypesUseCase) {
-        super(activityLifecycleProvider, schedulingPolicy);
+        super(activityLifecycleProvider);
         this.initExerciseTypesUseCase = initExerciseTypesUseCase;
         this.getExerciseTypesUseCase = getExerciseTypesUseCase;
     }
@@ -50,8 +49,8 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
         this.exerciseType = exerciseType;
         initView(view);
 
-        initExerciseTypesUseCase.createObservable()
-                .compose(useCaseTransformer())
+        initExerciseTypesUseCase.createSingle()
+                .compose(activityLifecycleProvider.bindToLifecycle().forSingle())
                 .subscribe();
 
         Observable.just(this.exerciseType)
@@ -60,11 +59,11 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View> implements 
                 .subscribe(getExerciseTypesUseCase::setSearchText);
 
         getExerciseTypesUseCase.createObservable()
-                .compose(useCaseTransformer())
+                .compose(activityLifecycleProvider.bindToLifecycle())
                 .subscribe(this::onListUpdated);
 
         view.typePicked()
-                .compose(uiTransformer())
+                .compose(activityLifecycleProvider.bindToLifecycle())
                 .subscribe(this::onTypePicked);
     }
 

@@ -9,6 +9,7 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  *
  * @author Chris
  */
+@SuppressWarnings("NullableProblems")
 public class ExerciseTypeDto {
 
     @NonNull

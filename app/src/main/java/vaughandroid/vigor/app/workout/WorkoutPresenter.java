@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.app.workout.WorkoutContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
-import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.workout.AddWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.Workout;
@@ -35,9 +34,9 @@ public class WorkoutPresenter extends BasePresenter<View>
 
     @Inject
     public WorkoutPresenter(ActivityLifecycleProvider activityLifecycleProvider,
-            SchedulingPolicy domainSchedulingPolicy, AddWorkoutUseCase addWorkoutUseCase,
+            AddWorkoutUseCase addWorkoutUseCase,
             GetWorkoutUseCase getWorkoutUseCase) {
-        super(activityLifecycleProvider, domainSchedulingPolicy);
+        super(activityLifecycleProvider);
         this.getWorkoutUseCase = getWorkoutUseCase;
         this.addWorkoutUseCase = addWorkoutUseCase;
     }
@@ -55,7 +54,7 @@ public class WorkoutPresenter extends BasePresenter<View>
             workout = Workout.builder().build();
         } else {
             getWorkoutUseCase.createObservable()
-                    .compose(useCaseTransformer())
+                    .compose(activityLifecycleProvider.bindToLifecycle())
                     .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::showError);
         }
     }

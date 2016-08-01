@@ -12,6 +12,7 @@ import vaughandroid.vigor.domain.workout.Workout;
  *
  * @author chris.vaughan@laterooms.com
  */
+@SuppressWarnings("NullableProblems")
 public class WorkoutDto {
 
     @NonNull

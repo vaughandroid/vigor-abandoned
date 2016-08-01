@@ -10,20 +10,22 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.Subject;
-import vaughandroid.vigor.domain.usecase.UseCase;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
+import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 
 /**
  * Use case for getting a list of {@link ExerciseType}s. The list may optionally be filtered.
  *
  * @author Chris
  */
-public class GetExerciseTypesUseCase implements UseCase<ImmutableList<ExerciseType>> {
+public class GetExerciseTypesUseCase extends ObservableUseCase<ImmutableList<ExerciseType>> {
 
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final Subject<String, String> searchTextSubject = BehaviorSubject.create("");
 
     @Inject
-    public GetExerciseTypesUseCase(ExerciseTypeRepository exerciseTypeRepository) {
+    public GetExerciseTypesUseCase(SchedulingPolicy schedulingPolicy, ExerciseTypeRepository exerciseTypeRepository) {
+        super(schedulingPolicy);
         this.exerciseTypeRepository = exerciseTypeRepository;
     }
 
@@ -38,6 +40,7 @@ public class GetExerciseTypesUseCase implements UseCase<ImmutableList<ExerciseTy
                 exerciseTypeRepository.getExerciseTypeList(),
                 searchTextSubject,
                 (exerciseTypes, searchText) ->
-                        ImmutableList.copyOf(Iterables.filter(exerciseTypes, input -> input.nameLowercase().contains(searchText))));
+                        ImmutableList.copyOf(Iterables.filter(exerciseTypes,
+                                input -> input.nameLowercase().contains(searchText))));
     }
 }

@@ -2,35 +2,31 @@ package vaughandroid.vigor.domain.exercise.type;
 
 import com.google.common.collect.ImmutableList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 
-import rx.Observable;
-import vaughandroid.vigor.domain.usecase.UseCase;
+import rx.Single;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
+import vaughandroid.vigor.domain.usecase.SingleUseCase;
 
 /**
  * Use case for initialising the list of exercise types.
  *
  * @author Chris
  */
-public class InitExerciseTypesUseCase implements UseCase<Boolean> {
+public class InitExerciseTypesUseCase extends SingleUseCase<Boolean> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ExerciseTypeRepository exerciseTypeRepository;
 
     @Inject
-    public InitExerciseTypesUseCase(ExerciseTypeRepository exerciseTypeRepository) {
+    public InitExerciseTypesUseCase(SchedulingPolicy schedulingPolicy, ExerciseTypeRepository exerciseTypeRepository) {
+        super(schedulingPolicy);
         this.exerciseTypeRepository = exerciseTypeRepository;
     }
 
     @Override
-    public Observable<Boolean> createObservable() {
-        // TODO: This is a Single, not an Observable
+    public Single<Boolean> createSingle() {
         return exerciseTypeRepository.isInitialised()
                 .doOnSuccess(isInitialised -> {
-                    logger.debug("is initialised: {}", isInitialised);
                     if (!isInitialised) {
                         exerciseTypeRepository.addExerciseTypes(ImmutableList.of(
                                 ExerciseType.create("Squat"),
@@ -40,7 +36,6 @@ public class InitExerciseTypesUseCase implements UseCase<Boolean> {
                                 ExerciseType.create("Bent-over Row")
                         ));
                     }
-                })
-                .toObservable();
+                });
     }
 }

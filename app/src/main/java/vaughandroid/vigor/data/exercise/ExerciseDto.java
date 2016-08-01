@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
  *
  * @author Chris
  */
+@SuppressWarnings("NullableProblems")
 public class ExerciseDto {
 
     @NonNull public String guid;

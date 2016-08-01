@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 
 import rx.Observable;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
+import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 import vaughandroid.vigor.domain.usecase.UseCase;
 
 /**
@@ -13,13 +15,14 @@ import vaughandroid.vigor.domain.usecase.UseCase;
  *
  * @author Chris
  */
-public class GetExerciseUseCase implements UseCase<Exercise> {
+public class GetExerciseUseCase extends ObservableUseCase<Exercise> {
 
     private final ExerciseRepository repository;
     @Nullable private ExerciseId exerciseId;
 
     @Inject
-    public GetExerciseUseCase(ExerciseRepository repository) {
+    public GetExerciseUseCase(SchedulingPolicy schedulingPolicy, ExerciseRepository repository) {
+        super(schedulingPolicy);
         this.repository = repository;
     }
 

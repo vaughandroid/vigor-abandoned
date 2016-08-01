@@ -9,7 +9,8 @@
 
     <EditText
         android:id="@+id/activity_exercise_type_picker_EditText"
-        style="@style/Vigor.Widget.EditText"/>
+        style="@style/Vigor.Widget.EditText"
+        android:inputType="text"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/activity_exercise_type_picker_RecyclerView"
