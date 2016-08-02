@@ -6,11 +6,13 @@ import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
+import vaughandroid.vigor.app.exercise.ExerciseContract;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.exercise.type.GetExerciseTypesUseCase;
 import vaughandroid.vigor.domain.exercise.type.InitExerciseTypesUseCase;
+import vaughandroid.vigor.domain.rx.LogErrorsSubscriber;
 
 /**
  * MVP Presenter for the {@link ExerciseTypePickerActivity}
@@ -45,21 +47,28 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     initView(view);
 
     initExerciseTypesUseCase.perform()
-        .compose(activityLifecycleProvider.bindToLifecycle().forSingle())
-        .subscribe();
+        .compose(activityLifecycleProvider.<Boolean>bindToLifecycle().forSingle())
+        .subscribe(LogErrorsSubscriber.<Boolean>create());
 
     Observable.just(this.exerciseType)
         .map(ExerciseType::name)
         .mergeWith(view.searchText())
-        .subscribe(getExerciseTypesUseCase::setSearchText);
+        .subscribe(getExerciseTypesUseCase::setSearchText, this::showError);
 
     getExerciseTypesUseCase.perform()
         .compose(activityLifecycleProvider.bindToLifecycle())
-        .subscribe(this::onListUpdated);
+        .subscribe(this::onListUpdated, this::showError);
 
     view.typePicked()
         .compose(activityLifecycleProvider.bindToLifecycle())
-        .subscribe(this::onTypePicked);
+        .subscribe(this::onTypePicked, this::showError);
+  }
+
+  @Override public void onErrorDialogDismissed() {
+    View view = getView();
+    if (view != null) {
+      view.returnCancelled();
+    }
   }
 
   private void onTypePicked(@NonNull ExerciseType exerciseType) {
@@ -73,6 +82,13 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     View view = getView();
     if (view != null) {
       view.setListEntries(exerciseTypes);
+    }
+  }
+
+  private void showError(Throwable t) {
+    ExerciseTypePickerContract.View view = getView();
+    if (view != null) {
+      view.showError();
     }
   }
 }

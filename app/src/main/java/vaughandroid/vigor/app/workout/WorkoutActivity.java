@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableList;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
+import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
 import vaughandroid.vigor.app.errors.UnexpectedActivityResultException;
 import vaughandroid.vigor.app.exercise.ExerciseActivity;
 import vaughandroid.vigor.app.widgets.HorizontalDividerLineItemDecoration;
@@ -29,6 +30,9 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
   private static final int REQUEST_CODE_EXERCISE_ADD = 1;
   private static final int REQUEST_CODE_EXERCISE_EDIT = 2;
+
+  private static final String TAG_ERROR_DIALOG = "ErrorDialog";
+
   private final ExerciseAdapter exerciseAdapter = new ExerciseAdapter();
   @Inject WorkoutPresenter presenter;
   @BindView(R.id.content_workout_RecyclerView_exercise_list) RecyclerView exerciseListRecyclerView;
@@ -147,6 +151,6 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
   }
 
   @Override public void showError() {
-
+    ErrorDialogFragment.create().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
   }
 }

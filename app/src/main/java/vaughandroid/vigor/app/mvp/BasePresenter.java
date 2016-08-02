@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for MVP Presenters.

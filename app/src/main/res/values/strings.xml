@@ -8,4 +8,7 @@
   <string name="number_input_button_more">+</string>
   <string name="exercise_list_item_values_weight_and_reps">%1$s%2$s, %3$s reps</string>
   <string name="exercise_type">Exercise type</string>
+  <string name="ok">OK</string>
+  <string name="error_general_title">Oops!</string>
+  <string name="error_general_message">Something went wrong</string>
 </resources>

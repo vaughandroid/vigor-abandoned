@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
+import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
 import vaughandroid.vigor.app.errors.UnexpectedActivityResultException;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
@@ -34,6 +35,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
 
   private static final String EXTRA_WORKOUT_ID = "workoutId";
   private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
+
+  private static final String TAG_ERROR_DIALOG = "ErrorDialog";
 
   private static final String RESULT_EXERCISE = "exercise";
 
@@ -116,7 +119,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
   }
 
   @Override public void showError() {
-
+    ErrorDialogFragment.create().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

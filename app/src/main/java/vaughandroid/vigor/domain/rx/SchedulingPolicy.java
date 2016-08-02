@@ -21,16 +21,10 @@ public class SchedulingPolicy {
         .observeOn(observationScheduler);
   }
 
-  /**
-   * Needs to be called with the annoying {@code instance.<T>apply()} syntax.
-   */
   @SuppressWarnings("unchecked") public <T> Observable.Transformer<T, T> observableTransformer() {
     return (Observable.Transformer<T, T>) observableTransformer;
   }
 
-  /**
-   * Needs to be called with the annoying {@code instance.<T>apply()} syntax.
-   */
   @SuppressWarnings("unchecked") public <T> Single.Transformer<T, T> singleTransformer() {
     return (Single.Transformer<T, T>) singleTransformer;
   }

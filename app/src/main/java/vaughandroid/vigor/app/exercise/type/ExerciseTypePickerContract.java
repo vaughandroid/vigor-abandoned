@@ -13,18 +13,22 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 public interface ExerciseTypePickerContract {
 
   interface View {
-    Observable<String> searchText();
+    Observable<String> searchText(); // TODO: just call a method on the presenter
 
-    Observable<ExerciseType> typePicked();
+    Observable<ExerciseType> typePicked(); // TODO: just call a method on the presenter
 
     void setSearchText(@NonNull String text);
-
     void setListEntries(@NonNull List<ExerciseType> entries);
 
+    void showError();
+
     void returnPickedType(@NonNull ExerciseType exerciseType);
+    void returnCancelled();
   }
 
   interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
     void init(@NonNull ExerciseType exerciseType);
+
+    void onErrorDialogDismissed();
   }
 }
