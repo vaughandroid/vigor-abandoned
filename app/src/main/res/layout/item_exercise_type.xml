@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
-    <TextView
-        android:id="@+id/item_exercise_type_TextView"
-        style="@style/Vigor.Widget.TextView"
-        android:layout_width="match_parent"
-        tools:text="Exercise type"/>
+  <TextView
+      android:id="@+id/item_exercise_type_TextView"
+      android:layout_width="match_parent"
+      tools:text="Exercise type"
+      style="@style/Vigor.Widget.TextView"
+      />
 </LinearLayout>

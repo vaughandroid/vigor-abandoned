@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
  */
 public interface Presenter<T> {
 
-    void setView(@NonNull T view);
-    @Nullable T getView();
+  @Nullable T getView();
+
+  void setView(@NonNull T view);
 }

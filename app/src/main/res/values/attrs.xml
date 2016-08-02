@@ -4,8 +4,8 @@
   -->
 
 <resources>
-    <declare-styleable name="NumberInputView">
-        <attr name="label" format="string"/>
-        <attr name="showUnits" format="boolean"/>
-    </declare-styleable>
+  <declare-styleable name="NumberInputView">
+    <attr format="string" name="label"/>
+    <attr format="boolean" name="showUnits"/>
+  </declare-styleable>
 </resources>

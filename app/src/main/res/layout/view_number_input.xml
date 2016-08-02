@@ -6,32 +6,38 @@
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="@layout/designer_merged_views">
+    tools:showIn="@layout/designer_merged_views"
+    >
 
-    <Button
-        style="@style/Vigor.Widget.Button.NumberInput"
-        android:id="@+id/view_number_input_Button_less"
-        android:text="@string/number_input_button_less" />
+  <Button
+      android:id="@+id/view_number_input_Button_less"
+      android:text="@string/number_input_button_less"
+      style="@style/Vigor.Widget.Button.NumberInput"
+      />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/view_number_input_TextInputLayout_value"
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_weight="3">
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/view_number_input_EditText_value"
-            style="@style/Vigor.Widget.EditText.Number"
-            tools:hint="label"
-            tools:text="99.99"/>
-    </android.support.design.widget.TextInputLayout>
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/view_number_input_TextInputLayout_value"
+      android:layout_width="0px"
+      android:layout_height="wrap_content"
+      android:layout_weight="3"
+      >
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/view_number_input_EditText_value"
+        tools:hint="label"
+        tools:text="99.99"
+        style="@style/Vigor.Widget.EditText.Number"
+        />
+  </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        android:id="@+id/view_number_input_TextView_units"
-        style="@style/Vigor.Widget.TextView.Units"
-        tools:text="Units"/>
+  <TextView
+      android:id="@+id/view_number_input_TextView_units"
+      tools:text="Units"
+      style="@style/Vigor.Widget.TextView.Units"
+      />
 
-    <Button
-        style="@style/Vigor.Widget.Button.NumberInput"
-        android:id="@+id/view_number_input_Button_more"
-        android:text="@string/number_input_button_more" />
+  <Button
+      android:id="@+id/view_number_input_Button_more"
+      android:text="@string/number_input_button_more"
+      style="@style/Vigor.Widget.Button.NumberInput"
+      />
 </merge>

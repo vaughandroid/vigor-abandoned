@@ -4,16 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_exercise_ViewGroup_container"
     android:orientation="vertical"
-    style="@style/Vigor.List.Item">
+    style="@style/Vigor.List.Item"
+    >
 
-    <TextView
-        android:id="@+id/item_exercise_TextView_name"
-        tools:text="Exercise name"
-        style="@style/Vigor.List.Item.Header"/>
+  <TextView
+      android:id="@+id/item_exercise_TextView_name"
+      tools:text="Exercise name"
+      style="@style/Vigor.List.Item.Header"
+      />
 
-    <TextView
-        android:id="@+id/item_exercise_TextView_values"
-        tools:text="Workout value descriptions"
-        style="@style/Vigor.List.Item.Detail"/>
+  <TextView
+      android:id="@+id/item_exercise_TextView_values"
+      tools:text="Workout value descriptions"
+      style="@style/Vigor.List.Item.Detail"
+      />
 
 </LinearLayout>

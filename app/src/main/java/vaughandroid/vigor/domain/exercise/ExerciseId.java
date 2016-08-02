@@ -1,9 +1,7 @@
 package vaughandroid.vigor.domain.exercise;
 
 import android.support.annotation.NonNull;
-
 import com.google.auto.value.AutoValue;
-
 import java.io.Serializable;
 
 /**
@@ -11,15 +9,13 @@ import java.io.Serializable;
  *
  * @author Chris
  */
-@AutoValue
-public abstract class ExerciseId implements Serializable {
+@AutoValue public abstract class ExerciseId implements Serializable {
 
-    public static final ExerciseId UNASSIGNED = create("unassigned");
+  public static final ExerciseId UNASSIGNED = create("unassigned");
 
-    public static ExerciseId create(String guid) {
-        return new AutoValue_ExerciseId(guid);
-    }
+  public static ExerciseId create(String guid) {
+    return new AutoValue_ExerciseId(guid);
+  }
 
-    @NonNull
-    public abstract String guid();
+  @NonNull public abstract String guid();
 }

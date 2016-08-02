@@ -1,7 +1,6 @@
 package vaughandroid.vigor.app.di;
 
 import android.app.Application;
-
 import javax.inject.Scope;
 
 /**
@@ -9,6 +8,5 @@ import javax.inject.Scope;
  *
  * @author Chris
  */
-@Scope
-public @interface ApplicationScope {
+@Scope public @interface ApplicationScope {
 }

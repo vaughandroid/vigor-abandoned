@@ -8,12 +8,9 @@ import vaughandroid.vigor.data.utils.GuidFactory;
 /**
  * @author Chris
  */
-@Module
-public class UtilsModule {
+@Module public class UtilsModule {
 
-    @Provides
-    @ApplicationScope
-    public GuidFactory provideGuidFactory() {
-        return new GuidFactory();
-    }
+  @Provides @ApplicationScope public GuidFactory provideGuidFactory() {
+    return new GuidFactory();
+  }
 }

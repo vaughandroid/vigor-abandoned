@@ -14,15 +14,12 @@ import vaughandroid.vigor.app.workout.WorkoutModule;
  * @author Chris
  */
 @Subcomponent(modules = {
-        ActivityModule.class,
-        ExerciseModule.class,
-        ExerciseTypeModule.class,
-        WorkoutModule.class,
-})
-@ActivityScope
-public interface ActivityComponent {
+    ActivityModule.class, ExerciseModule.class, ExerciseTypeModule.class, WorkoutModule.class,
+}) @ActivityScope public interface ActivityComponent {
 
-    void inject(ExerciseActivity activity);
-    void inject(ExerciseTypePickerActivity activity);
-    void inject(WorkoutActivity activity);
+  void inject(ExerciseActivity activity);
+
+  void inject(ExerciseTypePickerActivity activity);
+
+  void inject(WorkoutActivity activity);
 }

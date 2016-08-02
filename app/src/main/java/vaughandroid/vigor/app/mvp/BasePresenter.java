@@ -2,13 +2,10 @@ package vaughandroid.vigor.app.mvp;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
-
-import rx.Observable;
-import vaughandroid.vigor.domain.rx.SchedulingPolicy;
-import vaughandroid.vigor.domain.usecase.UseCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for MVP Presenters.
@@ -17,63 +14,28 @@ import vaughandroid.vigor.domain.usecase.UseCase;
  */
 public abstract class BasePresenter<View> implements Presenter<View> {
 
-    private final Observable.Transformer<Object, Object> domainTransformer;
-    private final Observable.Transformer<Object, Object> uiTransformer;
+  @NonNull protected final ActivityLifecycleProvider activityLifecycleProvider;
 
-    @Nullable private View view;
+  @Nullable private View view;
 
-    protected BasePresenter(ActivityLifecycleProvider activityLifecycleProvider,
-            SchedulingPolicy domainSchedulingPolicy) {
-        domainTransformer = objectObservable -> objectObservable
-                .compose(domainSchedulingPolicy.apply())
-                .compose(activityLifecycleProvider.bindToLifecycle());
-        uiTransformer = objectObservable -> objectObservable
-                .compose(activityLifecycleProvider.bindToLifecycle());
+  protected BasePresenter(@NonNull ActivityLifecycleProvider activityLifecycleProvider) {
+    this.activityLifecycleProvider = activityLifecycleProvider;
 
-        activityLifecycleProvider.lifecycle()
-                .filter(event -> event == ActivityEvent.DESTROY)
-                .subscribe(event -> {
-                    BasePresenter.this.view = null;
-                });
-    }
+    activityLifecycleProvider.lifecycle()
+        .filter(event -> event == ActivityEvent.DESTROY)
+        .subscribe(event -> {
+          BasePresenter.this.view = null;
+        });
+  }
 
-    @Override
-    public void setView(@NonNull View view) {
-        this.view = view;
-        initView(view);
-    }
+  @Override @Nullable public View getView() {
+    return view;
+  }
 
-    @Override @Nullable
-    public View getView() {
-        return view;
-    }
+  @Override public void setView(@NonNull View view) {
+    this.view = view;
+    initView(view);
+  }
 
-    protected abstract void initView(@NonNull View view);
-
-    /**
-     * Apply default policies for working with {@link UseCase} {@link Observable}s.
-     * <p/>
-     * Subscription is on the UI thread, observation is on an IO thread.
-     * The observable will be unsubscribed during the corresponding lifecycle event.
-     *
-     * @param <T>
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    protected <T> Observable.Transformer<T, T> useCaseTransformer() {
-        return (Observable.Transformer<T, T>) domainTransformer;
-    }
-
-    /**
-     * Apply default policies for working with UI {@link Observable}s.
-     * <p/>
-     * The observable will be unsubscribed during the corresponding lifecycle event.
-     *
-     * @param <T>
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    protected <T> Observable.Transformer<T, T> uiTransformer() {
-        return (Observable.Transformer<T, T>) uiTransformer;
-    }
+  protected abstract void initView(@NonNull View view);
 }

@@ -1,9 +1,7 @@
 package vaughandroid.vigor.data.workout;
 
 import android.support.annotation.NonNull;
-
 import java.util.List;
-
 import vaughandroid.vigor.data.exercise.ExerciseDto;
 import vaughandroid.vigor.domain.workout.Workout;
 
@@ -12,11 +10,9 @@ import vaughandroid.vigor.domain.workout.Workout;
  *
  * @author chris.vaughan@laterooms.com
  */
-public class WorkoutDto {
+@SuppressWarnings("NullableProblems") public class WorkoutDto {
 
-    @NonNull
-    String guid;
+  @NonNull String guid;
 
-    @NonNull
-    List<ExerciseDto> exerciseDtos;
+  @NonNull List<ExerciseDto> exerciseDtos;
 }

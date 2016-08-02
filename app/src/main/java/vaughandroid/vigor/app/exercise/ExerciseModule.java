@@ -10,18 +10,15 @@ import vaughandroid.vigor.domain.exercise.ExerciseRepository;
  *
  * @author Chris
  */
-@Module
-public class ExerciseModule {
+@Module public class ExerciseModule {
 
-    @Provides
-    @ActivityScope
-    public ExerciseContract.Presenter provideExercisePresenter(ExercisePresenter presenter) {
-        return presenter;
-    }
+  @Provides @ActivityScope
+  public ExerciseContract.Presenter provideExercisePresenter(ExercisePresenter presenter) {
+    return presenter;
+  }
 
-    @Provides
-    @ActivityScope
-    public ExerciseRepository provideExerciseRepository(vaughandroid.vigor.data.exercise.ExerciseRepository exerciseRepository) {
-        return exerciseRepository;
-    }
+  @Provides @ActivityScope public ExerciseRepository provideExerciseRepository(
+      vaughandroid.vigor.data.exercise.ExerciseRepository exerciseRepository) {
+    return exerciseRepository;
+  }
 }

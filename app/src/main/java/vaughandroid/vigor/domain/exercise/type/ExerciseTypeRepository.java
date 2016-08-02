@@ -1,10 +1,8 @@
 package vaughandroid.vigor.domain.exercise.type;
 
 import android.support.annotation.NonNull;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
 import rx.Observable;
 import rx.Single;
 
@@ -15,11 +13,16 @@ import rx.Single;
  */
 public interface ExerciseTypeRepository {
 
-    @NonNull
-    Single<Boolean> isInitialised();
-    @NonNull Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
-    @NonNull Observable<ImmutableList<ExerciseType>> addExerciseTypes(@NonNull Iterable<ExerciseType> exerciseTypes);
-    @NonNull Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
-    @NonNull Observable<ImmutableList<ExerciseType>> getExerciseTypeList();
-    @NonNull Observable<ImmutableMap<ExerciseTypeId, ExerciseType>> getExerciseTypeMap();
+  @NonNull Single<Boolean> isInitialised();
+
+  @NonNull Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
+
+  @NonNull Observable<ImmutableList<ExerciseType>> addExerciseTypes(
+      @NonNull Iterable<ExerciseType> exerciseTypes);
+
+  @NonNull Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);
+
+  @NonNull Observable<ImmutableList<ExerciseType>> getExerciseTypeList();
+
+  @NonNull Observable<ImmutableMap<ExerciseTypeId, ExerciseType>> getExerciseTypeMap();
 }

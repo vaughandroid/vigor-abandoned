@@ -8,12 +8,10 @@ import vaughandroid.vigor.domain.workout.WorkoutRepository;
 /**
  * @author Chris
  */
-@Module
-public class WorkoutModule {
+@Module public class WorkoutModule {
 
-    @Provides
-    @ActivityScope
-    public WorkoutRepository provideWorkoutRepository(vaughandroid.vigor.data.workout.WorkoutRepository workoutRepository) {
-        return workoutRepository;
-    }
+  @Provides @ActivityScope public WorkoutRepository provideWorkoutRepository(
+      vaughandroid.vigor.data.workout.WorkoutRepository workoutRepository) {
+    return workoutRepository;
+  }
 }

@@ -1,7 +1,6 @@
 package vaughandroid.vigor.data.utils;
 
 import java.util.UUID;
-
 import javax.inject.Inject;
 
 /**
@@ -11,10 +10,10 @@ import javax.inject.Inject;
  */
 public class GuidFactory {
 
-    @Inject
-    public GuidFactory() {}
+  @Inject public GuidFactory() {
+  }
 
-    public String newGuid() {
-        return UUID.randomUUID().toString();
-    }
+  public String newGuid() {
+    return UUID.randomUUID().toString();
+  }
 }

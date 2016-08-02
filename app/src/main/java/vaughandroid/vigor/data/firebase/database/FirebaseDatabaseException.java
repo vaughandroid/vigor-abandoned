@@ -1,7 +1,6 @@
 package vaughandroid.vigor.data.firebase.database;
 
 import android.support.annotation.NonNull;
-
 import com.google.firebase.database.DatabaseError;
 
 /**
@@ -11,18 +10,18 @@ import com.google.firebase.database.DatabaseError;
  */
 public class FirebaseDatabaseException extends RuntimeException {
 
-    private final DatabaseError databaseError;
+  private final DatabaseError databaseError;
 
-    public FirebaseDatabaseException(@NonNull DatabaseError databaseError) {
-        this(databaseError, null);
-    }
+  public FirebaseDatabaseException(@NonNull DatabaseError databaseError) {
+    this(databaseError, null);
+  }
 
-    public FirebaseDatabaseException(@NonNull DatabaseError databaseError, String message) {
-        super(message);
-        this.databaseError = databaseError;
-    }
+  public FirebaseDatabaseException(@NonNull DatabaseError databaseError, String message) {
+    super(message);
+    this.databaseError = databaseError;
+  }
 
-    public DatabaseError databaseError() {
-        return databaseError;
-    }
+  public DatabaseError databaseError() {
+    return databaseError;
+  }
 }

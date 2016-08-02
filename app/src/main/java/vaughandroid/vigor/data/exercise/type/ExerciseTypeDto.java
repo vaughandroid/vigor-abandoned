@@ -1,7 +1,6 @@
 package vaughandroid.vigor.data.exercise.type;
 
 import android.support.annotation.NonNull;
-
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 
 /**
@@ -9,10 +8,8 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  *
  * @author Chris
  */
-public class ExerciseTypeDto {
+@SuppressWarnings("NullableProblems") public class ExerciseTypeDto {
 
-    @NonNull
-    public String guid;
-    @NonNull
-    public String name;
+  @NonNull public String guid;
+  @NonNull public String name;
 }

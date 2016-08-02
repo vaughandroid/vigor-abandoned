@@ -2,37 +2,35 @@ package vaughandroid.vigor.domain.workout;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import javax.inject.Inject;
-
 import rx.Observable;
-import vaughandroid.vigor.domain.usecase.UseCase;
+import vaughandroid.vigor.domain.rx.SchedulingPolicy;
+import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 
 /**
  * Use case for adding a new {@link Workout}
  *
  * @author Chris
  */
-public class AddWorkoutUseCase implements UseCase<vaughandroid.vigor.domain.workout.Workout> {
+public class AddWorkoutUseCase extends ObservableUseCase<Workout> {
 
-    private final WorkoutRepository repository;
-    @Nullable
-    private vaughandroid.vigor.domain.workout.Workout workout;
+  private final WorkoutRepository repository;
+  @Nullable private Workout workout;
 
-    @Inject
-    public AddWorkoutUseCase(WorkoutRepository repository) {
-        this.repository = repository;
+  @Inject
+  public AddWorkoutUseCase(SchedulingPolicy schedulingPolicy, WorkoutRepository repository) {
+    super(schedulingPolicy);
+    this.repository = repository;
+  }
+
+  public void setWorkout(@NonNull Workout workout) {
+    this.workout = workout;
+  }
+
+  @Override protected Observable<Workout> createObservable() {
+    if (workout == null) {
+      throw new IllegalStateException("workout not set");
     }
-
-    public void setWorkout(@NonNull vaughandroid.vigor.domain.workout.Workout workout) {
-        this.workout = workout;
-    }
-
-    @Override
-    public Observable<vaughandroid.vigor.domain.workout.Workout> createObservable() {
-        if (workout == null) {
-            throw new IllegalStateException("workout not set");
-        }
-        return repository.addWorkout(workout);
-    }
+    return repository.addWorkout(workout);
+  }
 }

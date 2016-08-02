@@ -2,15 +2,15 @@ apply from: 'buildsystem/ci.gradle'
 apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
-        classpath 'com.google.gms:google-services:3.0.0'
-    }
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.1.2'
+    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+    classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
+    classpath 'com.google.gms:google-services:3.0.0'
+  }
 }

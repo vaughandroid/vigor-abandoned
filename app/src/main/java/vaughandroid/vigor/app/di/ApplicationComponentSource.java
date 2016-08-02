@@ -7,5 +7,5 @@ package vaughandroid.vigor.app.di;
  */
 public interface ApplicationComponentSource {
 
-    ApplicationComponent getApplicationComponent();
+  ApplicationComponent getApplicationComponent();
 }

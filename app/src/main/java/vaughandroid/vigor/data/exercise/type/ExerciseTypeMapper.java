@@ -2,9 +2,7 @@ package vaughandroid.vigor.data.exercise.type;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
-
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.exercise.type.ExerciseTypeId;
 
@@ -15,28 +13,26 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseTypeId;
  */
 public class ExerciseTypeMapper {
 
-    @Inject ExerciseTypeMapper() {}
+  @Inject ExerciseTypeMapper() {
+  }
 
-    ExerciseType fromDto(ExerciseTypeDto dto) {
-        return ExerciseType.builder()
-                .id(ExerciseTypeId.create(dto.guid))
-                .name(dto.name)
-                .build();
-    }
+  ExerciseType fromDto(ExerciseTypeDto dto) {
+    return ExerciseType.builder().id(ExerciseTypeId.create(dto.guid)).name(dto.name).build();
+  }
 
-    ExerciseTypeDto fromExerciseType(ExerciseType exerciseType) {
-        ExerciseTypeDto dto = new ExerciseTypeDto();
-        dto.guid = exerciseType.guid();
-        dto.name = exerciseType.name();
-        return dto;
-    }
+  ExerciseTypeDto fromExerciseType(ExerciseType exerciseType) {
+    ExerciseTypeDto dto = new ExerciseTypeDto();
+    dto.guid = exerciseType.guid();
+    dto.name = exerciseType.name();
+    return dto;
+  }
 
-    public Map<ExerciseTypeId, ExerciseType> fromDtoMap(Map<String, ExerciseTypeDto> dtoMap) {
-        Map<ExerciseTypeId, ExerciseType> exerciseTypeMap = new HashMap<>();
-        for (Map.Entry<String, ExerciseTypeDto> pair : dtoMap.entrySet()) {
-            ExerciseType exerciseType = fromDto(pair.getValue());
-            exerciseTypeMap.put(exerciseType.id(), exerciseType);
-        }
-        return exerciseTypeMap;
+  public Map<ExerciseTypeId, ExerciseType> fromDtoMap(Map<String, ExerciseTypeDto> dtoMap) {
+    Map<ExerciseTypeId, ExerciseType> exerciseTypeMap = new HashMap<>();
+    for (Map.Entry<String, ExerciseTypeDto> pair : dtoMap.entrySet()) {
+      ExerciseType exerciseType = fromDto(pair.getValue());
+      exerciseTypeMap.put(exerciseType.id(), exerciseType);
     }
+    return exerciseTypeMap;
+  }
 }

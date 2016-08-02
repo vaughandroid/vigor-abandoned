@@ -4,99 +4,99 @@ apply from: "${rootDir}/buildsystem/retrolambda.gradle"
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
-    def config = rootProject.ext.androidConfig
+  def config = rootProject.ext.androidConfig
 
-    compileSdkVersion config.compileSdkVersion
-    buildToolsVersion config.buildToolsVersion
+  compileSdkVersion config.compileSdkVersion
+  buildToolsVersion config.buildToolsVersion
 
-    compileOptions {
-        sourceCompatibility config.sourceCompatibility
-        targetCompatibility config.targetCompatibility
+  compileOptions {
+    sourceCompatibility config.sourceCompatibility
+    targetCompatibility config.targetCompatibility
+  }
+
+  defaultConfig {
+    applicationId "me.vaughandroid.vigor"
+    minSdkVersion config.minSdkVersion
+    targetSdkVersion config.targetSdkVersion
+    versionCode 1
+    versionName "1.0"
+
+    vectorDrawables.useSupportLibrary = true
+  }
+
+  buildTypes {
+    debug {
+      minifyEnabled false
+      applicationIdSuffix ".debug"
     }
-
-    defaultConfig {
-        applicationId "me.vaughandroid.vigor"
-        minSdkVersion config.minSdkVersion
-        targetSdkVersion config.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
-
-        vectorDrawables.useSupportLibrary = true
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'),
+          'proguard-rules.pro',
+          "${rootDir}/buildsystem/proguard/firebase.pro",
+          "${rootDir}/buildsystem/proguard/retrolambda.pro"
     }
+  }
 
-    buildTypes {
-        debug {
-            minifyEnabled false
-            applicationIdSuffix ".debug"
-        }
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    'proguard-rules.pro',
-                    "${rootDir}/buildsystem/proguard/firebase.pro",
-                    "${rootDir}/buildsystem/proguard/retrolambda.pro"
-        }
+  packagingOptions {
+    for (fileName in rootProject.ext.packagingExclusions) {
+      exclude fileName
     }
-
-    packagingOptions {
-        for (fileName in rootProject.ext.packagingExclusions) {
-            exclude fileName
-        }
-    }
+  }
 }
 
 dependencies {
-    def javaLibs        = rootProject.ext.javaLibs
-    def androidLibs     = rootProject.ext.androidLibs
-    def javaTestLibs    = rootProject.ext.javaTestLibs
-    def androidTestLibs = rootProject.ext.androidTestLibs
+  def javaLibs = rootProject.ext.javaLibs
+  def androidLibs = rootProject.ext.androidLibs
+  def javaTestLibs = rootProject.ext.javaTestLibs
+  def androidTestLibs = rootProject.ext.androidTestLibs
 
-    provided    javaLibs.autoValue
-    apt         javaLibs.autoValueWith
-    compile     javaLibs.dagger
-    apt         javaLibs.daggerCompiler
-    compile     javaLibs.guava
-    provided    javaLibs.javaxAnnotation
-    compile     javaLibs.rxJava
-    compile     javaLibs.slf4j
+  provided javaLibs.autoValue
+  apt javaLibs.autoValueWith
+  compile javaLibs.dagger
+  apt javaLibs.daggerCompiler
+  compile javaLibs.guava
+  provided javaLibs.javaxAnnotation
+  compile javaLibs.rxJava
+  compile javaLibs.slf4j
 
-    compile         androidLibs.androidAnnotations
-    compile         androidLibs.appCompat
-    compile         androidLibs.butterKnife
-    apt             androidLibs.butterKnifeCompiler
-    compile         androidLibs.design
-    compile         androidLibs.firebaseAuth
-    compile         androidLibs.firebaseCore
-    compile         androidLibs.firebaseConfig
-    compile         androidLibs.firebaseDatabase
-    debugCompile    androidLibs.leakCanary
-    releaseCompile  androidLibs.leakCanaryNoOp
-    compile         androidLibs.rxAndroid
-    compile         androidLibs.rxBinding
-    compile         androidLibs.rxBindingAppCompatV7
-    compile         androidLibs.rxBindingDesign
-    compile         androidLibs.rxBindingSupportV4
-    compile         androidLibs.rxBindingRecyclerViewV7
-    compile         androidLibs.rxLifecycle
-    compile         androidLibs.rxLifecycleComponents
-    compile         androidLibs.slf4jAndroid
+  compile androidLibs.androidAnnotations
+  compile androidLibs.appCompat
+  compile androidLibs.butterKnife
+  apt androidLibs.butterKnifeCompiler
+  compile androidLibs.design
+  compile androidLibs.firebaseAuth
+  compile androidLibs.firebaseCore
+  compile androidLibs.firebaseConfig
+  compile androidLibs.firebaseDatabase
+  debugCompile androidLibs.leakCanary
+  releaseCompile androidLibs.leakCanaryNoOp
+  compile androidLibs.rxAndroid
+  compile androidLibs.rxBinding
+  compile androidLibs.rxBindingAppCompatV7
+  compile androidLibs.rxBindingDesign
+  compile androidLibs.rxBindingSupportV4
+  compile androidLibs.rxBindingRecyclerViewV7
+  compile androidLibs.rxLifecycle
+  compile androidLibs.rxLifecycleComponents
+  compile androidLibs.slf4jAndroid
 
-    testCompile javaTestLibs.assertJ
-    testCompile javaTestLibs.jUnit
-    testCompile javaTestLibs.mockito
+  testCompile javaTestLibs.assertJ
+  testCompile javaTestLibs.jUnit
+  testCompile javaTestLibs.mockito
 
-    androidTestCompile javaTestLibs.assertJ
-    androidTestCompile androidTestLibs.dexmaker
-    androidTestCompile androidTestLibs.dexmakerMockito
-    androidTestCompile androidTestLibs.dexmakerDx
-    androidTestCompile androidTestLibs.espresso
-    androidTestCompile javaTestLibs.jUnit
-    androidTestCompile javaTestLibs.mockito
-    androidTestCompile androidTestLibs.testSupportRules
-    androidTestCompile androidTestLibs.testSupportRunner
+  androidTestCompile javaTestLibs.assertJ
+  androidTestCompile androidTestLibs.dexmaker
+  androidTestCompile androidTestLibs.dexmakerMockito
+  androidTestCompile androidTestLibs.dexmakerDx
+  androidTestCompile androidTestLibs.espresso
+  androidTestCompile javaTestLibs.jUnit
+  androidTestCompile javaTestLibs.mockito
+  androidTestCompile androidTestLibs.testSupportRules
+  androidTestCompile androidTestLibs.testSupportRunner
 
-    // Fix dependency version conflicts.
-    androidTestCompile androidLibs.androidAnnotations
+  // Fix dependency version conflicts.
+  androidTestCompile androidLibs.androidAnnotations
 }
 
 // For some reason, this has to go at the bottom of the script.

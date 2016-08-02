@@ -11,13 +11,10 @@ import vaughandroid.vigor.app.rx.UtilsModule;
  * @author Chris
  */
 @Component(modules = {
-        SchedulerModule.class,
-        UtilsModule.class,
-})
-@ApplicationScope
-public interface ApplicationComponent {
+    SchedulerModule.class, UtilsModule.class,
+}) @ApplicationScope public interface ApplicationComponent {
 
-    ActivityComponent activityComponent(ActivityModule activityModule);
+  ActivityComponent activityComponent(ActivityModule activityModule);
 
-    void inject(VigorApplication application);
+  void inject(VigorApplication application);
 }

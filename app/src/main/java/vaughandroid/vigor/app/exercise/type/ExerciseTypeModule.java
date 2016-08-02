@@ -8,17 +8,16 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseTypeRepository;
 /**
  * @author Chris
  */
-@Module
-public class ExerciseTypeModule {
+@Module public class ExerciseTypeModule {
 
-    @Provides @ActivityScope public ExerciseTypePickerContract.Presenter provideExerciseTypePickerPresenter(
-            ExerciseTypePickerPresenter presenter) {
-        return presenter;
-    }
+  @Provides @ActivityScope
+  public ExerciseTypePickerContract.Presenter provideExerciseTypePickerPresenter(
+      ExerciseTypePickerPresenter presenter) {
+    return presenter;
+  }
 
-    @Provides
-    @ActivityScope
-    public ExerciseTypeRepository provideExerciseTypeRepository(vaughandroid.vigor.data.exercise.type.ExerciseTypeRepository exerciseTypeRepository) {
-        return exerciseTypeRepository;
-    }
+  @Provides @ActivityScope public ExerciseTypeRepository provideExerciseTypeRepository(
+      vaughandroid.vigor.data.exercise.type.ExerciseTypeRepository exerciseTypeRepository) {
+    return exerciseTypeRepository;
+  }
 }
