@@ -66,12 +66,12 @@ public class ExerciseTypePickerActivity extends VigorActivity
     exerciseTypeAdapter.exerciseTypeClickedObservable()
         .compose(bindToLifecycle())
         .subscribe(exerciseType -> presenter.onTypePicked(exerciseType),
-            t -> presenter.onViewError(t));
+            t -> presenter.onError(t));
 
     RxTextView.textChanges(editText)
         .map(CharSequence::toString)
         .compose(bindToLifecycle())
-        .subscribe(text -> presenter.onSearchTextUpdated(text), t -> presenter.onViewError(t));
+        .subscribe(text -> presenter.onSearchTextUpdated(text), t -> presenter.onError(t));
   }
 
   private void initPresenter() {

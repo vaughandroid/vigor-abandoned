@@ -54,18 +54,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
 
     getExerciseTypesUseCase.perform()
         .compose(activityLifecycleProvider.bindToLifecycle())
-        .subscribe(this::onListUpdated, this::showError);
-  }
-
-  @Override public void onViewError(Throwable t) {
-
-  }
-
-  @Override public void onErrorDialogDismissed() {
-    View view = getView();
-    if (view != null) {
-      view.returnCancelled();
-    }
+        .subscribe(this::onListUpdated, this::onError);
   }
 
   @Override public void onSearchTextUpdated(@NonNull String text) {
@@ -79,17 +68,25 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     }
   }
 
+  @Override public void onErrorDialogDismissed() {
+    View view = getView();
+    if (view != null) {
+      view.returnCancelled();
+    }
+  }
+
+  @Override public void onError(Throwable t) {
+    logger.error("Error", t);
+    View view = getView();
+    if (view != null) {
+      view.showError();
+    }
+  }
+
   private void onListUpdated(List<ExerciseType> exerciseTypes) {
     View view = getView();
     if (view != null) {
       view.setListEntries(exerciseTypes);
-    }
-  }
-
-  private void showError(Throwable t) {
-    ExerciseTypePickerContract.View view = getView();
-    if (view != null) {
-      view.showError();
     }
   }
 }

@@ -13,4 +13,6 @@ public interface Presenter<T> {
   @Nullable T getView();
 
   void setView(@NonNull T view);
+
+  void onError(Throwable t);
 }

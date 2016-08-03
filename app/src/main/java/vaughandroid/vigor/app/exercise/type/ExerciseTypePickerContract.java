@@ -29,7 +29,5 @@ public interface ExerciseTypePickerContract {
     void onSearchTextUpdated(@NonNull String text);
     void onTypePicked(@NonNull ExerciseType exerciseType);
     void onErrorDialogDismissed();
-
-    void onViewError(Throwable t);
   }
 }
