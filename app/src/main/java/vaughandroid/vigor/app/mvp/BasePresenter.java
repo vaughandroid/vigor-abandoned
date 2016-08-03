@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public abstract class BasePresenter<View> implements Presenter<View> {
 
   @NonNull protected final ActivityLifecycleProvider activityLifecycleProvider;
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 
   @Nullable private View view;
 

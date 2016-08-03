@@ -85,6 +85,10 @@ public class NumberInputView extends LinearLayout {
     return value;
   }
 
+  @Nullable public Integer getIntValue() {
+    return value != null ? value.intValue() : null;
+  }
+
   public void setValue(@Nullable Integer valueInt) {
     BigDecimal value = valueInt != null ? BigDecimal.valueOf(valueInt) : null;
     setValueInternal(value, true);

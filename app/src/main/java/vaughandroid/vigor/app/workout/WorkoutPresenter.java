@@ -7,6 +7,7 @@ import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import vaughandroid.vigor.app.exercise.ExerciseContract;
 import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.app.workout.WorkoutContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -54,7 +55,7 @@ public class WorkoutPresenter extends BasePresenter<View> implements WorkoutCont
     // TODO: 19/06/2016 Find a better way of dealing with IDs
     View view = getView();
     if (view != null) {
-      view.openNewExerciseActivity(workout.id());
+      view.goToAddNewExercise(workout.id());
     }
   }
 
@@ -76,7 +77,7 @@ public class WorkoutPresenter extends BasePresenter<View> implements WorkoutCont
   @Override public void onOpenExercise(@NonNull Exercise exercise) {
     View view = getView();
     if (view != null) {
-      view.openExistingExerciseActivity(workout.id(), exercise.id());
+      view.goToEditExistingExercise(workout.id(), exercise.id());
     }
   }
 
@@ -95,5 +96,13 @@ public class WorkoutPresenter extends BasePresenter<View> implements WorkoutCont
       }
     }
     setWorkout(workout.withExercises(ImmutableList.copyOf(exercises)));
+  }
+
+  @Override public void onError(Throwable t) {
+    logger.error("Error", t);
+    View view = getView();
+    if (view != null) {
+      view.showError();
+    }
   }
 }

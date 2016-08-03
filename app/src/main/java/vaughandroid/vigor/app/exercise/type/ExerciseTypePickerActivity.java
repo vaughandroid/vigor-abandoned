@@ -14,7 +14,6 @@ import com.google.common.base.Preconditions;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import java.util.List;
 import javax.inject.Inject;
-import rx.Observable;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
@@ -63,6 +62,16 @@ public class ExerciseTypePickerActivity extends VigorActivity
     exerciseTypeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     exerciseTypeRecyclerView.setAdapter(exerciseTypeAdapter);
     exerciseTypeRecyclerView.setHasFixedSize(true);
+
+    exerciseTypeAdapter.exerciseTypeClickedObservable()
+        .compose(bindToLifecycle())
+        .subscribe(exerciseType -> presenter.onTypePicked(exerciseType),
+            t -> presenter.onError(t));
+
+    RxTextView.textChanges(editText)
+        .map(CharSequence::toString)
+        .compose(bindToLifecycle())
+        .subscribe(text -> presenter.onSearchTextUpdated(text), t -> presenter.onError(t));
   }
 
   private void initPresenter() {
@@ -72,17 +81,8 @@ public class ExerciseTypePickerActivity extends VigorActivity
 
   private ExerciseType getExerciseType() {
     Intent intent = getIntent();
-    Preconditions.checkState(intent.hasExtra(EXTRA_TYPE),
-        "Missing extra: '%s'", EXTRA_TYPE);
+    Preconditions.checkState(intent.hasExtra(EXTRA_TYPE), "Missing extra: '%s'", EXTRA_TYPE);
     return (ExerciseType) intent.getSerializableExtra(EXTRA_TYPE);
-  }
-
-  @Override public Observable<String> searchText() {
-    return RxTextView.textChanges(editText).map(CharSequence::toString);
-  }
-
-  @Override public Observable<ExerciseType> typePicked() {
-    return exerciseTypeAdapter.exerciseTypeClickedObservable();
   }
 
   @Override public void setSearchText(@NonNull String text) {
