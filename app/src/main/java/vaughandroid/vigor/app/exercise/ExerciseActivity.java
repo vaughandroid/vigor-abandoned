@@ -77,10 +77,6 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     initToolbar();
 
     weightNumberInputView.setUnitsShown(true);
-    weightNumberInputView.setValueChangedListener(newValue -> presenter.onWeightEntered(newValue));
-
-    repsNumberInputView.setValueChangedListener(
-        newValue -> presenter.onRepsEntered(newValue.intValue()));
   }
 
   private void initToolbar() {
@@ -108,14 +104,6 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     ExerciseId exerciseId = (ExerciseId) getIntent().getExtras().getSerializable(EXTRA_EXERCISE_ID);
     Preconditions.checkNotNull(exerciseId, "Missing extra: %s", EXTRA_EXERCISE_ID);
     return exerciseId;
-  }
-
-  @Override public void showLoading() {
-
-  }
-
-  @Override public void showContent() {
-
   }
 
   @Override public void showError() {
@@ -156,7 +144,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
   }
 
   @OnClick(R.id.content_exercise_Button_confirm) void onClickConfirmButton() {
-    presenter.onValuesConfirmed();
+    presenter.onValuesConfirmed(weightNumberInputView.getValue(),
+        repsNumberInputView.getIntValue());
   }
 
   @Override public void setType(@NonNull ExerciseType type) {
@@ -167,11 +156,8 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     presenter.onTypeClicked();
   }
 
-  @Override public void setWeight(@Nullable BigDecimal weight) {
+  @Override public void setWeight(@Nullable BigDecimal weight, @NonNull String units) {
     weightNumberInputView.setValue(weight);
-  }
-
-  @Override public void setWeightUnits(@NonNull String units) {
     weightNumberInputView.setUnits(units);
   }
 
@@ -179,7 +165,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     repsNumberInputView.setValue(reps);
   }
 
-  @Override public void openTypePicker(@NonNull ExerciseType type) {
+  @Override public void goToExerciseTypePicker(@NonNull ExerciseType type) {
     startActivityForResult(ExerciseTypePickerActivity.intent(this, type), REQUEST_CODE_PICK_TYPE);
   }
 

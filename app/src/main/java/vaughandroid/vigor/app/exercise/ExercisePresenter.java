@@ -16,7 +16,6 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
-import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
@@ -35,8 +34,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
   private Exercise exercise;
 
   @Inject public ExercisePresenter(ActivityLifecycleProvider activityLifecycleProvider,
-      SchedulingPolicy domainSchedulingPolicy, AddExerciseUseCase addExerciseUseCase,
-      GetExerciseUseCase getExerciseUseCase) {
+      AddExerciseUseCase addExerciseUseCase, GetExerciseUseCase getExerciseUseCase) {
     super(activityLifecycleProvider);
     this.addExerciseUseCase = addExerciseUseCase;
     this.getExerciseUseCase = getExerciseUseCase;
@@ -49,14 +47,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
       getExerciseUseCase.setExerciseId(exerciseId);
       getExerciseUseCase.perform()
           .compose(activityLifecycleProvider.bindToLifecycle())
-          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::showError);
-    }
-  }
-
-  private void showError(Throwable throwable) {
-    View view = getView();
-    if (view != null) {
-      view.showError();
+          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
     }
   }
 
@@ -68,38 +59,24 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     View view = getView();
     if (view != null && exercise != null) {
       view.setType(exercise.type());
-      view.setWeight(exercise.weight());
-      view.setWeightUnits("Kg"); // TODO: 15/06/2016 implement weight units setting
+      view.setWeight(exercise.weight(), "Kg"); // TODO: 15/06/2016 implement weight units setting
       view.setReps(exercise.reps());
-      view.showContent();
     }
   }
 
   @Override public void onTypeClicked() {
     View view = getView();
     if (view != null) {
-      view.openTypePicker(exercise.type());
+      view.goToExerciseTypePicker(exercise.type());
     }
   }
 
-  @Override public void onWeightEntered(@Nullable BigDecimal weight) {
-    setExercise(exercise.withWeight(weight));
-  }
+  @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
+    setExercise(exercise.withWeight(weight).withReps(reps));
 
-  @Override public void onRepsEntered(@Nullable Integer reps) {
-    try {
-      setExercise(exercise.withReps(reps));
-    } catch (NumberFormatException e) {
-      logger.warn("Caught invalid reps input: " + reps);
-      // Reset valid values.
-      updateViewValues();
-    }
-  }
-
-  @Override public void onValuesConfirmed() {
     addExerciseUseCase.setExercise(exercise);
     addExerciseUseCase.perform()
-        .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::showError);
+        .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::onError);
   }
 
   @Override public void onTypePicked(@NonNull ExerciseType typeFromResult) {
@@ -116,6 +93,14 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     View view = getView();
     if (view != null) {
       view.onSaved(exercise);
+    }
+  }
+
+  @Override public void onError(Throwable t) {
+    logger.error("Error", t);
+    View view = getView();
+    if (view != null) {
+      view.showError();
     }
   }
 }

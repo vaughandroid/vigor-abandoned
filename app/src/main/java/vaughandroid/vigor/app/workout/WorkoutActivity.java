@@ -112,12 +112,12 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     exerciseAdapter.setExercises(exercises);
   }
 
-  @Override public void openNewExerciseActivity(@NonNull WorkoutId workoutId) {
+  @Override public void goToAddNewExercise(@NonNull WorkoutId workoutId) {
     startActivityForResult(ExerciseActivity.intentForNew(this, workoutId),
         REQUEST_CODE_EXERCISE_ADD);
   }
 
-  @Override public void openExistingExerciseActivity(@NonNull WorkoutId workoutId,
+  @Override public void goToEditExistingExercise(@NonNull WorkoutId workoutId,
       @NonNull ExerciseId exerciseId) {
     startActivityForResult(ExerciseActivity.intentForExisting(this, workoutId, exerciseId),
         REQUEST_CODE_EXERCISE_EDIT);

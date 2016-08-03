@@ -2,8 +2,6 @@ package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
 import java.util.List;
-import rx.Observable;
-import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 
 /**
@@ -15,11 +13,13 @@ public interface ExerciseTypePickerContract {
 
   interface View {
     void setSearchText(@NonNull String text);
+
     void setListEntries(@NonNull List<ExerciseType> entries);
 
     void showError();
 
     void returnPickedType(@NonNull ExerciseType exerciseType);
+
     void returnCancelled();
   }
 
@@ -27,7 +27,9 @@ public interface ExerciseTypePickerContract {
     void init(@NonNull ExerciseType exerciseType);
 
     void onSearchTextUpdated(@NonNull String text);
+
     void onTypePicked(@NonNull ExerciseType exerciseType);
+
     void onErrorDialogDismissed();
   }
 }

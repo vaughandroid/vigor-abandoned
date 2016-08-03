@@ -17,9 +17,9 @@ public interface WorkoutContract {
   interface View extends LCEView {
     void setExercises(@NonNull ImmutableList<Exercise> exercises);
 
-    void openNewExerciseActivity(@NonNull WorkoutId workoutId);
+    void goToAddNewExercise(@NonNull WorkoutId workoutId);
 
-    void openExistingExerciseActivity(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
+    void goToEditExistingExercise(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
   }
 
   interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
