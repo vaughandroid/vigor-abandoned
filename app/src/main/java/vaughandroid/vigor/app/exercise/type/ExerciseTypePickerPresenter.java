@@ -50,18 +50,15 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
         .compose(activityLifecycleProvider.<Boolean>bindToLifecycle().forSingle())
         .subscribe(LogErrorsSubscriber.<Boolean>create());
 
-    Observable.just(this.exerciseType)
-        .map(ExerciseType::name)
-        .mergeWith(view.searchText())
-        .subscribe(getExerciseTypesUseCase::setSearchText, this::showError);
+    getExerciseTypesUseCase.setSearchText(exerciseType.name());
 
     getExerciseTypesUseCase.perform()
         .compose(activityLifecycleProvider.bindToLifecycle())
         .subscribe(this::onListUpdated, this::showError);
+  }
 
-    view.typePicked()
-        .compose(activityLifecycleProvider.bindToLifecycle())
-        .subscribe(this::onTypePicked, this::showError);
+  @Override public void onViewError(Throwable t) {
+
   }
 
   @Override public void onErrorDialogDismissed() {
@@ -71,7 +68,11 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     }
   }
 
-  private void onTypePicked(@NonNull ExerciseType exerciseType) {
+  @Override public void onSearchTextUpdated(@NonNull String text) {
+    getExerciseTypesUseCase.setSearchText(text);
+  }
+
+  @Override public void onTypePicked(@NonNull ExerciseType exerciseType) {
     View view = getView();
     if (view != null) {
       view.returnPickedType(exerciseType);

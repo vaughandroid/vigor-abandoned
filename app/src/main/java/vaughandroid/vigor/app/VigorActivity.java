@@ -20,8 +20,6 @@ import vaughandroid.vigor.app.di.ApplicationComponentSource;
 public abstract class VigorActivity extends RxAppCompatActivity
     implements ApplicationComponentSource, ActivityComponentSource {
 
-  protected final Logger logger = LoggerFactory.getLogger(getClass());
-
   private ActivityComponent activityComponent;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
