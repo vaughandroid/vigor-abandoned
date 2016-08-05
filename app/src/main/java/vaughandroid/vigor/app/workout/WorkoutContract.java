@@ -23,14 +23,10 @@ public interface WorkoutContract {
   }
 
   interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
-    void setWorkoutId(@NonNull WorkoutId workoutId);
+    void init(@NonNull WorkoutId workoutId);
 
     void onAddExercise();
 
     void onOpenExercise(@NonNull Exercise exercise);
-
-    void onExerciseAdded(@NonNull Exercise exercise);
-
-    void onExerciseUpdated(@NonNull Exercise exercise);
   }
 }

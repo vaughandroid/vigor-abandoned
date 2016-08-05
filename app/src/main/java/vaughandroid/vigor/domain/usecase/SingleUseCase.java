@@ -15,8 +15,7 @@ public abstract class SingleUseCase<T> extends UseCase {
   }
 
   public final Single<T> perform() {
-    return createSingle().compose(schedulingPolicy.singleTransformer())
-        .doOnError(t -> logger.error("Error", t));
+    return createSingle().compose(schedulingPolicy.singleTransformer());
   }
 
   protected abstract Single<T> createSingle();

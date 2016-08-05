@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_error_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+  <TextView
+      android:id="@+id/content_error_TextView_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/error_general_title"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      />
+  <TextView
+      android:id="@+id/content_error_TextView_message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/error_general_message"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      />
+</LinearLayout>

@@ -3,8 +3,6 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
-import vaughandroid.vigor.app.mvp.LCEView;
-import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
@@ -25,9 +23,9 @@ public interface ExerciseContract {
 
     void showError();
 
-    void goToExerciseTypePicker(@NonNull ExerciseType type);
+    void goToExerciseTypePicker(@NonNull ExerciseId exerciseId);
 
-    void onSaved(@NonNull Exercise exercise);
+    void finish();
   }
 
   interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
@@ -36,7 +34,5 @@ public interface ExerciseContract {
     void onTypeClicked();
 
     void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps);
-
-    void onTypePicked(@NonNull ExerciseType typeFromResult);
   }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
 import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 
 /**
@@ -27,24 +29,20 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 public class ExerciseTypePickerActivity extends VigorActivity
     implements ExerciseTypePickerContract.View, ErrorDialogFragment.Listener {
 
-  private static final String EXTRA_TYPE = "exerciseType";
-
-  private static final String TAG_ERROR_DIALOG = "ErrorDialog";
+  private static final String EXTRA_EXERCISE_ID = "exerciseId";
 
   private final ExerciseTypeAdapter exerciseTypeAdapter = new ExerciseTypeAdapter();
+
   @Inject ExerciseTypePickerContract.Presenter presenter;
-  @BindView(R.id.activity_exercise_type_picker_EditText) EditText editText;
-  @BindView(R.id.activity_exercise_type_picker_RecyclerView) RecyclerView exerciseTypeRecyclerView;
 
-  public static Intent intent(@NonNull Context context, @NonNull ExerciseType exerciseType) {
-    return new Intent(context, ExerciseTypePickerActivity.class).putExtra(EXTRA_TYPE, exerciseType);
-  }
+  @BindView(R.id.content_loading_root) View loadingRoot;
+  @BindView(R.id.content_exercise_type_picker_root) View contentRoot;
+  @BindView(R.id.content_error_root) View errorRoot;
+  @BindView(R.id.content_exercise_type_picker_EditText) EditText editText;
+  @BindView(R.id.content_exercise_type_picker_RecyclerView) RecyclerView exerciseTypeRecyclerView;
 
-  @NonNull public static ExerciseType getTypeFromResult(@NonNull Intent data) {
-    if (!data.hasExtra(EXTRA_TYPE)) {
-      throw new IllegalArgumentException("Invalid data");
-    }
-    return (ExerciseType) data.getSerializableExtra(EXTRA_TYPE);
+  public static Intent intent(@NonNull Context context, @NonNull ExerciseId exerciseId) {
+    return new Intent(context, ExerciseTypePickerActivity.class).putExtra(EXTRA_EXERCISE_ID, exerciseId);
   }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,38 +74,43 @@ public class ExerciseTypePickerActivity extends VigorActivity
 
   private void initPresenter() {
     presenter.setView(this);
-    presenter.init(getExerciseType());
+    presenter.init(getExerciseId());
   }
 
-  private ExerciseType getExerciseType() {
+  private ExerciseId getExerciseId() {
     Intent intent = getIntent();
-    Preconditions.checkState(intent.hasExtra(EXTRA_TYPE), "Missing extra: '%s'", EXTRA_TYPE);
-    return (ExerciseType) intent.getSerializableExtra(EXTRA_TYPE);
+    Preconditions.checkState(intent.hasExtra(EXTRA_EXERCISE_ID), "Missing extra: '%s'",
+        EXTRA_EXERCISE_ID);
+    return (ExerciseId) intent.getSerializableExtra(EXTRA_EXERCISE_ID);
   }
 
   @Override public void setSearchText(@NonNull String text) {
     editText.setText(text);
   }
 
-  @Override public void setListEntries(@NonNull List<ExerciseType> entries) {
+  @Override public void setExerciseTypes(@NonNull List<ExerciseType> entries) {
     exerciseTypeAdapter.setExerciseTypes(entries);
   }
 
+  @Override public void showLoading() {
+    loadingRoot.setVisibility(View.VISIBLE);
+    contentRoot.setVisibility(View.GONE);
+    errorRoot.setVisibility(View.GONE);
+  }
+
+  @Override public void showContent() {
+    contentRoot.setVisibility(View.VISIBLE);
+    loadingRoot.setVisibility(View.GONE);
+    errorRoot.setVisibility(View.GONE);
+  }
+
   @Override public void showError() {
-    ErrorDialogFragment.create().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
+    errorRoot.setVisibility(View.VISIBLE);
+    loadingRoot.setVisibility(View.GONE);
+    contentRoot.setVisibility(View.GONE);
   }
 
   @Override public void onErrorDialogDismissed(@NonNull ErrorDialogFragment dialog) {
     presenter.onErrorDialogDismissed();
-  }
-
-  @Override public void returnPickedType(@NonNull ExerciseType exerciseType) {
-    setResult(RESULT_OK, new Intent().putExtra(EXTRA_TYPE, exerciseType));
-    finish();
-  }
-
-  @Override public void returnCancelled() {
-    setResult(RESULT_CANCELED);
-    finish();
   }
 }

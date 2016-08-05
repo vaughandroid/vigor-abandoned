@@ -13,19 +13,20 @@ import vaughandroid.vigor.domain.usecase.UseCase;
  *
  * @author Chris
  */
-public class AddExerciseUseCase extends ObservableUseCase<Exercise> {
+public class SaveExerciseUseCase extends ObservableUseCase<Exercise> {
 
   private final ExerciseRepository repository;
   private @Nullable Exercise exercise;
 
   @Inject
-  public AddExerciseUseCase(SchedulingPolicy schedulingPolicy, ExerciseRepository repository) {
+  public SaveExerciseUseCase(SchedulingPolicy schedulingPolicy, ExerciseRepository repository) {
     super(schedulingPolicy);
     this.repository = repository;
   }
 
-  public void setExercise(@NonNull Exercise exercise) {
+  public SaveExerciseUseCase setExercise(@NonNull Exercise exercise) {
     this.exercise = exercise;
+    return this;
   }
 
   @Override protected @NonNull Observable<Exercise> createObservable() {
