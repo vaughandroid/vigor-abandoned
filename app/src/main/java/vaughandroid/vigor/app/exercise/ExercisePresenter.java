@@ -67,8 +67,8 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
   }
 
   @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
-    setExercise(exercise.withWeight(weight).withReps(reps));
-
+    exercise.setWeight(weight);
+    exercise.setReps(reps);
     saveExerciseUseCase.setExercise(exercise);
     saveExerciseUseCase.perform()
         .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::onError);

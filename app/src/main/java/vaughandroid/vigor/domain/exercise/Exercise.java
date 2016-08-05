@@ -2,9 +2,9 @@ package vaughandroid.vigor.domain.exercise;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import vaughandroid.util.Assertions;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
@@ -13,54 +13,112 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
-@AutoValue public abstract class Exercise implements Serializable {
+public class Exercise implements Serializable {
 
   public static Builder builder() {
-    return new $AutoValue_Exercise.Builder().id(ExerciseId.UNASSIGNED).type(ExerciseType.UNSET);
+    return new Builder();
   }
 
-  @NonNull public abstract ExerciseId id();
+  @NonNull private ExerciseId id;
+  @NonNull private final WorkoutId workoutId;
+  @NonNull private ExerciseType type;
+  @Nullable private Integer reps;
+  @Nullable private BigDecimal weight;
 
-  public abstract Exercise withId(@NonNull ExerciseId id);
+  private Exercise(@NonNull ExerciseId id, @NonNull WorkoutId workoutId,
+      @NonNull ExerciseType type, @Nullable Integer reps, @Nullable BigDecimal weight) {
+    this.id = id;
+    this.workoutId = workoutId;
+    this.type = type;
+    this.reps = reps;
+    this.weight = weight;
+  }
 
-  @NonNull public abstract WorkoutId workoutId();
+  @NonNull public ExerciseId id() {
+    return id;
+  }
+
+  public void setId(@NonNull ExerciseId id) {
+    this.id = id;
+  }
+
+  @NonNull public WorkoutId workoutId() {
+    return workoutId;
+  }
 
   @NonNull public String workoutGuid() {
-    return workoutId().guid();
+    return workoutId.guid();
   }
 
-  @NonNull public abstract ExerciseType type();
-
-  @NonNull public String typeGuid() {
-    return type().guid();
+  @NonNull public ExerciseType type() {
+    return type;
   }
 
-  public abstract Exercise withType(@NonNull ExerciseType type);
+  public void setType(@NonNull ExerciseType type) {
+    this.type = type;
+  }
 
-  @Nullable public abstract Integer reps();
+  @Nullable public String typeGuid() {
+    return type.guid();
+  }
 
-  public abstract Exercise withReps(@Nullable Integer reps);
+  @Nullable public Integer reps() {
+    return reps;
+  }
 
-  @Nullable public abstract BigDecimal weight();
+  public void setReps(@Nullable Integer reps) {
+    this.reps = reps;
+  }
+
+  @Nullable public BigDecimal weight() {
+    return weight;
+  }
+
+  public void setWeight(@Nullable BigDecimal weight) {
+    this.weight = weight;
+  }
 
   @Nullable public String weightAsString() {
-    //noinspection ConstantConditions
-    return weight() != null ? weight().toPlainString() : null;
+    return weight != null ? weight.toPlainString() : null;
   }
 
-  public abstract Exercise withWeight(@Nullable BigDecimal weight);
+  public static class Builder {
+    private ExerciseId id = ExerciseId.UNASSIGNED;
+    private WorkoutId workoutId;
+    private ExerciseType type = ExerciseType.UNSET;
+    private Integer reps;
+    private BigDecimal weight;
 
-  @AutoValue.Builder public abstract static class Builder {
-    public abstract Builder id(@NonNull ExerciseId id);
+    public Builder id(@NonNull ExerciseId id) {
+      this.id = id;
+      return this;
+    }
 
-    public abstract Builder type(@NonNull ExerciseType type);
+    public Builder type(@NonNull ExerciseType type) {
+      this.type = type;
+      return this;
+    }
 
-    public abstract Builder workoutId(@NonNull WorkoutId workoutId);
+    public Builder workoutId(@NonNull WorkoutId workoutId) {
+      this.workoutId = workoutId;
+      return this;
+    }
 
-    public abstract Builder reps(@Nullable Integer reps);
+    public Builder reps(@Nullable Integer reps) {
+      this.reps = reps;
+      return this;
+    }
 
-    public abstract Builder weight(@Nullable BigDecimal weight);
+    public Builder weight(@Nullable BigDecimal weight) {
+      this.weight = weight;
+      return this;
+    }
 
-    public abstract Exercise build();
+    public Exercise build() {
+      Assertions.checkNotNull(id, "id not set");
+      Assertions.checkNotNull(workoutId, "workoutId not set");
+      Assertions.checkNotNull(type, "type not set");
+      return new Exercise(id, workoutId, type, reps, weight);
+    }
   }
 }

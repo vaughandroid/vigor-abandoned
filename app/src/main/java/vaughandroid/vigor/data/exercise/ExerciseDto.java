@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 
   @NonNull public WorkoutDto workout;
 
-  @NonNull public ExerciseTypeDto type;
+  @Nullable public ExerciseTypeDto type;
 
   @Nullable public Integer reps;
 

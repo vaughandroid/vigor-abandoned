@@ -34,7 +34,7 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
 
   @NonNull @Override public Observable<Workout> addWorkout(@NonNull Workout workout) {
     if (Objects.equal(workout.id(), WorkoutId.UNASSIGNED)) {
-      workout = workout.withId(WorkoutId.create(guidFactory.newGuid()));
+      workout.setId(WorkoutId.create(guidFactory.newGuid()));
     }
     final Workout finalWorkout = workout;
 

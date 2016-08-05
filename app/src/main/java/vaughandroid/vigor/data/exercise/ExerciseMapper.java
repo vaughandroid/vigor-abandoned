@@ -23,12 +23,13 @@ public class ExerciseMapper {
 
   public Exercise fromDto(@NonNull ExerciseDto dto,
       @NonNull Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
-    return Exercise.builder()
+    Exercise.Builder builder = Exercise.builder()
         .id(ExerciseId.create(dto.guid))
-        .type(exerciseTypeMap.get(
-            ExerciseTypeId.create(dto.type.guid))) // TODO: 27/07/2016 Handle unavailable type
-        .workoutId(WorkoutId.create(dto.workout.guid))
-        .build();
+        .workoutId(WorkoutId.create(dto.workout.guid));
+    if (dto.type != null) {
+      builder.type(exerciseTypeMap.get(ExerciseTypeId.create(dto.type.guid)));
+    }
+    return builder.build();
   }
 
   public ExerciseDto fromExercise(Exercise exercise) {
@@ -39,9 +40,10 @@ public class ExerciseMapper {
       workoutDto.guid = exercise.workoutGuid();
       dto.workout = workoutDto;
     }
-    {
+    String typeGuid = exercise.typeGuid();
+    if (typeGuid != null) {
       ExerciseDto.ExerciseTypeDto exerciseTypeDto = new ExerciseDto.ExerciseTypeDto();
-      exerciseTypeDto.guid = exercise.typeGuid();
+      exerciseTypeDto.guid = typeGuid;
       dto.type = exerciseTypeDto;
     }
     dto.weight = exercise.weightAsString();

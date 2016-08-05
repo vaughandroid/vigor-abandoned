@@ -94,7 +94,8 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
   @Override public void onTypePicked(@NonNull ExerciseType exerciseType) {
     Preconditions.checkNotNull(exercise, "exercise == null");
     setReady(false);
-    saveExerciseUseCase.setExercise(exercise.withType(exerciseType)).perform()
+    exercise.setType(exerciseType);
+    saveExerciseUseCase.setExercise(exercise).perform()
         .compose(activityLifecycleProvider.bindToLifecycle())
         .subscribe(this::onExerciseUpdated, this::onError);
   }
