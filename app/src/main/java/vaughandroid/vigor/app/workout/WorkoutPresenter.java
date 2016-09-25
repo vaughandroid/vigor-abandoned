@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import javax.inject.Inject;
-import vaughandroid.vigor.app.mvp.BasePresenter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vaughandroid.vigor.app.workout.WorkoutContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
@@ -17,22 +18,25 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
-public class WorkoutPresenter extends BasePresenter<View> implements WorkoutContract.Presenter {
+public class WorkoutPresenter implements WorkoutContract.Presenter {
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final ActivityLifecycleProvider activityLifecycleProvider;
   private final GetWorkoutUseCase getWorkoutUseCase;
   private final SaveWorkoutUseCase saveWorkoutUseCase;
 
+  private View view;
   private Workout workout;
 
   @Inject public WorkoutPresenter(ActivityLifecycleProvider activityLifecycleProvider,
       GetWorkoutUseCase getWorkoutUseCase, SaveWorkoutUseCase saveWorkoutUseCase) {
-    super(activityLifecycleProvider);
+    this.activityLifecycleProvider = activityLifecycleProvider;
     this.getWorkoutUseCase = getWorkoutUseCase;
     this.saveWorkoutUseCase = saveWorkoutUseCase;
   }
 
   @Override public void init(@NonNull View view, @NonNull WorkoutId workoutId) {
-    setView(view);
+    this.view = view;
     view.showLoading();
 
     if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
@@ -46,22 +50,22 @@ public class WorkoutPresenter extends BasePresenter<View> implements WorkoutCont
   }
 
   @Override public void onAddExercise() {
-    getView().goToAddNewExercise(workout.id());
+    view.goToAddNewExercise(workout.id());
   }
 
   private void setWorkout(Workout workout) {
     this.workout = workout;
-    View view = getView();
+    View view = this.view;
     view.setExercises(workout.exercises());
     view.showContent();
   }
 
   @Override public void onOpenExercise(@NonNull Exercise exercise) {
-    getView().goToEditExistingExercise(workout.id(), exercise.id());
+    view.goToEditExistingExercise(workout.id(), exercise.id());
   }
 
   @Override public void onError(Throwable t) {
     logger.error("Error", t);
-    getView().showError();
+    view.showError();
   }
 }

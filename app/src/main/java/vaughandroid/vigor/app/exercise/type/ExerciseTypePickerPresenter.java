@@ -6,9 +6,10 @@ import com.jakewharton.rxbinding.internal.Preconditions;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.util.List;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rx.Observable;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
-import vaughandroid.vigor.app.mvp.BasePresenter;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
@@ -23,21 +24,23 @@ import vaughandroid.vigor.domain.rx.LogErrorsSubscriber;
  *
  * @author Chris
  */
-public class ExerciseTypePickerPresenter extends BasePresenter<View>
-    implements ExerciseTypePickerContract.Presenter {
+public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.Presenter {
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final ActivityLifecycleProvider activityLifecycleProvider;
   private final GetExerciseUseCase getExerciseUseCase;
   private final SaveExerciseUseCase saveExerciseUseCase;
   private final InitExerciseTypesUseCase initExerciseTypesUseCase;
   private final GetExerciseTypesUseCase getExerciseTypesUseCase;
 
+  private View view;
   private Exercise exercise;
 
   @Inject public ExerciseTypePickerPresenter(ActivityLifecycleProvider activityLifecycleProvider,
       GetExerciseUseCase getExerciseUseCase, SaveExerciseUseCase saveExerciseUseCase,
       InitExerciseTypesUseCase initExerciseTypesUseCase,
       GetExerciseTypesUseCase getExerciseTypesUseCase) {
-    super(activityLifecycleProvider);
+    this.activityLifecycleProvider = activityLifecycleProvider;
     this.getExerciseUseCase = getExerciseUseCase;
     this.saveExerciseUseCase = saveExerciseUseCase;
     this.initExerciseTypesUseCase = initExerciseTypesUseCase;
@@ -45,7 +48,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
   }
 
   @Override public void init(@NonNull View view, @NonNull ExerciseId exerciseId) {
-    setView(view);
+    this.view = view;
     view.showLoading();
 
     initExerciseTypesUseCase.perform()
@@ -67,9 +70,9 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
 
   private void setReady(boolean ready) {
     if (ready) {
-      getView().showContent();
+      view.showContent();
     } else {
-      getView().showLoading();
+      view.showLoading();
     }
   }
 
@@ -77,7 +80,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     this.exercise = exercise;
     String typeName = exercise.type().name();
     getExerciseTypesUseCase.setSearchText(typeName);
-    getView().setSearchText(typeName);
+    view.setSearchText(typeName);
   }
 
   @Override public void onSearchTextUpdated(@NonNull String text) {
@@ -88,21 +91,22 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     Preconditions.checkNotNull(exercise, "exercise == null");
     setReady(false);
     exercise.setType(exerciseType);
-    saveExerciseUseCase.setExercise(exercise).perform()
+    saveExerciseUseCase.setExercise(exercise)
+        .perform()
         .compose(activityLifecycleProvider.bindToLifecycle())
         .subscribe(this::onExerciseUpdated, this::onError);
   }
 
   private void onExerciseUpdated(Exercise exercise) {
-    getView().finish();
+    view.finish();
   }
 
   @Override public void onError(Throwable t) {
     logger.error("Error", t);
-    getView().showError();
+    view.showError();
   }
 
   private void onListUpdated(List<ExerciseType> exerciseTypes) {
-    getView().setExerciseTypes(exerciseTypes);
+    view.setExerciseTypes(exerciseTypes);
   }
 }

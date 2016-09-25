@@ -6,13 +6,14 @@ import com.google.common.base.Objects;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.math.BigDecimal;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.exercise.ExerciseContract.View;
-import vaughandroid.vigor.app.mvp.BasePresenter;
-import vaughandroid.vigor.domain.exercise.SaveExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
+import vaughandroid.vigor.domain.exercise.SaveExerciseUseCase;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
@@ -20,24 +21,26 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
-@ActivityScope public class ExercisePresenter extends BasePresenter<View>
-    implements ExerciseContract.Presenter {
+@ActivityScope public class ExercisePresenter implements ExerciseContract.Presenter {
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final ActivityLifecycleProvider activityLifecycleProvider;
   private final SaveExerciseUseCase saveExerciseUseCase;
   private final GetExerciseUseCase getExerciseUseCase;
 
+  private View view;
   private Exercise exercise;
 
   @Inject public ExercisePresenter(ActivityLifecycleProvider activityLifecycleProvider,
       SaveExerciseUseCase saveExerciseUseCase, GetExerciseUseCase getExerciseUseCase) {
-    super(activityLifecycleProvider);
+    this.activityLifecycleProvider = activityLifecycleProvider;
     this.saveExerciseUseCase = saveExerciseUseCase;
     this.getExerciseUseCase = getExerciseUseCase;
   }
 
   @Override public void init(@NonNull View view, @NonNull WorkoutId workoutId,
       @NonNull ExerciseId exerciseId) {
-    setView(view);
+    this.view = view;
     view.showLoading();
 
     if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
@@ -51,7 +54,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
   }
 
   @Override public void onTypeClicked() {
-    getView().goToExerciseTypePicker(exercise.id());
+    view.goToExerciseTypePicker(exercise.id());
   }
 
   @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
@@ -64,7 +67,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 
   private void setExercise(@NonNull Exercise exercise) {
     this.exercise = exercise;
-    View view = getView();
+    View view = this.view;
     view.setType(this.exercise.type());
     view.setWeight(this.exercise.weight(), "Kg"); // TODO: 15/06/2016 implement weight units setting
     view.setReps(this.exercise.reps());
@@ -73,11 +76,11 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 
   private void onSaved(@NonNull Exercise exercise) {
     this.setExercise(exercise);
-    getView().finish();
+    view.finish();
   }
 
   @Override public void onError(Throwable t) {
     logger.error("Error", t);
-    getView().showError();
+    view.showError();
   }
 }
