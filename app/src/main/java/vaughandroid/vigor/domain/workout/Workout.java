@@ -1,9 +1,9 @@
 package vaughandroid.vigor.domain.workout;
 
 import android.support.annotation.NonNull;
-import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import vaughandroid.util.Assertions;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -16,7 +16,7 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 public final class Workout implements Serializable {
 
   public static Builder builder() {
-    return new Builder().id(WorkoutId.UNASSIGNED).exercises(ImmutableList.<Exercise>of());
+    return new Builder();
   }
 
   @NonNull private WorkoutId id;
@@ -35,8 +35,11 @@ public final class Workout implements Serializable {
     this.id = id;
   }
 
-  @NonNull public ImmutableList<Exercise> exercises() {
-    return ImmutableList.copyOf(exercises); // TODO return read-only view
+  /**
+   * @return the list of exercises, which cannot be modified externally
+   */
+  @NonNull public List<Exercise> exercises() {
+    return Collections.unmodifiableList(exercises);
   }
 
   public static class Builder {
