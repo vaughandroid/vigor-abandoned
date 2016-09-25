@@ -23,8 +23,9 @@ public class SaveWorkoutUseCase extends ObservableUseCase<Workout> {
     this.repository = repository;
   }
 
-  public void setWorkout(@NonNull Workout workout) {
+  public SaveWorkoutUseCase setWorkout(@NonNull Workout workout) {
     this.workout = workout;
+    return this;
   }
 
   @Override protected Observable<Workout> createObservable() {

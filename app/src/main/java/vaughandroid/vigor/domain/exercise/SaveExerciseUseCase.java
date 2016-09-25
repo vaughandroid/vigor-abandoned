@@ -34,5 +34,6 @@ public class SaveExerciseUseCase extends ObservableUseCase<Exercise> {
       throw new IllegalStateException("exercise not set");
     }
     return repository.addExercise(exercise);
+    // XXX: Should update Workout too
   }
 }

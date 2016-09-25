@@ -2,7 +2,6 @@ package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
-import com.jakewharton.rxbinding.internal.Preconditions;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.util.List;
 import javax.inject.Inject;
@@ -55,16 +54,20 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
         .compose(activityLifecycleProvider.<Boolean>bindToLifecycle().forSingle())
         .subscribe(LogErrorsSubscriber.<Boolean>create());
 
-    Observable<ImmutableList<ExerciseType>> getExerciseTypesObservable =
-        getExerciseTypesUseCase.perform().compose(activityLifecycleProvider.bindToLifecycle());
+    Observable<ImmutableList<ExerciseType>> getExerciseTypesObservable = getExerciseTypesUseCase
+        .perform()
+        .compose(activityLifecycleProvider.bindToLifecycle());
     getExerciseTypesObservable.subscribe(this::onListUpdated, this::onError);
 
-    Observable<Exercise> getExerciseObservable =
-        getExerciseUseCase.perform().compose(activityLifecycleProvider.bindToLifecycle());
-    getExerciseObservable.doOnNext(this::setExercise);
+    Observable<Exercise> getExerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
+        .perform()
+        .compose(activityLifecycleProvider.bindToLifecycle())
+        .doOnNext(this::setExercise);
 
-    Observable.combineLatest(getExerciseTypesObservable, getExerciseObservable,
-        (exercise, exerciseTypes) -> exercise != null && exerciseTypes != null)
+    Observable.combineLatest(
+        getExerciseTypesObservable,
+        getExerciseObservable,
+        (exerciseTypes, exercise) -> exerciseTypes != null && exercise != null)
         .subscribe(this::setReady, this::onError);
   }
 
@@ -88,7 +91,6 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
   }
 
   @Override public void onTypePicked(@NonNull ExerciseType exerciseType) {
-    Preconditions.checkNotNull(exercise, "exercise == null");
     setReady(false);
     exercise.setType(exerciseType);
     saveExerciseUseCase.setExercise(exercise)

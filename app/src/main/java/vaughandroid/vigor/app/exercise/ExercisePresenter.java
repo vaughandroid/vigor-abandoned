@@ -14,6 +14,7 @@ import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.SaveExerciseUseCase;
+import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
@@ -43,14 +44,13 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     this.view = view;
     view.showLoading();
 
-    if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
-      setExercise(Exercise.builder().workoutId(workoutId).build());
-    } else {
-      getExerciseUseCase.setExerciseId(exerciseId);
-      getExerciseUseCase.perform()
-          .compose(activityLifecycleProvider.bindToLifecycle())
-          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
-    }
+    ObservableUseCase<Exercise> useCase =
+        Objects.equal(exerciseId, ExerciseId.UNASSIGNED)
+            ? saveExerciseUseCase.setExercise(Exercise.builder().workoutId(workoutId).build())
+            : getExerciseUseCase.setExerciseId(exerciseId);
+    useCase.perform()
+        .compose(activityLifecycleProvider.bindToLifecycle())
+        .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
   }
 
   @Override public void onTypeClicked() {
@@ -60,8 +60,8 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
   @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
     exercise.setWeight(weight);
     exercise.setReps(reps);
-    saveExerciseUseCase.setExercise(exercise);
-    saveExerciseUseCase.perform()
+    saveExerciseUseCase.setExercise(exercise)
+        .perform()
         .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::onError);
   }
 

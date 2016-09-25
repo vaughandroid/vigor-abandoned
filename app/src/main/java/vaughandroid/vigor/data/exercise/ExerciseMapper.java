@@ -1,6 +1,7 @@
 package vaughandroid.vigor.data.exercise;
 
 import android.support.annotation.NonNull;
+import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,10 @@ public class ExerciseMapper {
         .id(ExerciseId.create(dto.guid))
         .workoutId(WorkoutId.create(dto.workout.guid));
     if (dto.type != null) {
-      builder.type(exerciseTypeMap.get(ExerciseTypeId.create(dto.type.guid)));
+      ExerciseTypeId exerciseTypeId = ExerciseTypeId.create(dto.type.guid);
+      if (!Objects.equal(exerciseTypeId, ExerciseTypeId.UNASSIGNED)) {
+        builder.type(exerciseTypeMap.get(exerciseTypeId));
+      }
     }
     return builder.build();
   }
@@ -48,7 +52,7 @@ public class ExerciseMapper {
     }
     dto.weight = exercise.weightAsString();
     dto.reps = exercise.reps();
-    return null;
+    return dto;
   }
 
   public List<Exercise> fromDtoList(@NonNull List<ExerciseDto> dtoList,

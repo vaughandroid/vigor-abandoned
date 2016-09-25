@@ -12,7 +12,7 @@ import vaughandroid.vigor.domain.workout.Workout;
  */
 @SuppressWarnings("NullableProblems") public class WorkoutDto {
 
-  @NonNull String guid;
+  @NonNull public String guid;
 
-  @NonNull List<ExerciseDto> exerciseDtos;
+  @NonNull public List<ExerciseDto> exerciseDtos;
 }

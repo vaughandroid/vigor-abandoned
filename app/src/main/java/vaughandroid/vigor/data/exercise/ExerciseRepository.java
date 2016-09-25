@@ -44,8 +44,17 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
   }
 
   @NonNull @Override public Observable<Exercise> getExercise(@NonNull ExerciseId id) {
-    return Observable.combineLatest(firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class),
-        exerciseTypeRepository.getExerciseTypeMap(), exerciseMapper::fromDto);
+    // TODO: 25/09/2016 Probably want a different operator here which will wait for both to return a value - maybe Join?
+    return Observable.combineLatest(
+        firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class),
+        exerciseTypeRepository.getExerciseTypeMap(),
+        (dto, map) -> {
+          if (dto != null && map != null) {
+            return exerciseMapper.fromDto(dto, map);
+          }
+          return null;
+        })
+        .filter(exercise -> exercise != null);
   }
 
   @NonNull private String getPath(@NonNull ExerciseId id) {

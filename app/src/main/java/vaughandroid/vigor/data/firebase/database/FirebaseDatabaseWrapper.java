@@ -36,7 +36,7 @@ import vaughandroid.vigor.app.di.ApplicationScope;
   public Single<Boolean> dataExists(String path) {
     checkInitialised();
     // TODO: This also notifies when the child changes, so it's inefficient.
-    // TODO: More efficient to create it as a single.
+    // TODO: Should just create it as a single.
     return Observable.create(
         DataChangeOnSubscribe.create(mDatabase.getReference(path).limitToFirst(1),
             DataSnapshot::exists)).toSingle();
@@ -54,6 +54,7 @@ import vaughandroid.vigor.app.di.ApplicationScope;
         dataSnapshot -> dataSnapshot.getValue(genericTypeIndicator)));
   }
 
+  // TODO: 25/09/2016 This really ought to return a Completable
   public Observable<Void> set(String path, Object value) {
     checkInitialised();
     PublishSubject<Void> subject = PublishSubject.create();
@@ -61,6 +62,7 @@ import vaughandroid.vigor.app.di.ApplicationScope;
       if (databaseError != null) {
         subject.onError(new FirebaseDatabaseException(databaseError));
       } else {
+        subject.onNext(null);
         subject.onCompleted();
       }
     });

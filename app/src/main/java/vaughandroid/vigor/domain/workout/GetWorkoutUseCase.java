@@ -23,8 +23,9 @@ public class GetWorkoutUseCase extends ObservableUseCase<Workout> {
     this.repository = repository;
   }
 
-  public void setWorkoutId(@NonNull WorkoutId workoutId) {
+  public GetWorkoutUseCase setWorkoutId(@NonNull WorkoutId workoutId) {
     this.workoutId = workoutId;
+    return this;
   }
 
   @Override protected Observable<Workout> createObservable() {

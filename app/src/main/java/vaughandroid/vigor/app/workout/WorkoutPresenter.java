@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vaughandroid.vigor.app.workout.WorkoutContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
+import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.SaveWorkoutUseCase;
 import vaughandroid.vigor.domain.workout.Workout;
@@ -39,14 +40,12 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     this.view = view;
     view.showLoading();
 
-    if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
-      setWorkout(Workout.builder().build());
-    } else {
-      getWorkoutUseCase.setWorkoutId(workoutId);
-      getWorkoutUseCase.perform()
+    ObservableUseCase<Workout> useCase = Objects.equal(workoutId, WorkoutId.UNASSIGNED)
+        ? saveWorkoutUseCase.setWorkout(Workout.builder().build())
+        : getWorkoutUseCase.setWorkoutId(workoutId);
+    useCase.perform()
           .compose(activityLifecycleProvider.bindToLifecycle())
           .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::onError);
-    }
   }
 
   @Override public void onAddExercise() {
