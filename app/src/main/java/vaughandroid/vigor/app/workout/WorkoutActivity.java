@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
@@ -64,8 +65,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
   }
 
   private void initPresenter() {
-    presenter.setView(this);
-    presenter.init(getWorkoutId());
+    presenter.init(this, getWorkoutId());
   }
 
   @NonNull private WorkoutId getWorkoutId() {
@@ -106,7 +106,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     presenter.onAddExercise();
   }
 
-  @Override public void setExercises(@NonNull ImmutableList<Exercise> exercises) {
+  @Override public void setExercises(@NonNull List<Exercise> exercises) {
     exerciseAdapter.setExercises(exercises);
   }
 

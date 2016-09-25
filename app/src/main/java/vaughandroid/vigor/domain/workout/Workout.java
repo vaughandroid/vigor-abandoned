@@ -35,11 +35,8 @@ public final class Workout implements Serializable {
     this.id = id;
   }
 
-  /**
-   * @return the list of exercises, which cannot be modified externally
-   */
   @NonNull public List<Exercise> exercises() {
-    return Collections.unmodifiableList(exercises);
+    return exercises;
   }
 
   public static class Builder {

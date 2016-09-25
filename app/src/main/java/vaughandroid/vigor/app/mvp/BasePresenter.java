@@ -12,31 +12,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author Chris
  */
-public abstract class BasePresenter<View> implements Presenter<View> {
+public abstract class BasePresenter<View> {
 
   @NonNull protected final ActivityLifecycleProvider activityLifecycleProvider;
   protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-  @Nullable private View view;
+  private View view;
 
   protected BasePresenter(@NonNull ActivityLifecycleProvider activityLifecycleProvider) {
     this.activityLifecycleProvider = activityLifecycleProvider;
-
-    activityLifecycleProvider.lifecycle()
-        .filter(event -> event == ActivityEvent.DESTROY)
-        .subscribe(event -> {
-          BasePresenter.this.view = null;
-        });
   }
 
-  @Override @Nullable public View getView() {
+  @NonNull protected View getView() {
+    if (view == null) {
+      throw new IllegalStateException("view not initialised");
+    }
     return view;
   }
 
-  @Override public void setView(@NonNull View view) {
+  protected void setView(@NonNull View view) {
     this.view = view;
-    initView(view);
   }
-
-  protected abstract void initView(@NonNull View view);
 }

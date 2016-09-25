@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +20,6 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
-import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
@@ -34,9 +34,10 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
   private static final String EXTRA_WORKOUT_ID = "workoutId";
   private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
 
-  private static final String TAG_ERROR_DIALOG = "ErrorDialog";
-
   @Inject ExerciseContract.Presenter presenter;
+  @BindView(R.id.content_exercise_root) View contentRootView;
+  @BindView(R.id.content_loading_root) View loadingRootView;
+  @BindView(R.id.content_error_root) View errorRootView;
   @BindView(R.id.content_exercise_TextView_type) TextView typeTextView;
   @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
   @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView repsNumberInputView;
@@ -78,8 +79,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
   }
 
   private void initPresenter() {
-    presenter.setView(this);
-    presenter.init(getWorkoutId(), getExerciseId());
+    presenter.init(this, getWorkoutId(), getExerciseId());
   }
 
   @NonNull private WorkoutId getWorkoutId() {
@@ -94,8 +94,22 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     return exerciseId;
   }
 
+  @Override public void showContent() {
+    contentRootView.setVisibility(View.VISIBLE);
+    loadingRootView.setVisibility(View.GONE);
+    errorRootView.setVisibility(View.GONE);
+  }
+
+  @Override public void showLoading() {
+    loadingRootView.setVisibility(View.VISIBLE);
+    contentRootView.setVisibility(View.GONE);
+    errorRootView.setVisibility(View.GONE);
+  }
+
   @Override public void showError() {
-    ErrorDialogFragment.create().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
+    errorRootView.setVisibility(View.VISIBLE);
+    contentRootView.setVisibility(View.GONE);
+    loadingRootView.setVisibility(View.GONE);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

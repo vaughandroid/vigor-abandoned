@@ -27,7 +27,7 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  * @author Chris
  */
 public class ExerciseTypePickerActivity extends VigorActivity
-    implements ExerciseTypePickerContract.View, ErrorDialogFragment.Listener {
+    implements ExerciseTypePickerContract.View {
 
   private static final String EXTRA_EXERCISE_ID = "exerciseId";
 
@@ -73,8 +73,7 @@ public class ExerciseTypePickerActivity extends VigorActivity
   }
 
   private void initPresenter() {
-    presenter.setView(this);
-    presenter.init(getExerciseId());
+    presenter.init(this, getExerciseId());
   }
 
   private ExerciseId getExerciseId() {
@@ -108,9 +107,5 @@ public class ExerciseTypePickerActivity extends VigorActivity
     errorRoot.setVisibility(View.VISIBLE);
     loadingRoot.setVisibility(View.GONE);
     contentRoot.setVisibility(View.GONE);
-  }
-
-  @Override public void onErrorDialogDismissed(@NonNull ErrorDialogFragment dialog) {
-    presenter.onErrorDialogDismissed();
   }
 }

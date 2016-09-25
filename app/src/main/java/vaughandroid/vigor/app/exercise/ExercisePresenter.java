@@ -35,7 +35,11 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     this.getExerciseUseCase = getExerciseUseCase;
   }
 
-  @Override public void init(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId) {
+  @Override public void init(@NonNull View view, @NonNull WorkoutId workoutId,
+      @NonNull ExerciseId exerciseId) {
+    setView(view);
+    view.showLoading();
+
     if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
       setExercise(Exercise.builder().workoutId(workoutId).build());
     } else {
@@ -46,24 +50,8 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     }
   }
 
-  @Override protected void initView(@NonNull View view) {
-    updateViewValues();
-  }
-
-  private void updateViewValues() {
-    View view = getView();
-    if (view != null && exercise != null) {
-      view.setType(exercise.type());
-      view.setWeight(exercise.weight(), "Kg"); // TODO: 15/06/2016 implement weight units setting
-      view.setReps(exercise.reps());
-    }
-  }
-
   @Override public void onTypeClicked() {
-    View view = getView();
-    if (view != null) {
-      view.goToExerciseTypePicker(exercise.id());
-    }
+    getView().goToExerciseTypePicker(exercise.id());
   }
 
   @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
@@ -76,22 +64,20 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 
   private void setExercise(@NonNull Exercise exercise) {
     this.exercise = exercise;
-    updateViewValues();
+    View view = getView();
+    view.setType(this.exercise.type());
+    view.setWeight(this.exercise.weight(), "Kg"); // TODO: 15/06/2016 implement weight units setting
+    view.setReps(this.exercise.reps());
+    view.showContent();
   }
 
   private void onSaved(@NonNull Exercise exercise) {
     this.setExercise(exercise);
-    View view = getView();
-    if (view != null) {
-      view.finish();
-    }
+    getView().finish();
   }
 
   @Override public void onError(Throwable t) {
     logger.error("Error", t);
-    View view = getView();
-    if (view != null) {
-      view.showError();
-    }
+    getView().showError();
   }
 }

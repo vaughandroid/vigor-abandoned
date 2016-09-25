@@ -44,11 +44,10 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     this.getExerciseTypesUseCase = getExerciseTypesUseCase;
   }
 
-  protected void initView(@NonNull View view) {
+  @Override public void init(@NonNull View view, @NonNull ExerciseId exerciseId) {
+    setView(view);
     view.showLoading();
-  }
 
-  @Override public void init(@NonNull ExerciseId exerciseId) {
     initExerciseTypesUseCase.perform()
         .compose(activityLifecycleProvider.<Boolean>bindToLifecycle().forSingle())
         .subscribe(LogErrorsSubscriber.<Boolean>create());
@@ -67,13 +66,10 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
   }
 
   private void setReady(boolean ready) {
-    View view = getView();
-    if (view != null) {
-      if (ready) {
-        view.showContent();
-      } else {
-        view.showLoading();
-      }
+    if (ready) {
+      getView().showContent();
+    } else {
+      getView().showLoading();
     }
   }
 
@@ -81,10 +77,7 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
     this.exercise = exercise;
     String typeName = exercise.type().name();
     getExerciseTypesUseCase.setSearchText(typeName);
-    View view = getView();
-    if (view != null) {
-      view.setSearchText(typeName);
-    }
+    getView().setSearchText(typeName);
   }
 
   @Override public void onSearchTextUpdated(@NonNull String text) {
@@ -101,31 +94,15 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
   }
 
   private void onExerciseUpdated(Exercise exercise) {
-    View view = getView();
-    if (view != null) {
-      view.finish();
-    }
-  }
-
-  @Override public void onErrorDialogDismissed() {
-    View view = getView();
-    if (view != null) {
-      view.finish();
-    }
+    getView().finish();
   }
 
   @Override public void onError(Throwable t) {
     logger.error("Error", t);
-    View view = getView();
-    if (view != null) {
-      view.showError();
-    }
+    getView().showError();
   }
 
   private void onListUpdated(List<ExerciseType> exerciseTypes) {
-    View view = getView();
-    if (view != null) {
-      view.setExerciseTypes(exerciseTypes);
-    }
+    getView().setExerciseTypes(exerciseTypes);
   }
 }
