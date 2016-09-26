@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +35,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
   @BindView(R.id.content_loading_root) View loadingRoot;
   @BindView(R.id.content_workout_root) View contentRoot;
   @BindView(R.id.content_error_root) View errorRoot;
+  @BindView(R.id.fab) FloatingActionButton floatingActionButton;
   @BindView(R.id.content_workout_RecyclerView_exercise_list) RecyclerView exerciseListRecyclerView;
 
   public static Intent intentForNew(@NonNull Context context) {
@@ -122,11 +124,13 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
   @Override public void showLoading() {
     loadingRoot.setVisibility(View.VISIBLE);
     contentRoot.setVisibility(View.GONE);
+    floatingActionButton.setVisibility(View.GONE);
     errorRoot.setVisibility(View.GONE);
   }
 
   @Override public void showContent() {
     contentRoot.setVisibility(View.VISIBLE);
+    floatingActionButton.setVisibility(View.VISIBLE);
     loadingRoot.setVisibility(View.GONE);
     errorRoot.setVisibility(View.GONE);
   }
@@ -135,5 +139,6 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     errorRoot.setVisibility(View.VISIBLE);
     loadingRoot.setVisibility(View.GONE);
     contentRoot.setVisibility(View.GONE);
+    floatingActionButton.setVisibility(View.GONE);
   }
 }
