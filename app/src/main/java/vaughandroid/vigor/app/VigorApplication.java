@@ -19,11 +19,13 @@ public class VigorApplication extends Application implements ApplicationComponen
   @Override public void onCreate() {
     super.onCreate();
 
-    applicationComponent = DaggerApplicationComponent.create();
-    applicationComponent.inject(this);
+    getApplicationComponent().inject(this);
   }
 
   @Override public ApplicationComponent getApplicationComponent() {
+    if (applicationComponent == null) {
+      applicationComponent = DaggerApplicationComponent.create();
+    }
     return applicationComponent;
   }
 

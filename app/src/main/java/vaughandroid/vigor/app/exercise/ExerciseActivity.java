@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,8 +33,8 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  */
 public class ExerciseActivity extends VigorActivity implements ExerciseContract.View {
 
-  private static final String EXTRA_WORKOUT_ID = "workoutId";
-  private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
+  @VisibleForTesting public static final String EXTRA_WORKOUT_ID = "workoutId";
+  @VisibleForTesting public static final String EXTRA_EXERCISE_ID = "savedExerciseId";
 
   @Inject ExerciseContract.Presenter presenter;
   @BindView(R.id.content_exercise_root) View contentRootView;

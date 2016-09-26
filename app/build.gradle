@@ -22,6 +22,7 @@ android {
     versionName "1.0"
 
     vectorDrawables.useSupportLibrary = true
+    testInstrumentationRunner 'vaughandroid.vigor.TestApplicationTestRunner'
   }
 
   buildTypes {
@@ -86,10 +87,12 @@ dependencies {
   testCompile javaTestLibs.mockito
 
   androidTestCompile javaTestLibs.assertJ
+  androidTestApt javaLibs.daggerCompiler
   androidTestCompile androidTestLibs.dexmaker
   androidTestCompile androidTestLibs.dexmakerMockito
   androidTestCompile androidTestLibs.dexmakerDx
   androidTestCompile androidTestLibs.espresso
+  androidTestCompile androidTestLibs.espressoIntents
   androidTestCompile javaTestLibs.jUnit
   androidTestCompile javaTestLibs.mockito
   androidTestCompile androidTestLibs.testSupportRules
