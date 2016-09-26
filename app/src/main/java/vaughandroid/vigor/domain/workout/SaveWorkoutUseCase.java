@@ -3,16 +3,16 @@ package vaughandroid.vigor.domain.workout;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import javax.inject.Inject;
-import rx.Observable;
+import rx.Single;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
-import vaughandroid.vigor.domain.usecase.ObservableUseCase;
+import vaughandroid.vigor.domain.usecase.SingleUseCase;
 
 /**
  * Use case for adding a new {@link Workout}
  *
  * @author Chris
  */
-public class SaveWorkoutUseCase extends ObservableUseCase<Workout> {
+public class SaveWorkoutUseCase extends SingleUseCase<Workout> {
 
   private final WorkoutRepository repository;
   @Nullable private Workout workout;
@@ -28,10 +28,10 @@ public class SaveWorkoutUseCase extends ObservableUseCase<Workout> {
     return this;
   }
 
-  @Override protected Observable<Workout> createObservable() {
+  @Override protected Single<Workout> createSingle() {
     if (workout == null) {
       throw new IllegalStateException("workout not set");
     }
-    return repository.addWorkout(workout);
+    return repository.addWorkout(workout).toSingle();
   }
 }
