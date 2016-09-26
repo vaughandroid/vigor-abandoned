@@ -44,13 +44,17 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     this.view = view;
     view.showLoading();
 
-    ObservableUseCase<Exercise> useCase =
-        Objects.equal(exerciseId, ExerciseId.UNASSIGNED)
-            ? saveExerciseUseCase.setExercise(Exercise.builder().workoutId(workoutId).build())
-            : getExerciseUseCase.setExerciseId(exerciseId);
-    useCase.perform()
-        .compose(activityLifecycleProvider.bindToLifecycle())
-        .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
+    if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
+      saveExerciseUseCase.setExercise(Exercise.builder().workoutId(workoutId).build())
+          .perform()
+          .compose(activityLifecycleProvider.<Exercise>bindToLifecycle().forSingle())
+          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
+    } else {
+      getExerciseUseCase.setExerciseId(exerciseId)
+          .perform()
+          .compose(activityLifecycleProvider.bindToLifecycle())
+          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
+    }
   }
 
   @Override public void onTypeClicked() {

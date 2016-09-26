@@ -95,7 +95,7 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
     exercise.setType(exerciseType);
     saveExerciseUseCase.setExercise(exercise)
         .perform()
-        .compose(activityLifecycleProvider.bindToLifecycle())
+        .compose(activityLifecycleProvider.<Exercise>bindToLifecycle().forSingle())
         .subscribe(this::onExerciseUpdated, this::onError);
   }
 

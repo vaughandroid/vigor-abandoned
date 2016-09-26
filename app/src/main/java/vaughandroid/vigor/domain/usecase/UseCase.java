@@ -12,7 +12,6 @@ import vaughandroid.vigor.domain.rx.SchedulingPolicy;
  */
 public abstract class UseCase {
 
-  protected final Logger logger = LoggerFactory.getLogger(getClass());
   protected final SchedulingPolicy schedulingPolicy;
 
   protected UseCase(SchedulingPolicy schedulingPolicy) {
