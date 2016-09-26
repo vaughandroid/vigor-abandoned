@@ -2,6 +2,7 @@ package vaughandroid.vigor.domain.exercise;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import javax.inject.Inject;
 import rx.Single;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
@@ -42,15 +43,25 @@ public class SaveExerciseUseCase extends SingleUseCase<Exercise> {
     if (exercise == null) {
       throw new IllegalStateException("exercise not set");
     }
-    Single<Workout> saveWorkout = getWorkoutUseCase.setWorkoutId(exercise.workoutId())
-        .perform()
-        .toSingle()
-        .flatMap(workout -> {
-          workout.exercises().add(exercise);
-          return saveWorkoutUseCase.setWorkout(workout).perform();
-        });
 
-    return Single.zip(repository.addExercise(exercise), saveWorkout,
-        (exercise, workout) -> exercise);
+    Single<Workout> getWorkout =
+        getWorkoutUseCase.setWorkoutId(exercise.workoutId()).perform().take(1).toSingle();
+
+    /* 1. Save the Exercise & retrieve the Workout.
+     * 2. Add the saved Exercise to the Workout & save that.
+     * 3. Return the saved Exercise.
+     */
+    return Single.zip(
+        getWorkout,
+        repository.addExercise(exercise),
+        Pair::new)
+        .flatMap(pair -> {
+          Workout workout = pair.first;
+          Exercise exercise = pair.second;
+          workout.exercises().add(exercise);
+          return saveWorkoutUseCase.setWorkout(workout)
+              .perform()
+              .map(savedWorkout -> exercise);
+        });
   }
 }
