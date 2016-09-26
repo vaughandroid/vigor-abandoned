@@ -47,12 +47,7 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
     return Observable.combineLatest(
         firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class),
         exerciseTypeRepository.getExerciseTypeMap(),
-        (dto, map) -> {
-          if (dto != null && map != null) {
-            return exerciseMapper.fromDto(dto, map);
-          }
-          return null;
-        })
+        exerciseMapper::fromDto)
         .filter(exercise -> exercise != null);
   }
 

@@ -22,7 +22,8 @@ public class WorkoutMapper {
     this.exerciseMapper = exerciseMapper;
   }
 
-  @NonNull Workout fromDto(@NonNull WorkoutDto dto, Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
+  @NonNull Workout fromDto(@NonNull WorkoutDto dto,
+      @NonNull Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
     return Workout.builder()
         .id(WorkoutId.create(dto.guid))
         .exercises(exerciseMapper.fromDtoList(dto.exerciseDtos, exerciseTypeMap))

@@ -67,7 +67,7 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
     Observable.combineLatest(
         getExerciseTypesObservable,
         getExerciseObservable,
-        (exerciseTypes, exercise) -> exerciseTypes != null && exercise != null)
+        (exerciseTypes, exercise) -> true)
         .subscribe(this::setReady, this::onError);
   }
 

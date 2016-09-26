@@ -51,12 +51,12 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
       saveExerciseUseCase.setExercise(exercise)
           .perform()
           .compose(activityLifecycleProvider.<Exercise>bindToLifecycle().forSingle())
-          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
+          .subscribe(this::setExercise, this::onError);
     } else {
       getExerciseUseCase.setExerciseId(exerciseId)
           .perform()
           .compose(activityLifecycleProvider.bindToLifecycle())
-          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
+          .subscribe(this::setExercise, this::onError);
     }
   }
 
@@ -65,11 +65,12 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
   }
 
   @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
+    view.showLoading();
     exercise.setWeight(weight);
     exercise.setReps(reps);
     saveExerciseUseCase.setExercise(exercise)
         .perform()
-        .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::onError);
+        .subscribe(this::onSaved, this::onError);
   }
 
   private void setExercise(@NonNull Exercise exercise) {
