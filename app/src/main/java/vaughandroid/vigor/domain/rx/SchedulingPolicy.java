@@ -1,5 +1,6 @@
 package vaughandroid.vigor.domain.rx;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -13,11 +14,14 @@ public class SchedulingPolicy {
 
   private final Observable.Transformer<Object, Object> observableTransformer;
   private final Single.Transformer<Object, Object> singleTransformer;
+  private final Completable.CompletableTransformer completableTransformer;
 
   public SchedulingPolicy(Scheduler subscriptionScheduler, Scheduler observationScheduler) {
     observableTransformer = objectObservable -> objectObservable.subscribeOn(subscriptionScheduler)
         .observeOn(observationScheduler);
     singleTransformer = objectSingle -> objectSingle.subscribeOn(subscriptionScheduler)
+        .observeOn(observationScheduler);
+    completableTransformer = completable -> completable.subscribeOn(subscriptionScheduler)
         .observeOn(observationScheduler);
   }
 
@@ -27,5 +31,9 @@ public class SchedulingPolicy {
 
   @SuppressWarnings("unchecked") public <T> Single.Transformer<T, T> singleTransformer() {
     return (Single.Transformer<T, T>) singleTransformer;
+  }
+
+  public Completable.CompletableTransformer completableTransformer() {
+    return completableTransformer;
   }
 }
