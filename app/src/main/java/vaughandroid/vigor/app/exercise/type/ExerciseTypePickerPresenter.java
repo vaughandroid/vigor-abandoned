@@ -2,8 +2,10 @@ package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
+import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,32 +53,24 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
     view.showLoading();
 
     initExerciseTypesUseCase.perform()
-        .compose(activityLifecycleProvider.<Boolean>bindToLifecycle().forSingle())
+        .compose(activityLifecycleProvider.<Boolean>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
         .subscribe(LogErrorsSubscriber.<Boolean>create());
 
     Observable<ImmutableList<ExerciseType>> getExerciseTypesObservable = getExerciseTypesUseCase
         .perform()
-        .compose(activityLifecycleProvider.bindToLifecycle());
-    getExerciseTypesObservable.subscribe(this::onListUpdated, this::onError);
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY));
+    getExerciseTypesObservable.subscribe(view::setExerciseTypes, this::onError);
 
     Observable<Exercise> getExerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
         .perform()
-        .compose(activityLifecycleProvider.bindToLifecycle())
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
         .doOnNext(this::setExercise);
 
     Observable.combineLatest(
         getExerciseTypesObservable,
         getExerciseObservable,
-        (exerciseTypes, exercise) -> true)
-        .subscribe(this::setReady, this::onError);
-  }
-
-  private void setReady(boolean ready) {
-    if (ready) {
-      view.showContent();
-    } else {
-      view.showLoading();
-    }
+        (exerciseTypes, exercise) -> null)
+        .subscribe(ignored -> view.showContent(), this::onError);
   }
 
   private void setExercise(Exercise exercise) {
@@ -91,24 +85,18 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
   }
 
   @Override public void onTypePicked(@NonNull ExerciseType exerciseType) {
-    setReady(false);
+    view.showLoading();
     exercise.setType(exerciseType);
     saveExerciseUseCase.setExercise(exercise)
         .perform()
-        .compose(activityLifecycleProvider.<Exercise>bindToLifecycle().forSingle())
-        .subscribe(this::onExerciseUpdated, this::onError);
-  }
-
-  private void onExerciseUpdated(Exercise exercise) {
-    view.finish();
+        .compose(activityLifecycleProvider.<Exercise>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
+        .subscribe(ignored -> view.finish(), this::onError);
   }
 
   @Override public void onError(Throwable t) {
-    logger.error("Error", t);
-    view.showError();
-  }
-
-  private void onListUpdated(List<ExerciseType> exerciseTypes) {
-    view.setExerciseTypes(exerciseTypes);
+    if (!(t instanceof CancellationException)) {
+      logger.error("Error", t);
+      view.showError();
+    }
   }
 }

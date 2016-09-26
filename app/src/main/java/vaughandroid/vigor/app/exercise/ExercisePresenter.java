@@ -3,18 +3,21 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.common.base.Objects;
+import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.math.BigDecimal;
+import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Single;
+import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.exercise.ExerciseContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.SaveExerciseUseCase;
-import vaughandroid.vigor.domain.usecase.ObservableUseCase;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
@@ -45,19 +48,24 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     view.showLoading();
 
     if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
+      // Save a new Exercise & get its ID
       Exercise exercise = Exercise.builder()
           .workoutId(workoutId)
           .build();
       saveExerciseUseCase.setExercise(exercise)
           .perform()
-          .compose(activityLifecycleProvider.<Exercise>bindToLifecycle().forSingle())
-          .subscribe(this::setExercise, this::onError);
+          .compose(activityLifecycleProvider.<Exercise>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
+          .subscribe(savedExercise -> loadExercise(savedExercise.id()), this::onError);
     } else {
-      getExerciseUseCase.setExerciseId(exerciseId)
-          .perform()
-          .compose(activityLifecycleProvider.bindToLifecycle())
-          .subscribe(this::setExercise, this::onError);
+      loadExercise(exerciseId);
     }
+  }
+
+  private Subscription loadExercise(@NonNull ExerciseId exerciseId) {
+    return getExerciseUseCase.setExerciseId(exerciseId)
+        .perform()
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
+        .subscribe(this::setExercise, this::onError);
   }
 
   @Override public void onTypeClicked() {
@@ -70,7 +78,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     exercise.setReps(reps);
     saveExerciseUseCase.setExercise(exercise)
         .perform()
-        .subscribe(this::onSaved, this::onError);
+        .subscribe(ignored -> view.finish(), this::onError);
   }
 
   private void setExercise(@NonNull Exercise exercise) {
@@ -82,13 +90,10 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     view.showContent();
   }
 
-  private void onSaved(@NonNull Exercise exercise) {
-    this.setExercise(exercise);
-    view.finish();
-  }
-
   @Override public void onError(Throwable t) {
-    logger.error("Error", t);
-    view.showError();
+    if (!(t instanceof CancellationException)) {
+      logger.error("Error", t);
+      view.showError();
+    }
   }
 }

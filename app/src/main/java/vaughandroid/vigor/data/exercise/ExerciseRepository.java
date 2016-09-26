@@ -2,6 +2,7 @@ package vaughandroid.vigor.data.exercise;
 
 import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import java.text.MessageFormat;
 import javax.inject.Inject;
 import rx.Observable;
@@ -44,11 +45,15 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
   }
 
   @NonNull @Override public Observable<Exercise> getExercise(@NonNull ExerciseId id) {
+    Preconditions.checkArgument(!Objects.equal(id, ExerciseId.UNASSIGNED), "not a valid exercise ID");
     return Observable.combineLatest(
-        firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class),
+        firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class)
+            // XXX: Is this ever returning null?
+            .filter(dto -> {
+              return dto != null;
+            }),
         exerciseTypeRepository.getExerciseTypeMap(),
-        exerciseMapper::fromDto)
-        .filter(exercise -> exercise != null);
+        exerciseMapper::fromDto);
   }
 
   @NonNull private String getPath(@NonNull ExerciseId id) {

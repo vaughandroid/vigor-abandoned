@@ -2,10 +2,13 @@ package vaughandroid.vigor.app.workout;
 
 import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
+import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
+import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Subscription;
 import vaughandroid.vigor.app.workout.WorkoutContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.workout.GetWorkoutUseCase;
@@ -40,16 +43,21 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     view.showLoading();
 
     if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
+      // Save a new Workout & get its ID
       saveWorkoutUseCase.setWorkout(Workout.builder().build())
           .perform()
-          .compose(activityLifecycleProvider.<Workout>bindToLifecycle().forSingle())
-          .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::onError);
+          .compose(activityLifecycleProvider.<Workout>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
+          .subscribe(workout -> loadWorkout(workout.id()), WorkoutPresenter.this::onError);
     } else {
-      getWorkoutUseCase.setWorkoutId(workoutId)
-          .perform()
-          .compose(activityLifecycleProvider.bindToLifecycle())
-          .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::onError);
+      loadWorkout(workoutId);
     }
+  }
+
+  private Subscription loadWorkout(@NonNull WorkoutId workoutId) {
+    return getWorkoutUseCase.setWorkoutId(workoutId)
+        .perform()
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
+        .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::onError);
   }
 
   @Override public void onAddExercise() {
@@ -68,7 +76,9 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
   }
 
   @Override public void onError(Throwable t) {
-    logger.error("Error", t);
-    view.showError();
+    if (!(t instanceof CancellationException)) {
+      logger.error("Error", t);
+      view.showError();
+    }
   }
 }

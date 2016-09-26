@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.google.common.base.Preconditions;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import com.trello.rxlifecycle.ActivityEvent;
 import java.util.List;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
@@ -62,13 +63,13 @@ public class ExerciseTypePickerActivity extends VigorActivity
     exerciseTypeRecyclerView.setHasFixedSize(true);
 
     exerciseTypeAdapter.exerciseTypeClickedObservable()
-        .compose(bindToLifecycle())
+        .compose(bindUntilEvent(ActivityEvent.DESTROY))
         .subscribe(exerciseType -> presenter.onTypePicked(exerciseType),
             t -> presenter.onError(t));
 
     RxTextView.textChanges(editText)
         .map(CharSequence::toString)
-        .compose(bindToLifecycle())
+        .compose(bindUntilEvent(ActivityEvent.DESTROY))
         .subscribe(text -> presenter.onSearchTextUpdated(text), t -> presenter.onError(t));
   }
 

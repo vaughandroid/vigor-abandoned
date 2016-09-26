@@ -57,11 +57,11 @@ public class SaveExerciseUseCase extends SingleUseCase<Exercise> {
         Pair::new)
         .flatMap(pair -> {
           Workout workout = pair.first;
-          Exercise exercise = pair.second;
-          workout.exercises().add(exercise);
+          Exercise savedExercise = pair.second;
+          workout.exercises().add(savedExercise);
           return saveWorkoutUseCase.setWorkout(workout)
               .perform()
-              .map(savedWorkout -> exercise);
+              .map(savedWorkout -> savedExercise);
         });
   }
 }
