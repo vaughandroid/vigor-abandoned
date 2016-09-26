@@ -44,7 +44,6 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
   }
 
   @NonNull @Override public Observable<Exercise> getExercise(@NonNull ExerciseId id) {
-    // TODO: 25/09/2016 Probably want a different operator here which will wait for both to return a value - maybe Join?
     return Observable.combineLatest(
         firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class),
         exerciseTypeRepository.getExerciseTypeMap(),

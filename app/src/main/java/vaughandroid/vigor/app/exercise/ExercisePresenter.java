@@ -45,7 +45,10 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     view.showLoading();
 
     if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
-      saveExerciseUseCase.setExercise(Exercise.builder().workoutId(workoutId).build())
+      Exercise exercise = Exercise.builder()
+          .workoutId(workoutId)
+          .build();
+      saveExerciseUseCase.setExercise(exercise)
           .perform()
           .compose(activityLifecycleProvider.<Exercise>bindToLifecycle().forSingle())
           .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);

@@ -45,8 +45,10 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
   }
 
   @NonNull @Override public Observable<Workout> getWorkout(@NonNull WorkoutId id) {
-    return Observable.combineLatest(firebaseDatabaseWrapper.observe(getPath(id), WorkoutDto.class),
-        exerciseTypeRepository.getExerciseTypeMap(), workoutMapper::fromDto);
+    return Observable.combineLatest(
+        firebaseDatabaseWrapper.observe(getPath(id), WorkoutDto.class),
+        exerciseTypeRepository.getExerciseTypeMap(),
+        workoutMapper::fromDto);
   }
 
   @NonNull private String getPath(@NonNull WorkoutId id) {
