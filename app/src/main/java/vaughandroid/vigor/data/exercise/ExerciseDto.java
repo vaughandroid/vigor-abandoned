@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 
   @Nullable public Integer reps;
 
+  // TODO: Can this be stored as a BigDecimal?
   @Nullable public String weight;
 
   static class WorkoutDto {

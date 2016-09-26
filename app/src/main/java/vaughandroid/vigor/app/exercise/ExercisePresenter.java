@@ -10,7 +10,6 @@ import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rx.Single;
 import rx.Subscription;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.exercise.ExerciseContract.View;

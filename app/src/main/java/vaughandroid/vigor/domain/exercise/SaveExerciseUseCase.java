@@ -58,7 +58,7 @@ public class SaveExerciseUseCase extends SingleUseCase<Exercise> {
         .flatMap(pair -> {
           Workout workout = pair.first;
           Exercise savedExercise = pair.second;
-          workout.exercises().add(savedExercise);
+          workout.addExercise(savedExercise);
           return saveWorkoutUseCase.setWorkout(workout)
               .perform()
               .map(savedWorkout -> savedExercise);

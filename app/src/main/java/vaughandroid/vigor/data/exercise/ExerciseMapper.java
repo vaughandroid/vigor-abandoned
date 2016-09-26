@@ -26,7 +26,9 @@ public class ExerciseMapper {
       @NonNull Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
     Exercise.Builder builder = Exercise.builder()
         .id(ExerciseId.create(dto.guid))
-        .workoutId(WorkoutId.create(dto.workout.guid));
+        .workoutId(WorkoutId.create(dto.workout.guid))
+        .reps(dto.reps)
+        .weight(dto.weight);
     if (dto.type != null) {
       ExerciseTypeId exerciseTypeId = ExerciseTypeId.create(dto.type.guid);
       if (!Objects.equal(exerciseTypeId, ExerciseTypeId.UNASSIGNED)) {

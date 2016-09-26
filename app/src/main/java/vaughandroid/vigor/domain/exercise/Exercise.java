@@ -82,6 +82,19 @@ public class Exercise implements Serializable {
     return weight != null ? weight.toPlainString() : null;
   }
 
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Exercise exercise = (Exercise) o;
+
+    return id.equals(exercise.id);
+  }
+
+  @Override public int hashCode() {
+    return id.hashCode();
+  }
+
   public static class Builder {
     private ExerciseId id = ExerciseId.UNASSIGNED;
     private WorkoutId workoutId;
@@ -111,6 +124,13 @@ public class Exercise implements Serializable {
 
     public Builder weight(@Nullable BigDecimal weight) {
       this.weight = weight;
+      return this;
+    }
+
+    public Builder weight(@Nullable String weight) {
+      if (weight != null) {
+        this.weight = new BigDecimal(weight);
+      }
       return this;
     }
 

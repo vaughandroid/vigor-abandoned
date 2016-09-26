@@ -35,8 +35,25 @@ public final class Workout implements Serializable {
     this.id = id;
   }
 
+  /**
+   * @return an unmodifiable view of the List of Exercises
+   */
   @NonNull public List<Exercise> exercises() {
-    return exercises;
+    return Collections.unmodifiableList(exercises);
+  }
+
+  public void addExercise(@NonNull Exercise exercise) {
+    int idx = exercises.indexOf(exercise);
+    if (idx == -1) {
+      exercises.add(exercise);
+    } else {
+      // Replace an existing Exercise.
+      exercises.set(idx, exercise);
+    }
+  }
+
+  public boolean removeExercise(@NonNull Exercise exercise) {
+    return exercises.remove(exercise);
   }
 
   public static class Builder {
