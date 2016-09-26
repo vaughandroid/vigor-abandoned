@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
 import java.text.MessageFormat;
 import javax.inject.Inject;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
 import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.type.ExerciseTypeRepository;
@@ -32,15 +34,14 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
     this.firebaseDatabaseWrapper = firebaseDatabaseWrapper;
   }
 
-  @NonNull @Override public Observable<Workout> addWorkout(@NonNull Workout workout) {
+  @NonNull @Override public Single<Workout> addWorkout(@NonNull Workout workout) {
     if (Objects.equal(workout.id(), WorkoutId.UNASSIGNED)) {
       workout.setId(WorkoutId.create(guidFactory.newGuid()));
     }
-    final Workout finalWorkout = workout;
 
-    WorkoutDto dto = workoutMapper.fromWorkout(finalWorkout);
-    return firebaseDatabaseWrapper.set(getPath(finalWorkout.id()), dto)
-        .map(ignored -> finalWorkout);
+    WorkoutDto dto = workoutMapper.fromWorkout(workout);
+    return firebaseDatabaseWrapper.set(getPath(workout.id()), dto)
+        .toSingleDefault(workout);
   }
 
   @NonNull @Override public Observable<Workout> getWorkout(@NonNull WorkoutId id) {

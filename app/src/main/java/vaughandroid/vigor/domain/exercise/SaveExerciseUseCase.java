@@ -50,7 +50,7 @@ public class SaveExerciseUseCase extends SingleUseCase<Exercise> {
           return saveWorkoutUseCase.setWorkout(workout).perform();
         });
 
-    return Single.zip(repository.addExercise(exercise).toSingle(), saveWorkout,
+    return Single.zip(repository.addExercise(exercise), saveWorkout,
         (exercise, workout) -> exercise);
   }
 }

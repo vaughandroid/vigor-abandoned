@@ -32,6 +32,6 @@ public class SaveWorkoutUseCase extends SingleUseCase<Workout> {
     if (workout == null) {
       throw new IllegalStateException("workout not set");
     }
-    return repository.addWorkout(workout).toSingle();
+    return repository.addWorkout(workout);
   }
 }

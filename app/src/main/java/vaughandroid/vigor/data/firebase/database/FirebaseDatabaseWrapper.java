@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import javax.inject.Inject;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.subjects.PublishSubject;
@@ -54,19 +55,18 @@ import vaughandroid.vigor.app.di.ApplicationScope;
         dataSnapshot -> dataSnapshot.getValue(genericTypeIndicator)));
   }
 
-  // TODO: 25/09/2016 This really ought to return a Completable
-  public Observable<Void> set(String path, Object value) {
+  public Completable set(String path, Object value) {
     checkInitialised();
-    PublishSubject<Void> subject = PublishSubject.create();
-    mDatabase.getReference(path).setValue(value, (databaseError, databaseReference) -> {
-      if (databaseError != null) {
-        subject.onError(new FirebaseDatabaseException(databaseError));
-      } else {
-        subject.onNext(null);
-        subject.onCompleted();
-      }
+
+    return Completable.create(completableSubscriber -> {
+      mDatabase.getReference(path).setValue(value, (databaseError, databaseReference) -> {
+        if (databaseError != null) {
+          completableSubscriber.onError(new FirebaseDatabaseException(databaseError));
+        } else {
+          completableSubscriber.onCompleted();
+        }
+      });
     });
-    return subject.asObservable();
   }
 
   private void checkInitialised() {

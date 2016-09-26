@@ -36,7 +36,7 @@ public class ExerciseMapper {
     return builder.build();
   }
 
-  public ExerciseDto fromExercise(Exercise exercise) {
+  @NonNull public ExerciseDto fromExercise(Exercise exercise) {
     ExerciseDto dto = new ExerciseDto();
     dto.guid = exercise.id().guid();
     {
@@ -55,7 +55,7 @@ public class ExerciseMapper {
     return dto;
   }
 
-  public List<Exercise> fromDtoList(@NonNull List<ExerciseDto> dtoList,
+  @NonNull public List<Exercise> fromDtoList(@NonNull List<ExerciseDto> dtoList,
       @NonNull Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
     List<Exercise> exercises = new ArrayList<>(dtoList.size());
     for (ExerciseDto dto : dtoList) {
@@ -64,7 +64,7 @@ public class ExerciseMapper {
     return exercises;
   }
 
-  public List<ExerciseDto> fromExerciseList(List<Exercise> exercises) {
+  @NonNull public List<ExerciseDto> fromExerciseList(List<Exercise> exercises) {
     List<ExerciseDto> dtos = new ArrayList<>(exercises.size());
     for (Exercise exercise : exercises) {
       dtos.add(fromExercise(exercise));

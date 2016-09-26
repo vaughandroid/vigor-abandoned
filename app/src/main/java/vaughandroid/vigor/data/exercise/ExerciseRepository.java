@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import java.text.MessageFormat;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Single;
 import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
 import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -32,15 +33,14 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
     this.firebaseDatabaseWrapper = firebaseDatabaseWrapper;
   }
 
-  @NonNull @Override public Observable<Exercise> addExercise(@NonNull Exercise exercise) {
+  @NonNull @Override public Single<Exercise> addExercise(@NonNull Exercise exercise) {
     if (Objects.equal(exercise.id(), ExerciseId.UNASSIGNED)) {
       exercise.setId(ExerciseId.create(guidFactory.newGuid()));
     }
-    final Exercise finalExercise = exercise;
 
-    ExerciseDto dto = exerciseMapper.fromExercise(finalExercise);
-    return firebaseDatabaseWrapper.set(getPath(finalExercise.id()), dto)
-        .map(ignored -> finalExercise);
+    ExerciseDto dto = exerciseMapper.fromExercise(exercise);
+    return firebaseDatabaseWrapper.set(getPath(exercise.id()), dto)
+        .toSingleDefault(exercise);
   }
 
   @NonNull @Override public Observable<Exercise> getExercise(@NonNull ExerciseId id) {

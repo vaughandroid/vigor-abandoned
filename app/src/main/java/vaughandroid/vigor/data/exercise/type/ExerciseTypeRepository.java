@@ -43,24 +43,24 @@ public class ExerciseTypeRepository
   }
 
   @NonNull @Override
-  public Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType) {
+  public Single<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType) {
     if (Objects.equal(exerciseType.id(), ExerciseTypeId.UNASSIGNED)) {
       exerciseType = exerciseType.withId(ExerciseTypeId.create(guidFactory.newGuid()));
     }
-    final ExerciseType finalExerciseType = exerciseType;
 
-    ExerciseTypeDto dto = mapper.fromExerciseType(finalExerciseType);
-    return firebaseDatabaseWrapper.set(getPathForId(finalExerciseType.id()), dto)
-        .map(ignored -> finalExerciseType);
+    ExerciseTypeDto dto = mapper.fromExerciseType(exerciseType);
+    return firebaseDatabaseWrapper.set(getPathForId(exerciseType.id()), dto)
+        .toSingleDefault(exerciseType);
   }
 
-  @NonNull @Override public Observable<ImmutableList<ExerciseType>> addExerciseTypes(
+  @NonNull @Override public Single<ImmutableList<ExerciseType>> addExerciseTypes(
       @NonNull Iterable<ExerciseType> exerciseTypes) {
-    List<Observable<ExerciseType>> list = new ArrayList<>();
+    List<Single<ExerciseType>> list = new ArrayList<>();
     for (ExerciseType exerciseType : exerciseTypes) {
       list.add(addExerciseType(exerciseType));
     }
-    return Observable.combineLatest(list, addedTypes -> {
+    return Single.zip(list, addedTypes -> {
+      // We get an array of Objects, so have to cast each one individually.
       ImmutableList.Builder<ExerciseType> builder = ImmutableList.builder();
       for (Object o : addedTypes) {
         builder.add((ExerciseType) o);

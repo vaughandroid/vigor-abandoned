@@ -1,6 +1,7 @@
 package vaughandroid.vigor.data.workout;
 
 import android.support.annotation.NonNull;
+import java.util.ArrayList;
 import java.util.List;
 import vaughandroid.vigor.data.exercise.ExerciseDto;
 import vaughandroid.vigor.domain.workout.Workout;
@@ -14,5 +15,5 @@ import vaughandroid.vigor.domain.workout.Workout;
 
   @NonNull public String guid;
 
-  @NonNull public List<ExerciseDto> exerciseDtos;
+  @NonNull public List<ExerciseDto> exerciseDtos = new ArrayList<>();
 }
