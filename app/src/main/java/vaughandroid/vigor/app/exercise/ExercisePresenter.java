@@ -10,7 +10,7 @@ import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rx.Subscription;
+import rx.Observable;
 import rx.functions.Action0;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.exercise.ExerciseContract.View;
@@ -34,6 +34,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 
   private View view;
   private Exercise exercise;
+  private boolean exerciseChanged;
 
   @Inject public ExercisePresenter(ActivityLifecycleProvider activityLifecycleProvider,
       SaveExerciseUseCase saveExerciseUseCase, GetExerciseUseCase getExerciseUseCase) {
@@ -61,38 +62,53 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     }
   }
 
-  private Subscription loadExercise(@NonNull ExerciseId exerciseId) {
-    return getExerciseUseCase.setExerciseId(exerciseId)
+  private void loadExercise(@NonNull ExerciseId exerciseId) {
+    Observable<Exercise> exerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
         .perform()
-        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY));
+
+    exerciseObservable
         .subscribe(this::setExercise, this::onError);
+
+    /* If the exercise is updated after the initial load, it has been changed elsewhere -
+     * e.g. in the ExerciseTypePickerActivity
+     */
+    exerciseObservable.skip(1).take(1).toCompletable()
+        .subscribe(() -> exerciseChanged = true, this::onError);
   }
 
   @Override public void onWeightChanged(@Nullable BigDecimal weight) {
     exercise.setWeight(weight);
+    exerciseChanged = true;
   }
 
   @Override public void onRepsChanged(@Nullable Integer reps) {
     exercise.setReps(reps);
+    exerciseChanged = true;
   }
 
   @Override public void onTypeClicked() {
-    saveAndPerformAction(() -> view.goToExerciseTypePicker(exercise.id()));
+    saveIfChangedThen(() -> view.goToExerciseTypePicker(exercise.id()));
   }
 
   @Override public void onBack() {
-    saveAndPerformAction(() -> view.finish());
+    saveIfChangedThen(() -> view.finish());
   }
 
   @Override public void onValuesConfirmed() {
-    saveAndPerformAction(() -> view.finish());
+    saveIfChangedThen(() -> view.finish());
   }
 
-  private void saveAndPerformAction(Action0 action) {
-    view.showLoading();
-    saveExerciseUseCase.setExercise(exercise)
-        .perform()
-        .subscribe(ignored -> action.call(), this::onError);
+  private void saveIfChangedThen(Action0 action) {
+    if (exerciseChanged) {
+      view.showLoading();
+      saveExerciseUseCase.setExercise(exercise)
+          .perform()
+          .toCompletable()
+          .subscribe(action::call, this::onError);
+    } else {
+      action.call();
+    }
   }
 
   private void setExercise(@NonNull Exercise exercise) {
