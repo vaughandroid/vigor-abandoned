@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Subscription;
+import rx.functions.Action0;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.exercise.ExerciseContract.View;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -47,7 +48,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     view.showLoading();
 
     if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
-      // Save a new Exercise & get its ID
+      // Save a new Exercise & get its ID.
       Exercise exercise = Exercise.builder()
           .workoutId(workoutId)
           .build();
@@ -67,17 +68,31 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
         .subscribe(this::setExercise, this::onError);
   }
 
-  @Override public void onTypeClicked() {
-    view.goToExerciseTypePicker(exercise.id());
+  @Override public void onWeightChanged(@Nullable BigDecimal weight) {
+    exercise.setWeight(weight);
   }
 
-  @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
-    view.showLoading();
-    exercise.setWeight(weight);
+  @Override public void onRepsChanged(@Nullable Integer reps) {
     exercise.setReps(reps);
+  }
+
+  @Override public void onTypeClicked() {
+    saveAndPerformAction(() -> view.goToExerciseTypePicker(exercise.id()));
+  }
+
+  @Override public void onBack() {
+    saveAndPerformAction(() -> view.finish());
+  }
+
+  @Override public void onValuesConfirmed() {
+    saveAndPerformAction(() -> view.finish());
+  }
+
+  private void saveAndPerformAction(Action0 action) {
+    view.showLoading();
     saveExerciseUseCase.setExercise(exercise)
         .perform()
-        .subscribe(ignored -> view.finish(), this::onError);
+        .subscribe(ignored -> action.call(), this::onError);
   }
 
   private void setExercise(@NonNull Exercise exercise) {

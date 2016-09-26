@@ -21,9 +21,15 @@ import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import com.google.common.base.Objects;
+import com.jakewharton.rxbinding.internal.Preconditions;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.MainThreadSubscription;
 import vaughandroid.vigor.R;
 
 /**
@@ -32,15 +38,17 @@ import vaughandroid.vigor.R;
 public class NumberInputView extends LinearLayout {
   // TODO: 19/06/2016 There's likely a way to simplify the EditText interactions
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
   @BindView(R.id.view_number_input_TextInputLayout_value) TextInputLayout valueTextInputLayout;
   @BindView(R.id.view_number_input_EditText_value) EditText valueEditText;
   @BindView(R.id.view_number_input_TextView_units) TextView unitsTextView;
   @BindView(R.id.view_number_input_Button_less) Button lessButton;
   @BindView(R.id.view_number_input_Button_more) Button moreButton;
-  private Logger logger = LoggerFactory.getLogger(getClass());
+
   @Nullable private BigDecimal value;
   @Nullable private BigDecimal lastNotifiedValue;
-  @Nullable private ValueChangedListener valueChangedListener;
+  private final ValueOnSubscribe valueOnSubscribe = new ValueOnSubscribe();
 
   public NumberInputView(Context context) {
     super(context);
@@ -81,21 +89,21 @@ public class NumberInputView extends LinearLayout {
     }
   }
 
+  public Observable<BigDecimal> valueObservable() {
+    return Observable.create(valueOnSubscribe);
+  }
+
   @Nullable public BigDecimal getValue() {
     return value;
   }
 
-  @Nullable public Integer getIntValue() {
-    return value != null ? value.intValue() : null;
+  @NonNull public BigDecimal getValueOrZero() {
+    return value != null ? value : BigDecimal.ZERO;
   }
 
   public void setValue(@Nullable Integer valueInt) {
     BigDecimal value = valueInt != null ? BigDecimal.valueOf(valueInt) : null;
     setValueInternal(value, true);
-  }
-
-  @NonNull public BigDecimal getValueOrZero() {
-    return value != null ? value : BigDecimal.ZERO;
   }
 
   public void setValue(@Nullable BigDecimal value) {
@@ -121,9 +129,9 @@ public class NumberInputView extends LinearLayout {
   }
 
   private void notifyValueChangedListenerIfChanged() {
-    if (valueChangedListener != null && !Objects.equal(value, lastNotifiedValue)) {
+    if (!Objects.equal(value, lastNotifiedValue)) {
       lastNotifiedValue = value;
-      valueChangedListener.onValueChanged(value);
+      valueOnSubscribe.onValueChanged(value);
     }
   }
 
@@ -133,10 +141,6 @@ public class NumberInputView extends LinearLayout {
 
   public void setUnitsShown(boolean shown) {
     unitsTextView.setVisibility(shown ? GONE : VISIBLE);
-  }
-
-  public void setValueChangedListener(@Nullable ValueChangedListener valueChangedListener) {
-    this.valueChangedListener = valueChangedListener;
   }
 
   @OnClick(R.id.view_number_input_Button_less) void onClickLess() {
@@ -165,7 +169,24 @@ public class NumberInputView extends LinearLayout {
     }
   }
 
-  public interface ValueChangedListener {
-    void onValueChanged(BigDecimal newValue);
+  private static class ValueOnSubscribe implements Observable.OnSubscribe<BigDecimal> {
+    private final List<Subscriber<? super BigDecimal>> subscribers = new ArrayList<>();
+
+    @Override public void call(Subscriber<? super BigDecimal> subscriber) {
+      Preconditions.checkUiThread();
+      subscribers.add(subscriber);
+
+      subscriber.add(new MainThreadSubscription() {
+        @Override protected void onUnsubscribe() {
+          subscribers.remove(subscriber);
+        }
+      });
+    }
+
+    void onValueChanged(@Nullable BigDecimal newValue) {
+      for (Subscriber<? super BigDecimal> subscriber : subscribers) {
+        subscriber.onNext(newValue);
+      }
+    }
   }
 }

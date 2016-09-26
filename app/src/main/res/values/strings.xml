@@ -14,4 +14,7 @@
   <string name="ok">OK</string>
   <string name="error_general_title">Oops!</string>
   <string name="error_general_message">Something went wrong</string>
+  <string name="title_activity_exercise">Exercise</string>
+  <string name="title_activity_workout">Workout</string>
+  <string name="title_activity_exercise_type_picker">Exercise Type</string>
 </resources>

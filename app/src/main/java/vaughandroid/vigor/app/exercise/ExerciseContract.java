@@ -30,9 +30,15 @@ public interface ExerciseContract {
   interface Presenter {
     void init(@NonNull View view, @NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId);
 
+    void onWeightChanged(@Nullable BigDecimal weight);
+
+    void onRepsChanged(@Nullable Integer reps);
+
     void onTypeClicked();
 
-    void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps);
+    void onValuesConfirmed();
+
+    void onBack();
 
     void onError(Throwable t);
   }

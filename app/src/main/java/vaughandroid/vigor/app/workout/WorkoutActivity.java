@@ -50,6 +50,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
+    setTitle(R.string.title_activity_workout);
     initViews();
     initPresenter();
   }

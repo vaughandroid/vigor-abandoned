@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.common.base.Preconditions;
+import com.trello.rxlifecycle.ActivityEvent;
 import java.math.BigDecimal;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
@@ -56,6 +57,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
+    setTitle(R.string.title_activity_exercise);
     initViews();
     initPresenter();
   }
@@ -66,6 +68,14 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     initToolbar();
 
     weightNumberInputView.setUnitsShown(true);
+    weightNumberInputView.valueObservable()
+        .compose(bindUntilEvent(ActivityEvent.DESTROY))
+        .subscribe(presenter::onWeightChanged, presenter::onError);
+
+    repsNumberInputView.valueObservable()
+        .compose(bindUntilEvent(ActivityEvent.DESTROY))
+        .map(BigDecimal::intValue)
+        .subscribe(presenter::onRepsChanged, presenter::onError);
   }
 
   private void initToolbar() {
@@ -75,7 +85,6 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
   }
 
   private void initPresenter() {
@@ -126,14 +135,17 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onBackPressed() {
+    presenter.onBack();
+  }
+
   @Override public boolean onSupportNavigateUp() {
-    finish();
-    return true;
+    presenter.onBack();
+    return false;
   }
 
   @OnClick(R.id.content_exercise_Button_confirm) void onClickConfirmButton() {
-    presenter.onValuesConfirmed(weightNumberInputView.getValue(),
-        repsNumberInputView.getIntValue());
+    presenter.onValuesConfirmed();
   }
 
   @Override public void setType(@NonNull ExerciseType type) {

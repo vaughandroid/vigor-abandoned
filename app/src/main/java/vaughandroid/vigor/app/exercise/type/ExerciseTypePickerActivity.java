@@ -50,6 +50,7 @@ public class ExerciseTypePickerActivity extends VigorActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
+    setTitle(R.string.title_activity_exercise_type_picker);
     initViews();
     initPresenter();
   }
