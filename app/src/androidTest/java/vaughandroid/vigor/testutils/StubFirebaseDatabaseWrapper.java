@@ -1,7 +1,6 @@
 package vaughandroid.vigor.testutils;
 
 import com.google.firebase.database.GenericTypeIndicator;
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 import rx.Completable;
@@ -37,10 +36,7 @@ public class StubFirebaseDatabaseWrapper implements FirebaseDatabaseWrapper {
 
   @Override
   public <T> Observable<T> observe(String path, GenericTypeIndicator<T> genericTypeIndicator) {
-    // Nasty reflection here!
-    ParameterizedType t = (ParameterizedType) genericTypeIndicator.getClass().getGenericSuperclass();
-    Class<T> clazz = (Class<T>) t.getActualTypeArguments()[0]; // XXX this is crashing
-    return observe(path, clazz);
+    return Observable.just((T) data.get(path));
   }
 
   @Override public Completable set(String path, Object value) {
