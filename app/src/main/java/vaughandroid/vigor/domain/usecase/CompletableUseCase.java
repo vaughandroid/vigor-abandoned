@@ -14,7 +14,7 @@ public abstract class CompletableUseCase extends UseCase {
     super(schedulingPolicy);
   }
 
-  public final Completable perform() {
+  public Completable perform() {
     return createCompletable().compose(schedulingPolicy.completableTransformer());
   }
 

@@ -73,6 +73,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     /* If the exercise is updated after the initial load, it has been changed elsewhere -
      * e.g. in the ExerciseTypePickerActivity
      */
+    // TODO: Pretty sure this isn't needed.
     exerciseObservable.skip(1).take(1).subscribe(
         ignored -> { exerciseChanged = true; }, this::onError);
   }

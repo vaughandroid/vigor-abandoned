@@ -15,7 +15,7 @@ public abstract class ObservableUseCase<T> extends UseCase {
     super(schedulingPolicy);
   }
 
-  public final Observable<T> perform() {
+  public Observable<T> perform() {
     return createObservable().compose(schedulingPolicy.observableTransformer());
   }
 

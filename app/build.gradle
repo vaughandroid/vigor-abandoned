@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply from: "${rootDir}/buildsystem/retrolambda.gradle"
+apply plugin: 'de.mobilej.unmock'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
@@ -44,6 +45,11 @@ android {
       exclude fileName
     }
   }
+}
+
+unMock {
+  // Where to download the 'real' Android.jar from. We use the version of Robolectric closest to our minSdkVersion
+  downloadFrom 'https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/4.3_r2-robolectric-0/android-all-4.3_r2-robolectric-0.jar'
 }
 
 dependencies {
