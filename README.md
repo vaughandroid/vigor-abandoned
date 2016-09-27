@@ -18,7 +18,7 @@ I was also playing around with RxJava and Firebase database when I wrote this. P
 
 Things that I'm proud of/are worth looking at:
 * The architecture. As I mentioned earlier, it's overkill for a project of this size, but pays dividends for larger projects.
-* The test Robot approach (inspired by [this presentation](https://realm.io/news/kau-jake-wharton-testing-robots/) by Jake Wharton).
+* The test Robot approach used in the instrumented tests (inspired by [this presentation](https://realm.io/news/kau-jake-wharton-testing-robots/) by Jake Wharton).
 * The structure of the acceptance tests - e.g. using [TestApplication](https://github.com/vaughandroid/vigor/blob/dev/app/src/androidTest/java/vaughandroid/vigor/TestApplication.java) and [TestApplicationTestRunner](https://github.com/vaughandroid/vigor/blob/dev/app/src/androidTest/java/vaughandroid/vigor/TestApplicationTestRunner.java) to inject Mocks & Stubs using Dagger 2.
  
 Things I'm less proud of:
@@ -31,4 +31,4 @@ Regarding tests, this was originally without any meaningful tests since this was
 ## Useful commands
 
 * `./gradlew :app:test` - Run all unit tests.
-* `./gradlew :app:connectedAndroidTest` - Run app acceptance tests.  
+* `./gradlew :app:connectedAndroidTest` - Run instrumented tests (acceptance tests).  
