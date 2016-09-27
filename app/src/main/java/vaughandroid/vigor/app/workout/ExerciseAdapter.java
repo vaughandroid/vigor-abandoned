@@ -75,12 +75,28 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     public void setExercise(@NonNull Exercise exercise) {
       this.exercise = exercise;
-      nameTextView.setText(exercise.id().guid());
-      Context context = valuesTextView.getContext();
-      String valuesText =
-          context.getString(R.string.exercise_list_item_values_weight_and_reps, exercise.weight(),
-              "Kg", exercise.reps()); // TODO: weight units
+      Context context = itemView.getContext();
+      nameTextView.setText(
+          context.getString(R.string.exercise_list_item_name, exercise.type().name()));
+      String valuesText = getValuesText(exercise, context);
       valuesTextView.setText(valuesText);
+    }
+
+    private String getValuesText(@NonNull Exercise exercise, Context context) {
+      String text = "";
+      if (exercise.weight() != null) {
+        // TODO: weight units
+        if (exercise.reps() != null) {
+          text = context.getString(R.string.exercise_list_item_values_weight_and_reps,
+              exercise.weight(), "Kg", exercise.reps());
+        } else {
+          text =
+              context.getString(R.string.exercise_list_item_values_weight, exercise.weight(), "Kg");
+        }
+      } else if (exercise.reps() != null) {
+        text = context.getString(R.string.exercise_list_item_values_reps, exercise.reps());
+      }
+      return text;
     }
 
     @OnClick(R.id.item_exercise_ViewGroup_container) void onClickItem() {

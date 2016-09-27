@@ -83,12 +83,14 @@ ext {
                      dexmakerMockito  : "com.crittercism.dexmaker:dexmaker-mockito:${dexmakerVersion}",
                      dexmakerDx       : "com.crittercism.dexmaker:dexmaker-dx:${dexmakerVersion}",
                      espresso         : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+                     espressoIntents  : "com.android.support.test.espresso:espresso-intents:${espressoVersion}",
                      testSupportRunner: "com.android.support.test:runner:${testSupportVersion}",
                      testSupportRules : "com.android.support.test:rules:${testSupportVersion}",
                      robolectric      : "org.robolectric:robolectric:${robolectricVersion}",]
 
   // Files which conflict during the packaging process
   packagingExclusions = ['LICENSE.txt',
+                         'asm-license.txt',
                          'META-INF/DEPENDENCIES',
                          'META-INF/ASL2.0',
                          'META-INF/NOTICE',

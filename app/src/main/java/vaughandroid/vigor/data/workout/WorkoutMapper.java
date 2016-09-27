@@ -12,7 +12,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 /**
  * Maps between {@link Workout} and {@link WorkoutDto}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class WorkoutMapper {
 
@@ -22,14 +22,15 @@ public class WorkoutMapper {
     this.exerciseMapper = exerciseMapper;
   }
 
-  Workout fromDto(@NonNull WorkoutDto dto, Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
+  public @NonNull Workout fromDto(@NonNull WorkoutDto dto,
+      @NonNull Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
     return Workout.builder()
         .id(WorkoutId.create(dto.guid))
         .exercises(exerciseMapper.fromDtoList(dto.exerciseDtos, exerciseTypeMap))
         .build();
   }
 
-  WorkoutDto fromWorkout(@NonNull Workout workout) {
+  public @NonNull WorkoutDto fromWorkout(@NonNull Workout workout) {
     WorkoutDto dto = new WorkoutDto();
     dto.guid = workout.id().guid();
     dto.exerciseDtos = exerciseMapper.fromExerciseList(workout.exercises());

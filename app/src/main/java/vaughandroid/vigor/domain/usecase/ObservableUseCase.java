@@ -14,10 +14,9 @@ public abstract class ObservableUseCase<T> extends UseCase {
     super(schedulingPolicy);
   }
 
-  public final Observable<T> perform() {
-    return createObservable().compose(schedulingPolicy.observableTransformer())
-        .doOnError(t -> logger.error("Error", t));
+  public Observable<T> getObservable() {
+    return create().compose(schedulingPolicy.observableTransformer());
   }
 
-  protected abstract Observable<T> createObservable();
+  protected abstract Observable<T> create();
 }

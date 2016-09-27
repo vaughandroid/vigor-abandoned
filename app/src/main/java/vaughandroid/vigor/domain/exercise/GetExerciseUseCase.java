@@ -24,11 +24,12 @@ public class GetExerciseUseCase extends ObservableUseCase<Exercise> {
     this.repository = repository;
   }
 
-  public void setExerciseId(@NonNull ExerciseId exerciseId) {
+  public GetExerciseUseCase setExerciseId(@NonNull ExerciseId exerciseId) {
     this.exerciseId = exerciseId;
+    return this;
   }
 
-  @Override protected Observable<Exercise> createObservable() {
+  @Override protected Observable<Exercise> create() {
     if (exerciseId == null) {
       throw new IllegalStateException("exerciseId not set");
     }

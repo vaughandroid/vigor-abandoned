@@ -1,44 +1,81 @@
 package vaughandroid.vigor.domain.workout;
 
 import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import vaughandroid.util.Assertions;
+import vaughandroid.vigor.domain.exercise.Exercise;
 
 /**
  * Data for a workout session.
  *
  * @author Chris
  */
-@AutoValue public abstract class Workout implements Serializable {
+// TODO: Implement equals(), hashCode() for testing purposes
+public final class Workout implements Serializable {
 
   public static Builder builder() {
-    return new $AutoValue_Workout.Builder().id(WorkoutId.UNASSIGNED)
-        .exercises(ImmutableList.<vaughandroid.vigor.domain.exercise.Exercise>of());
+    return new Builder();
   }
 
-  @NonNull public abstract WorkoutId id();
+  @NonNull private WorkoutId id;
+  @NonNull private final ArrayList<Exercise> exercises;
 
-  public abstract Workout withId(WorkoutId workoutId);
+  private Workout(@NonNull WorkoutId id, List<Exercise> exercises) {
+    this.id = id;
+    this.exercises = new ArrayList<>(exercises);
+  }
 
-  @NonNull public abstract ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises();
+  @NonNull public WorkoutId id() {
+    return id;
+  }
 
-  public abstract Workout withExercises(
-      @NonNull ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises);
+  public void setId(@NonNull WorkoutId id) {
+    this.id = id;
+  }
 
-  @AutoValue.Builder public static abstract class Builder {
+  /**
+   * @return an unmodifiable view of the List of Exercises
+   */
+  @NonNull public List<Exercise> exercises() {
+    return Collections.unmodifiableList(exercises);
+  }
 
-    public abstract Builder id(@NonNull WorkoutId id);
+  public void addExercise(@NonNull Exercise exercise) {
+    int idx = exercises.indexOf(exercise);
+    if (idx == -1) {
+      exercises.add(exercise);
+    } else {
+      // Replace an existing Exercise.
+      exercises.set(idx, exercise);
+    }
+  }
 
-    public abstract Builder exercises(
-        @NonNull ImmutableList<vaughandroid.vigor.domain.exercise.Exercise> exercises);
+  public boolean removeExercise(@NonNull Exercise exercise) {
+    return exercises.remove(exercise);
+  }
 
-    public Builder exercises(List<vaughandroid.vigor.domain.exercise.Exercise> exercises) {
-      exercises(ImmutableList.copyOf(exercises));
+  public static class Builder {
+
+    private WorkoutId id = WorkoutId.UNASSIGNED;
+    private List<Exercise> exercises = new ArrayList<>();
+
+    public Builder id(@NonNull WorkoutId id) {
+      this.id = id;
       return this;
     }
 
-    public abstract Workout build();
+    public Builder exercises(List<Exercise> exercises) {
+      this.exercises.clear();
+      this.exercises.addAll(exercises);
+      return this;
+    }
+
+    public Workout build() {
+      Assertions.checkNotNull(id);
+      return new Workout(id, exercises);
+    }
   }
 }

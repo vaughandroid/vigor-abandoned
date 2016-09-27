@@ -15,9 +15,9 @@ public interface ExerciseTypeRepository {
 
   @NonNull Single<Boolean> isInitialised();
 
-  @NonNull Observable<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
+  @NonNull Single<ExerciseType> addExerciseType(@NonNull ExerciseType exerciseType);
 
-  @NonNull Observable<ImmutableList<ExerciseType>> addExerciseTypes(
+  @NonNull Single<ImmutableList<ExerciseType>> addExerciseTypes(
       @NonNull Iterable<ExerciseType> exerciseTypes);
 
   @NonNull Observable<ExerciseType> getExerciseType(@NonNull ExerciseTypeId id);

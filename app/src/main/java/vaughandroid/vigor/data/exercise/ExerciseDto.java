@@ -14,10 +14,11 @@ import android.support.annotation.Nullable;
 
   @NonNull public WorkoutDto workout;
 
-  @NonNull public ExerciseTypeDto type;
+  @Nullable public ExerciseTypeDto type;
 
   @Nullable public Integer reps;
 
+  // TODO: Can this be stored as a BigDecimal?
   @Nullable public String weight;
 
   static class WorkoutDto {

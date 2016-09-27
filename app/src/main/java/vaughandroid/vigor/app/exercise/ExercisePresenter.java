@@ -3,19 +3,21 @@ package vaughandroid.vigor.app.exercise;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.common.base.Objects;
+import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
 import java.math.BigDecimal;
+import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.functions.Action0;
 import vaughandroid.vigor.app.di.ActivityScope;
 import vaughandroid.vigor.app.exercise.ExerciseContract.View;
-import vaughandroid.vigor.app.mvp.BasePresenter;
-import vaughandroid.vigor.domain.exercise.AddExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
-import vaughandroid.vigor.domain.exercise.type.ExerciseType;
+import vaughandroid.vigor.domain.exercise.SaveExerciseUseCase;
 import vaughandroid.vigor.domain.workout.WorkoutId;
 
 /**
@@ -23,83 +25,108 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
-@ActivityScope public class ExercisePresenter extends BasePresenter<View>
-    implements ExerciseContract.Presenter {
-
-  private final AddExerciseUseCase addExerciseUseCase;
-  private final GetExerciseUseCase getExerciseUseCase;
+@ActivityScope public class ExercisePresenter implements ExerciseContract.Presenter {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final ActivityLifecycleProvider activityLifecycleProvider;
+  private final SaveExerciseUseCase saveExerciseUseCase;
+  private final GetExerciseUseCase getExerciseUseCase;
 
+  private View view;
   private Exercise exercise;
+  private boolean exerciseChanged;
 
   @Inject public ExercisePresenter(ActivityLifecycleProvider activityLifecycleProvider,
-      AddExerciseUseCase addExerciseUseCase, GetExerciseUseCase getExerciseUseCase) {
-    super(activityLifecycleProvider);
-    this.addExerciseUseCase = addExerciseUseCase;
+      SaveExerciseUseCase saveExerciseUseCase, GetExerciseUseCase getExerciseUseCase) {
+    this.activityLifecycleProvider = activityLifecycleProvider;
+    this.saveExerciseUseCase = saveExerciseUseCase;
     this.getExerciseUseCase = getExerciseUseCase;
   }
 
-  @Override public void init(@NonNull WorkoutId workoutId, @NonNull ExerciseId exerciseId) {
+  @Override public void init(@NonNull View view, @NonNull WorkoutId workoutId,
+      @NonNull ExerciseId exerciseId) {
+    this.view = view;
+    view.showLoading();
+
     if (Objects.equal(exerciseId, ExerciseId.UNASSIGNED)) {
-      setExercise(Exercise.builder().workoutId(workoutId).build());
+      // Save a new Exercise & get its ID.
+      Exercise exercise = Exercise.builder()
+          .workoutId(workoutId)
+          .build();
+      saveExerciseUseCase.setExercise(exercise)
+          .getSingle()
+          .compose(activityLifecycleProvider.<Exercise>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
+          .subscribe(savedExercise -> loadExercise(savedExercise.id()), this::onError);
     } else {
-      getExerciseUseCase.setExerciseId(exerciseId);
-      getExerciseUseCase.perform()
-          .compose(activityLifecycleProvider.bindToLifecycle())
-          .subscribe(ExercisePresenter.this::setExercise, ExercisePresenter.this::onError);
+      loadExercise(exerciseId);
     }
   }
 
-  @Override protected void initView(@NonNull View view) {
-    updateViewValues();
+  private void loadExercise(@NonNull ExerciseId exerciseId) {
+    Observable<Exercise> exerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
+        .getObservable()
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY));
+
+    exerciseObservable
+        .subscribe(this::setExercise, this::onError);
+
+    /* If the exercise is updated after the initial load, it has been changed elsewhere -
+     * e.g. in the ExerciseTypePickerActivity
+     */
+    // TODO: Pretty sure this isn't needed.
+    exerciseObservable.skip(1).take(1).subscribe(
+        ignored -> { exerciseChanged = true; }, this::onError);
   }
 
-  private void updateViewValues() {
-    View view = getView();
-    if (view != null && exercise != null) {
-      view.setType(exercise.type());
-      view.setWeight(exercise.weight(), "Kg"); // TODO: 15/06/2016 implement weight units setting
-      view.setReps(exercise.reps());
-    }
+  @Override public void onWeightChanged(@Nullable BigDecimal weight) {
+    exercise.setWeight(weight);
+    exerciseChanged = true;
+  }
+
+  @Override public void onRepsChanged(@Nullable Integer reps) {
+    exercise.setReps(reps);
+    exerciseChanged = true;
   }
 
   @Override public void onTypeClicked() {
-    View view = getView();
-    if (view != null) {
-      view.goToExerciseTypePicker(exercise.type());
+    saveIfChangedThen(() -> view.goToExerciseTypePicker(exercise.id()));
+  }
+
+  @Override public void onBack() {
+    saveIfChangedThen(() -> view.finish());
+  }
+
+  @Override public void onValuesConfirmed() {
+    saveIfChangedThen(() -> view.finish());
+  }
+
+  private void saveIfChangedThen(Action0 action) {
+    if (exerciseChanged) {
+      view.showLoading();
+      saveExerciseUseCase.setExercise(exercise)
+          .getSingle()
+          .toCompletable()
+          .subscribe(() -> {
+            view.showContent();
+            action.call();
+          }, this::onError);
+    } else {
+      action.call();
     }
-  }
-
-  @Override public void onValuesConfirmed(@Nullable BigDecimal weight, @Nullable Integer reps) {
-    setExercise(exercise.withWeight(weight).withReps(reps));
-
-    addExerciseUseCase.setExercise(exercise);
-    addExerciseUseCase.perform()
-        .subscribe(ExercisePresenter.this::onSaved, ExercisePresenter.this::onError);
-  }
-
-  @Override public void onTypePicked(@NonNull ExerciseType typeFromResult) {
-    setExercise(exercise.withType(typeFromResult));
   }
 
   private void setExercise(@NonNull Exercise exercise) {
     this.exercise = exercise;
-    updateViewValues();
-  }
-
-  private void onSaved(@NonNull Exercise exercise) {
-    this.setExercise(exercise);
-    View view = getView();
-    if (view != null) {
-      view.onSaved(exercise);
-    }
+    View view = this.view;
+    view.setType(this.exercise.type());
+    view.setWeight(this.exercise.weight(), "Kg"); // TODO: 15/06/2016 implement weight units setting
+    view.setReps(this.exercise.reps());
+    view.showContent();
   }
 
   @Override public void onError(Throwable t) {
-    logger.error("Error", t);
-    View view = getView();
-    if (view != null) {
+    if (!(t instanceof CancellationException)) {
+      logger.error("Error", t);
       view.showError();
     }
   }

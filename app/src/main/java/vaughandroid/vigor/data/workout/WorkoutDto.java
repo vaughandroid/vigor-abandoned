@@ -1,6 +1,7 @@
 package vaughandroid.vigor.data.workout;
 
 import android.support.annotation.NonNull;
+import java.util.ArrayList;
 import java.util.List;
 import vaughandroid.vigor.data.exercise.ExerciseDto;
 import vaughandroid.vigor.domain.workout.Workout;
@@ -8,11 +9,11 @@ import vaughandroid.vigor.domain.workout.Workout;
 /**
  * Data Transfer Object for a {@link Workout} instance
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @SuppressWarnings("NullableProblems") public class WorkoutDto {
 
-  @NonNull String guid;
+  @NonNull public String guid;
 
-  @NonNull List<ExerciseDto> exerciseDtos;
+  @NonNull public List<ExerciseDto> exerciseDtos = new ArrayList<>();
 }

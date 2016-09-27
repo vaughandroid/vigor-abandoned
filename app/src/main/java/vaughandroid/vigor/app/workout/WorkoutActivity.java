@@ -4,20 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
-import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
-import vaughandroid.vigor.app.errors.UnexpectedActivityResultException;
 import vaughandroid.vigor.app.exercise.ExerciseActivity;
 import vaughandroid.vigor.app.widgets.HorizontalDividerLineItemDecoration;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -28,13 +29,13 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
 
   private static final String EXTRA_WORKOUT_ID = "workoutId";
 
-  private static final int REQUEST_CODE_EXERCISE_ADD = 1;
-  private static final int REQUEST_CODE_EXERCISE_EDIT = 2;
-
-  private static final String TAG_ERROR_DIALOG = "ErrorDialog";
-
   private final ExerciseAdapter exerciseAdapter = new ExerciseAdapter();
   @Inject WorkoutPresenter presenter;
+
+  @BindView(R.id.content_loading_root) View loadingRoot;
+  @BindView(R.id.content_workout_root) View contentRoot;
+  @BindView(R.id.content_error_root) View errorRoot;
+  @BindView(R.id.fab) FloatingActionButton floatingActionButton;
   @BindView(R.id.content_workout_RecyclerView_exercise_list) RecyclerView exerciseListRecyclerView;
 
   public static Intent intentForNew(@NonNull Context context) {
@@ -49,6 +50,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
+    setTitle(R.string.title_activity_workout);
     initViews();
     initPresenter();
   }
@@ -66,8 +68,7 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
   }
 
   private void initPresenter() {
-    presenter.setView(this);
-    presenter.setWorkoutId(getWorkoutId());
+    presenter.init(this, getWorkoutId());
   }
 
   @NonNull private WorkoutId getWorkoutId() {
@@ -108,49 +109,37 @@ public class WorkoutActivity extends VigorActivity implements WorkoutContract.Vi
     presenter.onAddExercise();
   }
 
-  @Override public void setExercises(@NonNull ImmutableList<Exercise> exercises) {
+  @Override public void setExercises(@NonNull List<Exercise> exercises) {
     exerciseAdapter.setExercises(exercises);
   }
 
   @Override public void goToAddNewExercise(@NonNull WorkoutId workoutId) {
-    startActivityForResult(ExerciseActivity.intentForNew(this, workoutId),
-        REQUEST_CODE_EXERCISE_ADD);
+    startActivity(ExerciseActivity.intentForNew(this, workoutId));
   }
 
   @Override public void goToEditExistingExercise(@NonNull WorkoutId workoutId,
       @NonNull ExerciseId exerciseId) {
-    startActivityForResult(ExerciseActivity.intentForExisting(this, workoutId, exerciseId),
-        REQUEST_CODE_EXERCISE_EDIT);
-  }
-
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    switch (requestCode) {
-      case REQUEST_CODE_EXERCISE_ADD:
-        if (resultCode == RESULT_OK) {
-          presenter.onExerciseAdded(ExerciseActivity.getExerciseFromResult(data));
-        }
-        break;
-      case REQUEST_CODE_EXERCISE_EDIT:
-        if (resultCode == RESULT_OK) {
-          presenter.onExerciseUpdated(ExerciseActivity.getExerciseFromResult(data));
-        }
-        break;
-      default:
-        throw new UnexpectedActivityResultException(requestCode, resultCode, data);
-    }
+    startActivity(ExerciseActivity.intentForExisting(this, workoutId, exerciseId));
   }
 
   @Override public void showLoading() {
-
+    loadingRoot.setVisibility(View.VISIBLE);
+    contentRoot.setVisibility(View.GONE);
+    floatingActionButton.setVisibility(View.GONE);
+    errorRoot.setVisibility(View.GONE);
   }
 
   @Override public void showContent() {
-
+    contentRoot.setVisibility(View.VISIBLE);
+    floatingActionButton.setVisibility(View.VISIBLE);
+    loadingRoot.setVisibility(View.GONE);
+    errorRoot.setVisibility(View.GONE);
   }
 
   @Override public void showError() {
-    ErrorDialogFragment.create().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
+    errorRoot.setVisibility(View.VISIBLE);
+    loadingRoot.setVisibility(View.GONE);
+    contentRoot.setVisibility(View.GONE);
+    floatingActionButton.setVisibility(View.GONE);
   }
 }

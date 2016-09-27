@@ -1,14 +1,19 @@
 package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
-import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
-import java.util.List;
+import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rx.Observable;
-import vaughandroid.vigor.app.exercise.ExerciseContract;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerContract.View;
-import vaughandroid.vigor.app.mvp.BasePresenter;
+import vaughandroid.vigor.domain.exercise.Exercise;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
+import vaughandroid.vigor.domain.exercise.GetExerciseUseCase;
+import vaughandroid.vigor.domain.exercise.SaveExerciseUseCase;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.exercise.type.GetExerciseTypesUseCase;
 import vaughandroid.vigor.domain.exercise.type.InitExerciseTypesUseCase;
@@ -19,42 +24,59 @@ import vaughandroid.vigor.domain.rx.LogErrorsSubscriber;
  *
  * @author Chris
  */
-public class ExerciseTypePickerPresenter extends BasePresenter<View>
-    implements ExerciseTypePickerContract.Presenter {
+public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.Presenter {
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final ActivityLifecycleProvider activityLifecycleProvider;
+  private final GetExerciseUseCase getExerciseUseCase;
+  private final SaveExerciseUseCase saveExerciseUseCase;
   private final InitExerciseTypesUseCase initExerciseTypesUseCase;
   private final GetExerciseTypesUseCase getExerciseTypesUseCase;
 
-  @NonNull private ExerciseType exerciseType = ExerciseType.UNSET;
+  private View view;
+  private Exercise exercise;
 
   @Inject public ExerciseTypePickerPresenter(ActivityLifecycleProvider activityLifecycleProvider,
+      GetExerciseUseCase getExerciseUseCase, SaveExerciseUseCase saveExerciseUseCase,
       InitExerciseTypesUseCase initExerciseTypesUseCase,
       GetExerciseTypesUseCase getExerciseTypesUseCase) {
-    super(activityLifecycleProvider);
+    this.activityLifecycleProvider = activityLifecycleProvider;
+    this.getExerciseUseCase = getExerciseUseCase;
+    this.saveExerciseUseCase = saveExerciseUseCase;
     this.initExerciseTypesUseCase = initExerciseTypesUseCase;
     this.getExerciseTypesUseCase = getExerciseTypesUseCase;
   }
 
-  protected void initView(@NonNull View view) {
-    view.setSearchText(exerciseType.name());
-  }
+  @Override public void init(@NonNull View view, @NonNull ExerciseId exerciseId) {
+    this.view = view;
+    view.showLoading();
 
-  @Override public void init(@NonNull ExerciseType exerciseType) {
-    View view = getView();
-    Preconditions.checkState(view != null, "view == null");
-
-    this.exerciseType = exerciseType;
-    initView(view);
-
-    initExerciseTypesUseCase.perform()
-        .compose(activityLifecycleProvider.<Boolean>bindToLifecycle().forSingle())
+    initExerciseTypesUseCase.getSingle()
+        .compose(activityLifecycleProvider.<Boolean>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
         .subscribe(LogErrorsSubscriber.<Boolean>create());
 
-    getExerciseTypesUseCase.setSearchText(exerciseType.name());
+    Observable<ImmutableList<ExerciseType>> getExerciseTypesObservable = getExerciseTypesUseCase
+        .getObservable()
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY));
+    getExerciseTypesObservable.subscribe(view::setExerciseTypes, this::onError);
 
-    getExerciseTypesUseCase.perform()
-        .compose(activityLifecycleProvider.bindToLifecycle())
-        .subscribe(this::onListUpdated, this::onError);
+    Observable<Exercise> getExerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
+        .getObservable()
+        .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
+        .doOnNext(this::setExercise);
+
+    Observable.combineLatest(
+        getExerciseTypesObservable,
+        getExerciseObservable,
+        (exerciseTypes, exercise) -> null)
+        .subscribe(ignored -> view.showContent(), this::onError);
+  }
+
+  private void setExercise(Exercise exercise) {
+    this.exercise = exercise;
+    String typeName = exercise.type().name();
+    getExerciseTypesUseCase.setSearchText(typeName);
+    view.setSearchText(typeName);
   }
 
   @Override public void onSearchTextUpdated(@NonNull String text) {
@@ -62,31 +84,18 @@ public class ExerciseTypePickerPresenter extends BasePresenter<View>
   }
 
   @Override public void onTypePicked(@NonNull ExerciseType exerciseType) {
-    View view = getView();
-    if (view != null) {
-      view.returnPickedType(exerciseType);
-    }
-  }
-
-  @Override public void onErrorDialogDismissed() {
-    View view = getView();
-    if (view != null) {
-      view.returnCancelled();
-    }
+    view.showLoading();
+    exercise.setType(exerciseType);
+    saveExerciseUseCase.setExercise(exercise)
+        .getSingle()
+        .compose(activityLifecycleProvider.<Exercise>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
+        .subscribe(ignored -> view.finish(), this::onError);
   }
 
   @Override public void onError(Throwable t) {
-    logger.error("Error", t);
-    View view = getView();
-    if (view != null) {
+    if (!(t instanceof CancellationException)) {
+      logger.error("Error", t);
       view.showError();
-    }
-  }
-
-  private void onListUpdated(List<ExerciseType> exerciseTypes) {
-    View view = getView();
-    if (view != null) {
-      view.setListEntries(exerciseTypes);
     }
   }
 }

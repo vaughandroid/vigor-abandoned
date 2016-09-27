@@ -8,22 +8,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.common.base.Preconditions;
+import com.trello.rxlifecycle.ActivityEvent;
 import java.math.BigDecimal;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
 import vaughandroid.vigor.app.VigorActivity;
-import vaughandroid.vigor.app.dialogs.ErrorDialogFragment;
-import vaughandroid.vigor.app.errors.UnexpectedActivityResultException;
 import vaughandroid.vigor.app.exercise.type.ExerciseTypePickerActivity;
 import vaughandroid.vigor.app.widgets.NumberInputView;
-import vaughandroid.vigor.domain.exercise.Exercise;
 import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 import vaughandroid.vigor.domain.workout.WorkoutId;
@@ -33,15 +33,13 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  */
 public class ExerciseActivity extends VigorActivity implements ExerciseContract.View {
 
-  private static final String EXTRA_WORKOUT_ID = "workoutId";
-  private static final String EXTRA_EXERCISE_ID = "savedExerciseId";
+  @VisibleForTesting public static final String EXTRA_WORKOUT_ID = "workoutId";
+  @VisibleForTesting public static final String EXTRA_EXERCISE_ID = "savedExerciseId";
 
-  private static final String TAG_ERROR_DIALOG = "ErrorDialog";
-
-  private static final String RESULT_EXERCISE = "exercise";
-
-  private static final int REQUEST_CODE_PICK_TYPE = 1;
   @Inject ExerciseContract.Presenter presenter;
+  @BindView(R.id.content_exercise_root) View contentRootView;
+  @BindView(R.id.content_loading_root) View loadingRootView;
+  @BindView(R.id.content_error_root) View errorRootView;
   @BindView(R.id.content_exercise_TextView_type) TextView typeTextView;
   @BindView(R.id.content_exercise_NumberInputView_weight) NumberInputView weightNumberInputView;
   @BindView(R.id.content_exercise_NumberInputView_reps) NumberInputView repsNumberInputView;
@@ -56,17 +54,11 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
         .putExtra(EXTRA_EXERCISE_ID, exerciseId);
   }
 
-  @NonNull public static Exercise getExerciseFromResult(@NonNull Intent data) {
-    if (!data.hasExtra(RESULT_EXERCISE)) {
-      throw new IllegalArgumentException("Invalid data");
-    }
-    return (Exercise) data.getSerializableExtra(RESULT_EXERCISE);
-  }
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
 
+    setTitle(R.string.title_activity_exercise);
     initViews();
     initPresenter();
   }
@@ -77,6 +69,14 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     initToolbar();
 
     weightNumberInputView.setUnitsShown(true);
+    weightNumberInputView.valueObservable()
+        .compose(bindUntilEvent(ActivityEvent.DESTROY))
+        .subscribe(presenter::onWeightChanged, presenter::onError);
+
+    repsNumberInputView.valueObservable()
+        .compose(bindUntilEvent(ActivityEvent.DESTROY))
+        .map(BigDecimal::intValue)
+        .subscribe(presenter::onRepsChanged, presenter::onError);
   }
 
   private void initToolbar() {
@@ -86,12 +86,10 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
   }
 
   private void initPresenter() {
-    presenter.setView(this);
-    presenter.init(getWorkoutId(), getExerciseId());
+    presenter.init(this, getWorkoutId(), getExerciseId());
   }
 
   @NonNull private WorkoutId getWorkoutId() {
@@ -106,8 +104,22 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     return exerciseId;
   }
 
+  @Override public void showContent() {
+    contentRootView.setVisibility(View.VISIBLE);
+    loadingRootView.setVisibility(View.GONE);
+    errorRootView.setVisibility(View.GONE);
+  }
+
+  @Override public void showLoading() {
+    loadingRootView.setVisibility(View.VISIBLE);
+    contentRootView.setVisibility(View.GONE);
+    errorRootView.setVisibility(View.GONE);
+  }
+
   @Override public void showError() {
-    ErrorDialogFragment.create().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
+    errorRootView.setVisibility(View.VISIBLE);
+    contentRootView.setVisibility(View.GONE);
+    loadingRootView.setVisibility(View.GONE);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -124,28 +136,17 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public boolean onSupportNavigateUp() {
-    finish();
-    return true;
+  @Override public void onBackPressed() {
+    presenter.onBack();
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    switch (requestCode) {
-      case REQUEST_CODE_PICK_TYPE:
-        if (resultCode == RESULT_OK) {
-          presenter.onTypePicked(ExerciseTypePickerActivity.getTypeFromResult(data));
-        }
-        break;
-      default:
-        throw new UnexpectedActivityResultException(requestCode, resultCode, data);
-    }
+  @Override public boolean onSupportNavigateUp() {
+    presenter.onBack();
+    return false;
   }
 
   @OnClick(R.id.content_exercise_Button_confirm) void onClickConfirmButton() {
-    presenter.onValuesConfirmed(weightNumberInputView.getValue(),
-        repsNumberInputView.getIntValue());
+    presenter.onValuesConfirmed();
   }
 
   @Override public void setType(@NonNull ExerciseType type) {
@@ -165,12 +166,7 @@ public class ExerciseActivity extends VigorActivity implements ExerciseContract.
     repsNumberInputView.setValue(reps);
   }
 
-  @Override public void goToExerciseTypePicker(@NonNull ExerciseType type) {
-    startActivityForResult(ExerciseTypePickerActivity.intent(this, type), REQUEST_CODE_PICK_TYPE);
-  }
-
-  @Override public void onSaved(@NonNull Exercise exercise) {
-    setResult(RESULT_OK, new Intent().putExtra(RESULT_EXERCISE, exercise));
-    finish();
+  @Override public void goToExerciseTypePicker(@NonNull ExerciseId exerciseId) {
+    startActivity(ExerciseTypePickerActivity.intent(this, exerciseId));
   }
 }

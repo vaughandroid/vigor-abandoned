@@ -1,5 +1,6 @@
 package vaughandroid.vigor.domain.rx;
 
+import java.util.concurrent.CancellationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Subscriber;
@@ -24,7 +25,9 @@ public class LogErrorsSubscriber<T> extends Subscriber<T> {
   }
 
   @Override public void onError(Throwable t) {
-    logger.error("Error", t);
+    if (!(t instanceof CancellationException)) {
+      logger.error("Error", t);
+    }
   }
 
   @Override public void onNext(T o) {

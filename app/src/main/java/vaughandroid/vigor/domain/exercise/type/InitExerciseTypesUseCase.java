@@ -11,6 +11,7 @@ import vaughandroid.vigor.domain.usecase.SingleUseCase;
  *
  * @author Chris
  */
+// TODO: Should use CompletableUseCase
 public class InitExerciseTypesUseCase extends SingleUseCase<Boolean> {
 
   private final ExerciseTypeRepository exerciseTypeRepository;
@@ -21,12 +22,15 @@ public class InitExerciseTypesUseCase extends SingleUseCase<Boolean> {
     this.exerciseTypeRepository = exerciseTypeRepository;
   }
 
-  @Override protected Single<Boolean> createSingle() {
+  @Override protected Single<Boolean> create() {
     return exerciseTypeRepository.isInitialised().doOnSuccess(isInitialised -> {
       if (!isInitialised) {
         exerciseTypeRepository.addExerciseTypes(
-            ImmutableList.of(ExerciseType.create("Squat"), ExerciseType.create("Deadlift"),
-                ExerciseType.create("Bench Press"), ExerciseType.create("Overhead Press"),
+            ImmutableList.of(
+                ExerciseType.create("Squat"),
+                ExerciseType.create("Deadlift"),
+                ExerciseType.create("Bench Press"),
+                ExerciseType.create("Overhead Press"),
                 ExerciseType.create("Bent-over Row")));
       }
     });

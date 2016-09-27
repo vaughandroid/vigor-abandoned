@@ -2,9 +2,10 @@ package vaughandroid.vigor.data.exercise;
 
 import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
-import java.text.MessageFormat;
+import com.google.common.base.Preconditions;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Single;
 import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
 import vaughandroid.vigor.data.utils.GuidFactory;
 import vaughandroid.vigor.domain.exercise.Exercise;
@@ -32,23 +33,29 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
     this.firebaseDatabaseWrapper = firebaseDatabaseWrapper;
   }
 
-  @NonNull @Override public Observable<Exercise> addExercise(@NonNull Exercise exercise) {
+  @NonNull @Override public Single<Exercise> addExercise(@NonNull Exercise exercise) {
     if (Objects.equal(exercise.id(), ExerciseId.UNASSIGNED)) {
-      exercise = exercise.withId(ExerciseId.create(guidFactory.newGuid()));
+      exercise.setId(ExerciseId.create(guidFactory.newGuid()));
     }
-    final Exercise finalExercise = exercise;
 
-    ExerciseDto dto = exerciseMapper.fromExercise(finalExercise);
-    return firebaseDatabaseWrapper.set(getPath(finalExercise.id()), dto)
-        .map(ignored -> finalExercise);
+    ExerciseDto dto = exerciseMapper.fromExercise(exercise);
+    return firebaseDatabaseWrapper.set(getPath(exercise.id()), dto)
+        .toSingleDefault(exercise);
   }
 
   @NonNull @Override public Observable<Exercise> getExercise(@NonNull ExerciseId id) {
-    return Observable.combineLatest(firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class),
-        exerciseTypeRepository.getExerciseTypeMap(), exerciseMapper::fromDto);
+    Preconditions.checkArgument(!Objects.equal(id, ExerciseId.UNASSIGNED), "not a valid exercise ID");
+    return Observable.combineLatest(
+        firebaseDatabaseWrapper.observe(getPath(id), ExerciseDto.class)
+            // XXX: Is this ever returning null?
+            .filter(dto -> {
+              return dto != null;
+            }),
+        exerciseTypeRepository.getExerciseTypeMap(),
+        exerciseMapper::fromDto);
   }
 
   @NonNull private String getPath(@NonNull ExerciseId id) {
-    return MessageFormat.format("exercises/{}", id.guid());
+    return "exercises/" + id.guid();
   }
 }

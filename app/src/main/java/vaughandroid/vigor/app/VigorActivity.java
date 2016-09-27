@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import vaughandroid.vigor.app.di.ActivityComponent;
 import vaughandroid.vigor.app.di.ActivityComponentSource;
 import vaughandroid.vigor.app.di.ActivityModule;

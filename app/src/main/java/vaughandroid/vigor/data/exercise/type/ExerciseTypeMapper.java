@@ -16,11 +16,11 @@ public class ExerciseTypeMapper {
   @Inject ExerciseTypeMapper() {
   }
 
-  ExerciseType fromDto(ExerciseTypeDto dto) {
+  public ExerciseType fromDto(ExerciseTypeDto dto) {
     return ExerciseType.builder().id(ExerciseTypeId.create(dto.guid)).name(dto.name).build();
   }
 
-  ExerciseTypeDto fromExerciseType(ExerciseType exerciseType) {
+  public ExerciseTypeDto fromExerciseType(ExerciseType exerciseType) {
     ExerciseTypeDto dto = new ExerciseTypeDto();
     dto.guid = exerciseType.guid();
     dto.name = exerciseType.name();

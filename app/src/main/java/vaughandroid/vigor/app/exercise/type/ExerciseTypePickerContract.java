@@ -1,7 +1,10 @@
 package vaughandroid.vigor.app.exercise.type;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.util.List;
+import vaughandroid.vigor.app.mvp.LCEView;
+import vaughandroid.vigor.domain.exercise.ExerciseId;
 import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 
 /**
@@ -11,25 +14,21 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
  */
 public interface ExerciseTypePickerContract {
 
-  interface View {
+  interface View extends LCEView {
     void setSearchText(@NonNull String text);
 
-    void setListEntries(@NonNull List<ExerciseType> entries);
+    void setExerciseTypes(@NonNull List<ExerciseType> entries);
 
-    void showError();
-
-    void returnPickedType(@NonNull ExerciseType exerciseType);
-
-    void returnCancelled();
+    void finish();
   }
 
-  interface Presenter extends vaughandroid.vigor.app.mvp.Presenter<View> {
-    void init(@NonNull ExerciseType exerciseType);
+  interface Presenter {
+    void init(@NonNull View view, @NonNull ExerciseId exerciseId);
 
     void onSearchTextUpdated(@NonNull String text);
 
     void onTypePicked(@NonNull ExerciseType exerciseType);
 
-    void onErrorDialogDismissed();
+    void onError(Throwable t);
   }
 }
