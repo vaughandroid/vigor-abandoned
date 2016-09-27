@@ -20,7 +20,6 @@ import vaughandroid.vigor.testutil.StubActivityLifecycleProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -31,6 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  *
  * @author Chris
  */
+// TODO: test errors from use cases
 public class ExercisePresenterTests {
 
   @Rule public JUnitSoftAssertions mSoftly = new JUnitSoftAssertions();
@@ -78,7 +78,7 @@ public class ExercisePresenterTests {
 
     // Loading the exercise ensures that future changes are observed.
     verify(getExerciseUseCaseMock).setExerciseId(exerciseId);
-    verify(getExerciseUseCaseMock).setExerciseId(exerciseId);
+    verify(getExerciseUseCaseMock).perform();
   }
 
   @Test public void init_for_existing_exercise_shows_loading() {
@@ -127,6 +127,23 @@ public class ExercisePresenterTests {
     verify(viewMock).finish();
   }
 
+  @Test public void onBack_no_changes_does_not_save() {
+    presenter.init(viewMock, workoutId, exerciseId);
+
+    presenter.onBack();
+
+    verifyZeroInteractions(saveExerciseUseCaseMock);
+  }
+
+  @Test public void onBack_saves_changes() {
+    presenter.init(viewMock, workoutId, exerciseId);
+
+    presenter.onWeightChanged(new BigDecimal("1"));
+    presenter.onBack();
+
+    verify(saveExerciseUseCaseMock).perform();
+  }
+
   @Test public void onValuesConfirmed_finishes() {
     presenter.init(viewMock, workoutId, exerciseId);
 
@@ -135,12 +152,22 @@ public class ExercisePresenterTests {
     verify(viewMock).finish();
   }
 
-  // TODO: save changes onTypeClicked
-  // TODO: save changes onBack
-  // TODO: save changes onValuesConfirmed
-  // TODO: save changes if changed externally
-  // TODO: saveExerciseUseCaseMock throws error
-  // TODO: getExerciseUseCaseMock throws error
+  @Test public void onValuesConfirmed_no_changes_does_not_save() {
+    presenter.init(viewMock, workoutId, exerciseId);
+
+    presenter.onValuesConfirmed();
+
+    verifyZeroInteractions(saveExerciseUseCaseMock);
+  }
+
+  @Test public void onValuesConfirmed_saves_changes() {
+    presenter.init(viewMock, workoutId, exerciseId);
+
+    presenter.onWeightChanged(new BigDecimal("1"));
+    presenter.onValuesConfirmed();
+
+    verify(saveExerciseUseCaseMock).perform();
+  }
 
   @Test public void onError_shows_error() {
     presenter.init(viewMock, workoutId, exerciseId);
