@@ -1,5 +1,7 @@
 package vaughandroid.vigor.app.workout;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.support.test.espresso.matcher.ViewMatchers;
 import javax.inject.Inject;
 import vaughandroid.vigor.R;
@@ -46,7 +48,8 @@ public class WorkoutActivityRobot {
   public class Setup {
 
     public Setup expectExerciseIntent() {
-      intending(hasComponent(ExerciseActivity.class.getName()));
+      intending(hasComponent(ExerciseActivity.class.getName()))
+          .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
       return this;
     }
   }

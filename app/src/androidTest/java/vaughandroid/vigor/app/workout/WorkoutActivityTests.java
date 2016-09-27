@@ -29,8 +29,6 @@ public class WorkoutActivityTests {
 
     robot.setup().expectExerciseIntent();
 
-    Thread.sleep(5000);
-    // TODO: 26/09/2016 Currently showing an error because the Firebase stub isn't set up correctly
     robot.perform().clickFAB();
 
     robot.check()
