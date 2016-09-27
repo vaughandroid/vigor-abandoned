@@ -2,9 +2,7 @@ package vaughandroid.vigor.data.workout;
 
 import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
-import java.text.MessageFormat;
 import javax.inject.Inject;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
@@ -52,6 +50,6 @@ public class WorkoutRepository implements vaughandroid.vigor.domain.workout.Work
   }
 
   @NonNull private String getPath(@NonNull WorkoutId id) {
-    return MessageFormat.format("workouts/{}", id.guid());
+    return "workouts/" + id.guid();
   }
 }

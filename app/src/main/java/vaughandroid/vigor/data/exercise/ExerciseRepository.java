@@ -3,7 +3,6 @@ package vaughandroid.vigor.data.exercise;
 import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import java.text.MessageFormat;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Single;
@@ -57,6 +56,6 @@ public class ExerciseRepository implements vaughandroid.vigor.domain.exercise.Ex
   }
 
   @NonNull private String getPath(@NonNull ExerciseId id) {
-    return MessageFormat.format("exercises/{}", id.guid());
+    return "exercises/" + id.guid();
   }
 }

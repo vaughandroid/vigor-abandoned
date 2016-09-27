@@ -13,6 +13,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
  *
  * @author Chris
  */
+// TODO: Make this an AutoValue type again
 public class Exercise implements Serializable {
 
   public static Builder builder() {

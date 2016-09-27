@@ -15,6 +15,18 @@ android {
     targetCompatibility config.targetCompatibility
   }
 
+  sourceSets {
+    def sharedTestDir = 'src/sharedTest'
+    test {
+      resources.srcDir "${sharedTestDir}/assets"
+      java.srcDir "${sharedTestDir}/java"
+    }
+    androidTest {
+      assets.srcDir "${sharedTestDir}/assets"
+      java.srcDir "${sharedTestDir}/java"
+    }
+  }
+
   defaultConfig {
     applicationId "me.vaughandroid.vigor"
     minSdkVersion config.minSdkVersion

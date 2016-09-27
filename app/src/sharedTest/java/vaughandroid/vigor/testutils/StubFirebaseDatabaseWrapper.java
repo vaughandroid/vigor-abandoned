@@ -15,7 +15,7 @@ import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
  */
 public class StubFirebaseDatabaseWrapper implements FirebaseDatabaseWrapper {
 
-  public boolean connected;
+  public boolean connected = true;
   public Map<String, Object> data = new HashMap<>();
 
   @Override public void init() {

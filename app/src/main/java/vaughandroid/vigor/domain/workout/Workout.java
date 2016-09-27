@@ -13,6 +13,7 @@ import vaughandroid.vigor.domain.exercise.Exercise;
  *
  * @author Chris
  */
+// TODO: Implement equals(), hashCode() for testing purposes
 public final class Workout implements Serializable {
 
   public static Builder builder() {

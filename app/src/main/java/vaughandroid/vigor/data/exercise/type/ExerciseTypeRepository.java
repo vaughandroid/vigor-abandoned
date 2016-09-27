@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 import com.google.firebase.database.GenericTypeIndicator;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +106,6 @@ public class ExerciseTypeRepository
   }
 
   @NonNull private String getPathForId(@NonNull ExerciseTypeId id) {
-    return MessageFormat.format("{0}/{1}", getPathForAll(), id.guid());
+    return getPathForAll() + "/" + id.guid();
   }
 }
