@@ -13,7 +13,7 @@ import vaughandroid.vigor.testutils.di.TestApplicationComponent;
  */
 public class TestApplication extends VigorApplication {
 
-  private TestApplicationComponent testApplicationComponent;
+  public static TestApplicationComponent testApplicationComponent;
 
   @Override public TestApplicationComponent getApplicationComponent() {
     if (testApplicationComponent == null) {

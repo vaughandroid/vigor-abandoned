@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -30,7 +31,7 @@ import vaughandroid.vigor.domain.exercise.type.ExerciseType;
 public class ExerciseTypePickerActivity extends VigorActivity
     implements ExerciseTypePickerContract.View {
 
-  private static final String EXTRA_EXERCISE_ID = "exerciseId";
+  @VisibleForTesting public static final String EXTRA_EXERCISE_ID = "exerciseId";
 
   private final ExerciseTypeAdapter exerciseTypeAdapter = new ExerciseTypeAdapter();
 

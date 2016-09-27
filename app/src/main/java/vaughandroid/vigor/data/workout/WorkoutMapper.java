@@ -22,7 +22,7 @@ public class WorkoutMapper {
     this.exerciseMapper = exerciseMapper;
   }
 
-  @NonNull Workout fromDto(@NonNull WorkoutDto dto,
+  public @NonNull Workout fromDto(@NonNull WorkoutDto dto,
       @NonNull Map<ExerciseTypeId, ExerciseType> exerciseTypeMap) {
     return Workout.builder()
         .id(WorkoutId.create(dto.guid))
@@ -30,7 +30,7 @@ public class WorkoutMapper {
         .build();
   }
 
-  @NonNull WorkoutDto fromWorkout(@NonNull Workout workout) {
+  public @NonNull WorkoutDto fromWorkout(@NonNull Workout workout) {
     WorkoutDto dto = new WorkoutDto();
     dto.guid = workout.id().guid();
     dto.exerciseDtos = exerciseMapper.fromExerciseList(workout.exercises());

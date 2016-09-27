@@ -73,8 +73,8 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     /* If the exercise is updated after the initial load, it has been changed elsewhere -
      * e.g. in the ExerciseTypePickerActivity
      */
-    exerciseObservable.skip(1).take(1).toCompletable()
-        .subscribe(() -> exerciseChanged = true, this::onError);
+    exerciseObservable.skip(1).take(1).subscribe(
+        ignored -> { exerciseChanged = true; }, this::onError);
   }
 
   @Override public void onWeightChanged(@Nullable BigDecimal weight) {
@@ -105,7 +105,10 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
       saveExerciseUseCase.setExercise(exercise)
           .perform()
           .toCompletable()
-          .subscribe(action::call, this::onError);
+          .subscribe(() -> {
+            view.showContent();
+            action.call();
+          }, this::onError);
     } else {
       action.call();
     }

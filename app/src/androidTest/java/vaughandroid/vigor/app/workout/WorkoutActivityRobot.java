@@ -27,8 +27,6 @@ import static org.hamcrest.CoreMatchers.allOf;
  */
 public class WorkoutActivityRobot {
 
-  @Inject FirebaseDatabaseWrapper firebaseDatabaseWrapperMock;
-
   public WorkoutActivityRobot(TestApplicationComponent testApplicationComponent) {
     testApplicationComponent.inject(this);
   }

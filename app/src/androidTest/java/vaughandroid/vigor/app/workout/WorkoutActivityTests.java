@@ -1,8 +1,6 @@
 package vaughandroid.vigor.app.workout;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import vaughandroid.vigor.TestApplication;
@@ -17,12 +15,8 @@ public class WorkoutActivityTests {
   @Rule public IntentsTestRule<WorkoutActivity> activityRule =
       new IntentsTestRule<>(WorkoutActivity.class, true, false);
 
-  WorkoutActivityRobot robot;
-
-  @Before public void setup() {
-    robot = new WorkoutActivityRobot(((TestApplication) InstrumentationRegistry.getTargetContext()
-        .getApplicationContext()).getApplicationComponent());
-  }
+  final WorkoutActivityRobot robot =
+      new WorkoutActivityRobot(TestApplication.testApplicationComponent);
 
   @Test public void clicking_fab_adds_new_exercise() throws Exception {
     activityRule.launchActivity(null);
