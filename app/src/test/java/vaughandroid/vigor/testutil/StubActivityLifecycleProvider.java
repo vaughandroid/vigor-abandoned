@@ -11,7 +11,7 @@ import rx.Single;
 /**
  * Stub implementation of {@link ActivityLifecycleProvider} for unit tests.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class StubActivityLifecycleProvider implements ActivityLifecycleProvider {
 
