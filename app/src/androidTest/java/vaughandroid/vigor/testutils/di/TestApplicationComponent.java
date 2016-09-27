@@ -10,7 +10,7 @@ import vaughandroid.vigor.app.workout.WorkoutActivityRobot;
 /**
  * Inject mocks, stubs & spies for testing.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Component(modules = {
     MockFirebaseModule.class, TestSchedulerModule.class, UtilsModule.class,

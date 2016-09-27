@@ -8,7 +8,7 @@ import rx.Single;
 /**
  * TODO: javadoc
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public interface FirebaseDatabaseWrapper {
   void init();

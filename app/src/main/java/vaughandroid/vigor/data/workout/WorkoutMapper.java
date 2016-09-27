@@ -12,7 +12,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 /**
  * Maps between {@link Workout} and {@link WorkoutDto}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class WorkoutMapper {
 

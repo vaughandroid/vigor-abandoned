@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 /**
  * Test robot for {@link WorkoutActivity}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class WorkoutActivityRobot {
 

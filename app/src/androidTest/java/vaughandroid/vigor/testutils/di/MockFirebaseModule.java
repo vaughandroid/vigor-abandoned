@@ -9,7 +9,7 @@ import vaughandroid.vigor.testutils.StubFirebaseDatabaseWrapper;
 /**
  * Module which provides mock Firebase classes for injection.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Module public class MockFirebaseModule {
 

@@ -9,7 +9,7 @@ import vaughandroid.vigor.domain.workout.Workout;
 /**
  * Data Transfer Object for a {@link Workout} instance
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @SuppressWarnings("NullableProblems") public class WorkoutDto {
 

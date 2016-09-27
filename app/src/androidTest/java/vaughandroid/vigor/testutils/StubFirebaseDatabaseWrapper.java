@@ -11,7 +11,7 @@ import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapper;
 /**
  * Sub implementation of {@link FirebaseDatabaseWrapper}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class StubFirebaseDatabaseWrapper implements FirebaseDatabaseWrapper {
 

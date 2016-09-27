@@ -13,7 +13,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 /**
  * Tests for {@link ExerciseActivity}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class ExerciseActivityTests {
 

@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnitRunner;
 /**
  * Custom {@link AndroidJUnitRunner} which launches {@link TestApplication}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class TestApplicationTestRunner extends AndroidJUnitRunner {
 

@@ -9,7 +9,7 @@ import vaughandroid.vigor.data.firebase.database.FirebaseDatabaseWrapperImpl;
 /**
  * Module which provides Firebase classes for injection.
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 @Module public class FirebaseModule {
 

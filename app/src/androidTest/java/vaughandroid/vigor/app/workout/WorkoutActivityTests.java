@@ -8,7 +8,7 @@ import vaughandroid.vigor.TestApplication;
 /**
  * Tests for {@link WorkoutActivity}
  *
- * @author chris.vaughan@laterooms.com
+ * @author Chris
  */
 public class WorkoutActivityTests {
 
