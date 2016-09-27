@@ -2,6 +2,7 @@ package vaughandroid.vigor.app.exercise;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,6 +40,20 @@ public class ExerciseActivityTests {
 
     robot.check()
         .receivedNewExerciseTypePickerIntent()
+        .noUnverifiedIntents();
+  }
+
+  @Test public void clicking_done_saves_changes() throws Exception {
+    launchForNewExercise();
+
+    robot.perform()
+        .enterWeight("1234.5")
+        .enterReps(10)
+        .clickDone();
+
+    robot.check()
+        .savedWeight("1234.5")
+        .savedReps(10)
         .noUnverifiedIntents();
   }
 
