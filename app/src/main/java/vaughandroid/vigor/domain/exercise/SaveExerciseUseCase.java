@@ -39,13 +39,13 @@ public class SaveExerciseUseCase extends SingleUseCase<Exercise> {
     return this;
   }
 
-  @Override protected @NonNull Single<Exercise> createSingle() {
+  @Override protected @NonNull Single<Exercise> create() {
     if (exercise == null) {
       throw new IllegalStateException("exercise not set");
     }
 
     Single<Workout> getWorkout =
-        getWorkoutUseCase.setWorkoutId(exercise.workoutId()).perform().take(1).toSingle();
+        getWorkoutUseCase.setWorkoutId(exercise.workoutId()).getObservable().take(1).toSingle();
 
     /* 1. Save the Exercise & retrieve the Workout.
      * 2. Add the saved Exercise to the Workout & save that.
@@ -60,7 +60,7 @@ public class SaveExerciseUseCase extends SingleUseCase<Exercise> {
           Exercise savedExercise = pair.second;
           workout.addExercise(savedExercise);
           return saveWorkoutUseCase.setWorkout(workout)
-              .perform()
+              .getSingle()
               .map(savedWorkout -> savedExercise);
         });
   }

@@ -22,7 +22,7 @@ public class InitExerciseTypesUseCase extends SingleUseCase<Boolean> {
     this.exerciseTypeRepository = exerciseTypeRepository;
   }
 
-  @Override protected Single<Boolean> createSingle() {
+  @Override protected Single<Boolean> create() {
     return exerciseTypeRepository.isInitialised().doOnSuccess(isInitialised -> {
       if (!isInitialised) {
         exerciseTypeRepository.addExerciseTypes(

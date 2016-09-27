@@ -28,7 +28,7 @@ public class GetWorkoutUseCase extends ObservableUseCase<Workout> {
     return this;
   }
 
-  @Override protected Observable<Workout> createObservable() {
+  @Override protected Observable<Workout> create() {
     if (workoutId == null) {
       throw new IllegalStateException("workoutId not set");
     }

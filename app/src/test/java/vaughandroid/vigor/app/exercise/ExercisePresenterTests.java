@@ -57,10 +57,10 @@ public class ExercisePresenterTests {
         getExerciseUseCaseMock);
 
     when(saveExerciseUseCaseMock.setExercise(any())).thenReturn(saveExerciseUseCaseMock);
-    when(saveExerciseUseCaseMock.perform()).thenReturn(Single.just(savedExercise));
+    when(saveExerciseUseCaseMock.getSingle()).thenReturn(Single.just(savedExercise));
 
     when(getExerciseUseCaseMock.setExerciseId(any())).thenReturn(getExerciseUseCaseMock);
-    when(getExerciseUseCaseMock.perform()).thenReturn(Observable.just(savedExercise));
+    when(getExerciseUseCaseMock.getObservable()).thenReturn(Observable.just(savedExercise));
   }
 
   @Test public void init_for_new_exercise_shows_loading() {
@@ -74,11 +74,11 @@ public class ExercisePresenterTests {
 
     verify(saveExerciseUseCaseMock).setExercise(exerciseArgumentCaptor.capture());
     assertThat(exerciseArgumentCaptor.getValue().id()).isEqualTo(ExerciseId.UNASSIGNED);
-    verify(saveExerciseUseCaseMock).perform();
+    verify(saveExerciseUseCaseMock).getSingle();
 
     // Loading the exercise ensures that future changes are observed.
     verify(getExerciseUseCaseMock).setExerciseId(exerciseId);
-    verify(getExerciseUseCaseMock).perform();
+    verify(getExerciseUseCaseMock).getObservable();
   }
 
   @Test public void init_for_existing_exercise_shows_loading() {
@@ -116,7 +116,7 @@ public class ExercisePresenterTests {
     presenter.onWeightChanged(new BigDecimal("1"));
     presenter.onTypeClicked();
 
-    verify(saveExerciseUseCaseMock).perform();
+    verify(saveExerciseUseCaseMock).getSingle();
   }
 
   @Test public void onBack_finishes() {
@@ -141,7 +141,7 @@ public class ExercisePresenterTests {
     presenter.onWeightChanged(new BigDecimal("1"));
     presenter.onBack();
 
-    verify(saveExerciseUseCaseMock).perform();
+    verify(saveExerciseUseCaseMock).getSingle();
   }
 
   @Test public void onValuesConfirmed_finishes() {
@@ -166,7 +166,7 @@ public class ExercisePresenterTests {
     presenter.onWeightChanged(new BigDecimal("1"));
     presenter.onValuesConfirmed();
 
-    verify(saveExerciseUseCaseMock).perform();
+    verify(saveExerciseUseCaseMock).getSingle();
   }
 
   @Test public void onError_shows_error() {

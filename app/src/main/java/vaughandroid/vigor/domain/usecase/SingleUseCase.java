@@ -14,9 +14,9 @@ public abstract class SingleUseCase<T> extends UseCase {
     super(schedulingPolicy);
   }
 
-  public Single<T> perform() {
-    return createSingle().compose(schedulingPolicy.singleTransformer());
+  public Single<T> getSingle() {
+    return create().compose(schedulingPolicy.singleTransformer());
   }
 
-  protected abstract Single<T> createSingle();
+  protected abstract Single<T> create();
 }

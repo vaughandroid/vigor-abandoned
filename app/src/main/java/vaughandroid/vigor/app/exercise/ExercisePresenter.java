@@ -54,7 +54,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
           .workoutId(workoutId)
           .build();
       saveExerciseUseCase.setExercise(exercise)
-          .perform()
+          .getSingle()
           .compose(activityLifecycleProvider.<Exercise>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
           .subscribe(savedExercise -> loadExercise(savedExercise.id()), this::onError);
     } else {
@@ -64,7 +64,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
 
   private void loadExercise(@NonNull ExerciseId exerciseId) {
     Observable<Exercise> exerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
-        .perform()
+        .getObservable()
         .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY));
 
     exerciseObservable
@@ -104,7 +104,7 @@ import vaughandroid.vigor.domain.workout.WorkoutId;
     if (exerciseChanged) {
       view.showLoading();
       saveExerciseUseCase.setExercise(exercise)
-          .perform()
+          .getSingle()
           .toCompletable()
           .subscribe(() -> {
             view.showContent();

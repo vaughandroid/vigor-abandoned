@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
 import com.trello.rxlifecycle.ActivityEvent;
 import com.trello.rxlifecycle.ActivityLifecycleProvider;
-import java.util.List;
 import java.util.concurrent.CancellationException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -52,17 +51,17 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
     this.view = view;
     view.showLoading();
 
-    initExerciseTypesUseCase.perform()
+    initExerciseTypesUseCase.getSingle()
         .compose(activityLifecycleProvider.<Boolean>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
         .subscribe(LogErrorsSubscriber.<Boolean>create());
 
     Observable<ImmutableList<ExerciseType>> getExerciseTypesObservable = getExerciseTypesUseCase
-        .perform()
+        .getObservable()
         .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY));
     getExerciseTypesObservable.subscribe(view::setExerciseTypes, this::onError);
 
     Observable<Exercise> getExerciseObservable = getExerciseUseCase.setExerciseId(exerciseId)
-        .perform()
+        .getObservable()
         .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
         .doOnNext(this::setExercise);
 
@@ -88,7 +87,7 @@ public class ExerciseTypePickerPresenter implements ExerciseTypePickerContract.P
     view.showLoading();
     exercise.setType(exerciseType);
     saveExerciseUseCase.setExercise(exercise)
-        .perform()
+        .getSingle()
         .compose(activityLifecycleProvider.<Exercise>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
         .subscribe(ignored -> view.finish(), this::onError);
   }

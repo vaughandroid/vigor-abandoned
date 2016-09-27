@@ -1,7 +1,6 @@
 package vaughandroid.vigor.domain.usecase;
 
 import rx.Observable;
-import vaughandroid.vigor.domain.rx.LogErrorsSubscriber;
 import vaughandroid.vigor.domain.rx.SchedulingPolicy;
 
 /**
@@ -15,9 +14,9 @@ public abstract class ObservableUseCase<T> extends UseCase {
     super(schedulingPolicy);
   }
 
-  public Observable<T> perform() {
-    return createObservable().compose(schedulingPolicy.observableTransformer());
+  public Observable<T> getObservable() {
+    return create().compose(schedulingPolicy.observableTransformer());
   }
 
-  protected abstract Observable<T> createObservable();
+  protected abstract Observable<T> create();
 }

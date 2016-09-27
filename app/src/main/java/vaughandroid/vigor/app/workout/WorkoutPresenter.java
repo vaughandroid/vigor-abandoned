@@ -45,7 +45,7 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
     if (Objects.equal(workoutId, WorkoutId.UNASSIGNED)) {
       // Save a new Workout & get its ID
       saveWorkoutUseCase.setWorkout(Workout.builder().build())
-          .perform()
+          .getSingle()
           .compose(activityLifecycleProvider.<Workout>bindUntilEvent(ActivityEvent.DESTROY).forSingle())
           .subscribe(workout -> loadWorkout(workout.id()), WorkoutPresenter.this::onError);
     } else {
@@ -55,7 +55,7 @@ public class WorkoutPresenter implements WorkoutContract.Presenter {
 
   private Subscription loadWorkout(@NonNull WorkoutId workoutId) {
     return getWorkoutUseCase.setWorkoutId(workoutId)
-        .perform()
+        .getObservable()
         .compose(activityLifecycleProvider.bindUntilEvent(ActivityEvent.DESTROY))
         .subscribe(WorkoutPresenter.this::setWorkout, WorkoutPresenter.this::onError);
   }

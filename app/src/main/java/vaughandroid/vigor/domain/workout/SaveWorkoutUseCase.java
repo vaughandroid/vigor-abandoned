@@ -28,7 +28,7 @@ public class SaveWorkoutUseCase extends SingleUseCase<Workout> {
     return this;
   }
 
-  @Override protected Single<Workout> createSingle() {
+  @Override protected Single<Workout> create() {
     if (workout == null) {
       throw new IllegalStateException("workout not set");
     }
